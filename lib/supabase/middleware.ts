@@ -39,9 +39,10 @@ export async function updateSession(request: NextRequest) {
 
   // Define public routes that don't require authentication
   const publicRoutes = ['/login', '/signup', '/auth', '/']
-  const isPublicRoute = publicRoutes.some(route => 
-    request.nextUrl.pathname.startsWith(route) || 
-    request.nextUrl.pathname === route
+  const isPublicRoute = publicRoutes.some(
+    (route) =>
+      request.nextUrl.pathname.startsWith(route) ||
+      request.nextUrl.pathname === route
   )
 
   if (!user && !isPublicRoute) {

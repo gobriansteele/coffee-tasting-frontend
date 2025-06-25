@@ -48,16 +48,19 @@ export default function SignupPage() {
           <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">
             Create Your Account
           </h2>
-          
+
           <form onSubmit={handleSignup} className="space-y-6">
             {error && (
               <div className="bg-red-50 text-red-500 p-3 rounded-md text-sm">
                 {error}
               </div>
             )}
-            
+
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Email
               </label>
               <input
@@ -70,9 +73,12 @@ export default function SignupPage() {
                 placeholder="you@example.com"
               />
             </div>
-            
+
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Password
               </label>
               <input
@@ -85,9 +91,12 @@ export default function SignupPage() {
                 placeholder="••••••••"
               />
             </div>
-            
+
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Confirm Password
               </label>
               <input
@@ -100,7 +109,7 @@ export default function SignupPage() {
                 placeholder="••••••••"
               />
             </div>
-            
+
             <button
               type="submit"
               disabled={loading}
@@ -109,7 +118,7 @@ export default function SignupPage() {
               {loading ? 'Creating account...' : 'Sign Up'}
             </button>
           </form>
-          
+
           <p className="mt-6 text-center text-sm text-gray-600">
             Already have an account?{' '}
             <Link href="/login" className="text-blue-600 hover:underline">

@@ -41,7 +41,7 @@ export default function LoginPage() {
           <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">
             Sign In to Coffee Tasting
           </h2>
-          
+
           <form onSubmit={handleLogin} className="space-y-6">
             {message && (
               <div className="bg-green-50 text-green-700 p-3 rounded-md text-sm">
@@ -53,9 +53,12 @@ export default function LoginPage() {
                 {error}
               </div>
             )}
-            
+
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Email
               </label>
               <input
@@ -68,9 +71,12 @@ export default function LoginPage() {
                 placeholder="you@example.com"
               />
             </div>
-            
+
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Password
               </label>
               <input
@@ -83,7 +89,7 @@ export default function LoginPage() {
                 placeholder="••••••••"
               />
             </div>
-            
+
             <button
               type="submit"
               disabled={loading}
@@ -92,7 +98,7 @@ export default function LoginPage() {
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
-          
+
           <p className="mt-6 text-center text-sm text-gray-600">
             Don't have an account?{' '}
             <Link href="/signup" className="text-blue-600 hover:underline">

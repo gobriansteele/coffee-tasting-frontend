@@ -9,7 +9,7 @@ export default function NewTastingPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  
+
   // Form state
   const [coffees, setCoffees] = useState<Coffee[]>([])
   const [roasters, setRoasters] = useState<Roaster[]>([])
@@ -23,7 +23,9 @@ export default function NewTastingPage() {
   const [waterGrams, setWaterGrams] = useState('')
   const [overallRating, setOverallRating] = useState('5')
   const [notes, setNotes] = useState('')
-  const [tastingDate, setTastingDate] = useState(new Date().toISOString().split('T')[0])
+  const [tastingDate, setTastingDate] = useState(
+    new Date().toISOString().split('T')[0]
+  )
 
   useEffect(() => {
     loadData()
@@ -34,7 +36,7 @@ export default function NewTastingPage() {
       const [coffeesData, roastersData, tagsData] = await Promise.all([
         apiClient.getCoffees(),
         apiClient.getRoasters(),
-        apiClient.getFlavorTags()
+        apiClient.getFlavorTags(),
       ])
       setCoffees(coffeesData.coffees)
       setRoasters(roastersData.roasters)
@@ -73,20 +75,25 @@ export default function NewTastingPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">New Tasting Session</h1>
-      
+      <h1 className="text-3xl font-bold text-gray-900 mb-8">
+        New Tasting Session
+      </h1>
+
       <form onSubmit={handleSubmit} className="space-y-6">
         {error && (
-          <div className="bg-red-50 text-red-600 p-4 rounded-md">
-            {error}
-          </div>
+          <div className="bg-red-50 text-red-600 p-4 rounded-md">{error}</div>
         )}
 
         <div className="bg-white shadow-md rounded-lg p-6 space-y-6">
-          <h2 className="text-xl font-semibold text-gray-800">Coffee Details</h2>
-          
+          <h2 className="text-xl font-semibold text-gray-800">
+            Coffee Details
+          </h2>
+
           <div>
-            <label htmlFor="coffee" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="coffee"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Coffee *
             </label>
             <select
@@ -106,7 +113,10 @@ export default function NewTastingPage() {
           </div>
 
           <div>
-            <label htmlFor="tastingDate" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="tastingDate"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Tasting Date *
             </label>
             <input
@@ -121,11 +131,16 @@ export default function NewTastingPage() {
         </div>
 
         <div className="bg-white shadow-md rounded-lg p-6 space-y-6">
-          <h2 className="text-xl font-semibold text-gray-800">Brewing Parameters</h2>
-          
+          <h2 className="text-xl font-semibold text-gray-800">
+            Brewing Parameters
+          </h2>
+
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="brewMethod" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="brewMethod"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Brew Method *
               </label>
               <input
@@ -140,7 +155,10 @@ export default function NewTastingPage() {
             </div>
 
             <div>
-              <label htmlFor="grindSize" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="grindSize"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Grind Size
               </label>
               <input
@@ -154,7 +172,10 @@ export default function NewTastingPage() {
             </div>
 
             <div>
-              <label htmlFor="waterTemp" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="waterTemp"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Water Temperature (°C)
               </label>
               <input
@@ -168,7 +189,10 @@ export default function NewTastingPage() {
             </div>
 
             <div>
-              <label htmlFor="brewTime" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="brewTime"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Brew Time (seconds)
               </label>
               <input
@@ -182,7 +206,10 @@ export default function NewTastingPage() {
             </div>
 
             <div>
-              <label htmlFor="coffeeGrams" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="coffeeGrams"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Coffee (grams)
               </label>
               <input
@@ -197,7 +224,10 @@ export default function NewTastingPage() {
             </div>
 
             <div>
-              <label htmlFor="waterGrams" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="waterGrams"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Water (grams)
               </label>
               <input
@@ -213,10 +243,15 @@ export default function NewTastingPage() {
         </div>
 
         <div className="bg-white shadow-md rounded-lg p-6 space-y-6">
-          <h2 className="text-xl font-semibold text-gray-800">Rating & Notes</h2>
-          
+          <h2 className="text-xl font-semibold text-gray-800">
+            Rating & Notes
+          </h2>
+
           <div>
-            <label htmlFor="overallRating" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="overallRating"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Overall Rating * (1-10)
             </label>
             <input
@@ -233,7 +268,10 @@ export default function NewTastingPage() {
           </div>
 
           <div>
-            <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="notes"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Tasting Notes
             </label>
             <textarea

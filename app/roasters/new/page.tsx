@@ -8,7 +8,7 @@ export default function NewRoasterPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  
+
   // Form state
   const [name, setName] = useState('')
   const [location, setLocation] = useState('')
@@ -39,17 +39,18 @@ export default function NewRoasterPage() {
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <h1 className="text-3xl font-bold text-gray-900 mb-8">Add New Roaster</h1>
-      
+
       <form onSubmit={handleSubmit} className="space-y-6">
         {error && (
-          <div className="bg-red-50 text-red-600 p-4 rounded-md">
-            {error}
-          </div>
+          <div className="bg-red-50 text-red-600 p-4 rounded-md">{error}</div>
         )}
 
         <div className="bg-white shadow-md rounded-lg p-6 space-y-6">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Roaster Name *
             </label>
             <input
@@ -64,7 +65,10 @@ export default function NewRoasterPage() {
           </div>
 
           <div>
-            <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="location"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Location
             </label>
             <input
@@ -78,7 +82,10 @@ export default function NewRoasterPage() {
           </div>
 
           <div>
-            <label htmlFor="website" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="website"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Website
             </label>
             <input
@@ -92,7 +99,10 @@ export default function NewRoasterPage() {
           </div>
 
           <div>
-            <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="notes"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Notes
             </label>
             <textarea

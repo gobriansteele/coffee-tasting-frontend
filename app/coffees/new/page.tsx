@@ -1,75 +1,75 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { apiClient } from "@/lib/api/client";
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { apiClient } from '@/lib/api/client'
 import type {
   CreateCoffeeRequest,
   ProcessingMethod,
   RoastLevel,
   Roaster,
-} from "@/lib/api/types";
+} from '@/lib/api/types'
 
 export default function NewCoffeePage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [roasters, setRoasters] = useState<Roaster[]>([]);
-  const [loadingRoasters, setLoadingRoasters] = useState(true);
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [roasters, setRoasters] = useState<Roaster[]>([])
+  const [loadingRoasters, setLoadingRoasters] = useState(true)
 
   // Form state
-  const [name, setName] = useState("");
-  const [roasterId, setRoasterId] = useState("");
+  const [name, setName] = useState('')
+  const [roasterId, setRoasterId] = useState('')
 
   // Origin info
-  const [originCountry, setOriginCountry] = useState("");
-  const [originRegion, setOriginRegion] = useState("");
-  const [farmName, setFarmName] = useState("");
-  const [producer, setProducer] = useState("");
-  const [altitude, setAltitude] = useState("");
+  const [originCountry, setOriginCountry] = useState('')
+  const [originRegion, setOriginRegion] = useState('')
+  const [farmName, setFarmName] = useState('')
+  const [producer, setProducer] = useState('')
+  const [altitude, setAltitude] = useState('')
 
   // Processing
   const [processingMethod, setProcessingMethod] = useState<
-    ProcessingMethod | ""
-  >("");
-  const [variety, setVariety] = useState("");
+    ProcessingMethod | ''
+  >('')
+  const [variety, setVariety] = useState('')
 
   // Roasting
-  const [roastLevel, setRoastLevel] = useState<RoastLevel | "">("");
-  const [roastDate, setRoastDate] = useState("");
+  const [roastLevel, setRoastLevel] = useState<RoastLevel | ''>('')
+  const [roastDate, setRoastDate] = useState('')
 
   // Additional info
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [bagSize, setBagSize] = useState("");
+  const [description, setDescription] = useState('')
+  const [price, setPrice] = useState('')
+  const [bagSize, setBagSize] = useState('')
 
   useEffect(() => {
-    loadRoasters();
+    loadRoasters()
 
     // Pre-select roaster from query params
-    const roasterIdParam = searchParams.get("roasterId");
+    const roasterIdParam = searchParams.get('roasterId')
     if (roasterIdParam) {
-      setRoasterId(roasterIdParam);
+      setRoasterId(roasterIdParam)
     }
-  }, [searchParams]);
+  }, [searchParams])
 
   const loadRoasters = async () => {
     try {
-      setLoadingRoasters(true);
-      const data = await apiClient.getRoasters();
-      setRoasters(data.roasters);
+      setLoadingRoasters(true)
+      const data = await apiClient.getRoasters()
+      setRoasters(data.roasters)
     } catch (err) {
-      setError("Failed to load roasters");
+      setError('Failed to load roasters')
     } finally {
-      setLoadingRoasters(false);
+      setLoadingRoasters(false)
     }
-  };
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
+    e.preventDefault()
+    setLoading(true)
+    setError(null)
 
     try {
       const coffeeData: CreateCoffeeRequest = {
@@ -87,22 +87,22 @@ export default function NewCoffeePage() {
         description: description || undefined,
         price: price ? parseFloat(price) : undefined,
         bag_size: bagSize || undefined,
-      };
+      }
 
-      await apiClient.createCoffee(coffeeData);
-      router.push(`/roasters/${roasterId}`);
+      await apiClient.createCoffee(coffeeData)
+      router.push(`/roasters/${roasterId}`)
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to create coffee");
-      setLoading(false);
+      setError(err instanceof Error ? err.message : 'Failed to create coffee')
+      setLoading(false)
     }
-  };
+  }
 
   if (loadingRoasters) {
     return (
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center">Loading roasters...</div>
       </div>
-    );
+    )
   }
 
   return (
@@ -414,7 +414,7 @@ export default function NewCoffeePage() {
         <div className="flex justify-end space-x-4">
           <button
             type="button"
-            onClick={() => router.push("/roasters")}
+            onClick={() => router.push('/roasters')}
             className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
           >
             Cancel
@@ -424,10 +424,10 @@ export default function NewCoffeePage() {
             disabled={loading}
             className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? "Creating..." : "Create Coffee"}
+            {loading ? 'Creating...' : 'Create Coffee'}
           </button>
         </div>
       </form>
     </div>
-  );
+  )
 }

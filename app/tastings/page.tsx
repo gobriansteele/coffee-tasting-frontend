@@ -30,7 +30,7 @@ export default function TastingsPage() {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
     })
   }
 
@@ -64,11 +64,10 @@ export default function TastingsPage() {
 
       {tastings.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-gray-600 mb-4">You haven't recorded any tastings yet.</p>
-          <Link
-            href="/tastings/new"
-            className="text-blue-600 hover:underline"
-          >
+          <p className="text-gray-600 mb-4">
+            You haven't recorded any tastings yet.
+          </p>
+          <Link href="/tastings/new" className="text-blue-600 hover:underline">
             Record your first tasting
           </Link>
         </div>
@@ -90,7 +89,7 @@ export default function TastingsPage() {
                   </p>
                 )}
               </div>
-              
+
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Method:</span>
@@ -98,14 +97,18 @@ export default function TastingsPage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Rating:</span>
-                  <span className="font-medium">{tasting.overall_rating}/10</span>
+                  <span className="font-medium">
+                    {tasting.overall_rating}/10
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Date:</span>
-                  <span className="font-medium">{formatDate(tasting.tasting_date)}</span>
+                  <span className="font-medium">
+                    {formatDate(tasting.tasting_date)}
+                  </span>
                 </div>
               </div>
-              
+
               {tasting.notes && (
                 <p className="mt-3 text-sm text-gray-600 line-clamp-2">
                   {tasting.notes}

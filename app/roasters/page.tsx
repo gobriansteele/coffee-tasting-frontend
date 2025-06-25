@@ -1,39 +1,39 @@
-"use client";
+'use client'
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { apiClient } from "@/lib/api/client";
-import type { Roaster } from "@/lib/api/types";
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { apiClient } from '@/lib/api/client'
+import type { Roaster } from '@/lib/api/types'
 
 export default function RoastersPage() {
-  const router = useRouter();
-  const [roasters, setRoasters] = useState<Roaster[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const router = useRouter()
+  const [roasters, setRoasters] = useState<Roaster[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    loadRoasters();
-  }, []);
+    loadRoasters()
+  }, [])
 
   const loadRoasters = async () => {
     try {
-      setLoading(true);
-      const data = await apiClient.getRoasters();
-      setRoasters(data.roasters);
+      setLoading(true)
+      const data = await apiClient.getRoasters()
+      setRoasters(data.roasters)
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load roasters");
+      setError(err instanceof Error ? err.message : 'Failed to load roasters')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   if (loading) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center">Loading roasters...</div>
       </div>
-    );
+    )
   }
 
   if (error) {
@@ -41,7 +41,7 @@ export default function RoastersPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center text-red-600">Error: {error}</div>
       </div>
-    );
+    )
   }
 
   return (
@@ -84,7 +84,7 @@ export default function RoastersPage() {
               {roaster.website && (
                 <a
                   href={
-                    roaster.website.startsWith("http")
+                    roaster.website.startsWith('http')
                       ? roaster.website
                       : `https://${roaster.website}`
                   }
@@ -107,5 +107,5 @@ export default function RoastersPage() {
         </div>
       )}
     </div>
-  );
+  )
 }

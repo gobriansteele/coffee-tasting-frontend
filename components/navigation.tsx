@@ -1,20 +1,20 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
-import { User } from "@supabase/supabase-js";
-import Logo from "./Logo";
+import Link from 'next/link'
+import { createClient } from '@/lib/supabase/client'
+import { useRouter } from 'next/navigation'
+import { User } from '@supabase/supabase-js'
+import Logo from './Logo'
 
 export default function Navigation({ user }: { user: User | null }) {
-  const router = useRouter();
-  const supabase = createClient();
+  const router = useRouter()
+  const supabase = createClient()
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    router.push("/login");
-    router.refresh();
-  };
+    await supabase.auth.signOut()
+    router.push('/login')
+    router.refresh()
+  }
 
   return (
     <nav className="bg-white shadow-sm border-b">
@@ -79,5 +79,5 @@ export default function Navigation({ user }: { user: User | null }) {
         </div>
       </div>
     </nav>
-  );
+  )
 }

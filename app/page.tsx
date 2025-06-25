@@ -3,7 +3,9 @@ import { createClient } from '@/lib/supabase/server'
 
 export default async function Home() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -14,12 +16,10 @@ export default async function Home() {
         <p className="text-xl text-gray-600 mb-8">
           Track, analyze, and improve your coffee tasting experiences
         </p>
-        
+
         {user ? (
           <div className="space-y-6">
-            <p className="text-lg text-gray-700">
-              Welcome back, {user.email}!
-            </p>
+            <p className="text-lg text-gray-700">Welcome back, {user.email}!</p>
             <div className="flex justify-center space-x-4">
               <Link
                 href="/tastings/new"
@@ -57,26 +57,29 @@ export default async function Home() {
           </div>
         )}
       </div>
-      
+
       <div className="mt-16 grid md:grid-cols-3 gap-8">
         <div className="bg-white p-6 rounded-lg shadow-md">
           <h3 className="text-xl font-semibold mb-3">Track Tastings</h3>
           <p className="text-gray-600">
-            Record detailed notes about each coffee you taste, including brewing parameters, flavor notes, and ratings.
+            Record detailed notes about each coffee you taste, including brewing
+            parameters, flavor notes, and ratings.
           </p>
         </div>
-        
+
         <div className="bg-white p-6 rounded-lg shadow-md">
           <h3 className="text-xl font-semibold mb-3">Discover Patterns</h3>
           <p className="text-gray-600">
-            Analyze your tasting history to discover your flavor preferences and find your perfect coffee profile.
+            Analyze your tasting history to discover your flavor preferences and
+            find your perfect coffee profile.
           </p>
         </div>
-        
+
         <div className="bg-white p-6 rounded-lg shadow-md">
           <h3 className="text-xl font-semibold mb-3">Explore Roasters</h3>
           <p className="text-gray-600">
-            Keep track of your favorite roasters and coffees, and discover new ones based on your taste preferences.
+            Keep track of your favorite roasters and coffees, and discover new
+            ones based on your taste preferences.
           </p>
         </div>
       </div>
