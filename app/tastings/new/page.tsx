@@ -33,12 +33,10 @@ export default function NewTastingPage() {
 
   const loadData = async () => {
     try {
-      const [coffeesData, roastersData, tagsData] = await Promise.all([
-        apiClient.getCoffees(),
+      const [roastersData, tagsData] = await Promise.all([
         apiClient.getRoasters(),
         apiClient.getFlavorTags(),
       ])
-      setCoffees(coffeesData.coffees)
       setRoasters(roastersData.roasters)
       setFlavorTags(tagsData.flavor_tags)
     } catch (err) {

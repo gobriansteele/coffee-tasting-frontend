@@ -18,7 +18,7 @@ export default function TastingsPage() {
     try {
       setLoading(true)
       const data = await apiClient.getTastingSessions()
-      setTastings(data)
+      setTastings(data.tasting_sessions)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load tastings')
     } finally {
