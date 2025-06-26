@@ -60,7 +60,7 @@ export default function NewCoffeePage() {
       const data = await apiClient.getRoasters()
       setRoasters(data.roasters)
     } catch (err) {
-      setError('Failed to load roasters')
+      setError('Failed to load any roasters')
     } finally {
       setLoadingRoasters(false)
     }
