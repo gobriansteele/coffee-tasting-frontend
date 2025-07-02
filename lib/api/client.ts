@@ -12,6 +12,7 @@ import type {
   FlavorTagListResponse,
   TastingSessionListResponse,
   PaginatedResponse,
+  CreateTastingSessionRequest,
 } from './types'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
@@ -97,16 +98,6 @@ class ApiClient {
     limit,
     roasterId,
   }: GetCoffeesParams): Promise<CoffeeListResponse> {
-    if (!roasterId) {
-      // should be adding coffees in this case
-      return {
-        coffees: [],
-        total: 0,
-        page: 0,
-        size: 0,
-      }
-    }
-
     const params = new URLSearchParams()
     params.append('skip', skip?.toString() || '0')
     params.append('limit', limit?.toString() || '100')
@@ -181,9 +172,9 @@ class ApiClient {
   }
 
   async createTastingSession(
-    data: Partial<TastingSession>
+    data: CreateTastingSessionRequest
   ): Promise<TastingSession> {
-    return this.request<TastingSession>('/tasting-sessions', {
+    return this.request<TastingSession>('/tastings', {
       method: 'POST',
       body: JSON.stringify(data),
     })

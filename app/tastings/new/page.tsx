@@ -3,7 +3,14 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { apiClient } from '@/lib/api/client'
-import type { Coffee, Roaster, FlavorTag } from '@/lib/api/types'
+import type {
+  Coffee,
+  Roaster,
+  CreateTastingSessionRequest,
+  BrewMethod,
+  GrindSize,
+} from '@/lib/api/types'
+import FlavorTag from '@/components/FlavorTag'
 
 export default function NewTastingPage() {
   const router = useRouter()
@@ -13,16 +20,17 @@ export default function NewTastingPage() {
   // Form state
   const [coffees, setCoffees] = useState<Coffee[]>([])
   const [roasters, setRoasters] = useState<Roaster[]>([])
-  const [flavorTags, setFlavorTags] = useState<FlavorTag[]>([])
   const [selectedCoffeeId, setSelectedCoffeeId] = useState('')
-  const [brewMethod, setBrewMethod] = useState('')
-  const [grindSize, setGrindSize] = useState('')
+  const [brewMethod, setBrewMethod] = useState<BrewMethod | ''>('')
+  const [grindSize, setGrindSize] = useState<GrindSize | ''>('')
   const [waterTemp, setWaterTemp] = useState('')
   const [brewTime, setBrewTime] = useState('')
   const [coffeeGrams, setCoffeeGrams] = useState('')
   const [waterGrams, setWaterGrams] = useState('')
   const [overallRating, setOverallRating] = useState('5')
-  const [notes, setNotes] = useState('')
+  const [flavorNotes, setFlavorNotes] = useState<string[]>([])
+  const [currentFlavor, setCurrentFlavor] = useState('')
+  const [sessionNotes, setSessionNotes] = useState('')
   const [tastingDate, setTastingDate] = useState(
     new Date().toISOString().split('T')[0]
   )
@@ -33,12 +41,12 @@ export default function NewTastingPage() {
 
   const loadData = async () => {
     try {
-      const [roastersData, tagsData] = await Promise.all([
-        apiClient.getRoasters(),
-        apiClient.getFlavorTags(),
-      ])
+      const roastersData = await apiClient.getRoasters()
       setRoasters(roastersData.roasters)
-      setFlavorTags(tagsData.flavor_tags)
+
+      // Load all coffees for now
+      const coffeesData = await apiClient.getCoffees({ limit: 100 })
+      setCoffees(coffeesData.coffees)
     } catch (err) {
       setError('Failed to load data')
     }
@@ -49,18 +57,24 @@ export default function NewTastingPage() {
     setLoading(true)
     setError(null)
 
+    if (!selectedCoffeeId || !brewMethod) {
+      setError('Please select a coffee and brew method')
+      setLoading(false)
+      return
+    }
+
     try {
-      const sessionData = {
+      const sessionData: CreateTastingSessionRequest = {
         coffee_id: selectedCoffeeId,
         brew_method: brewMethod,
         grind_size: grindSize || undefined,
-        water_temp_celsius: waterTemp ? parseFloat(waterTemp) : undefined,
-        brew_time_seconds: brewTime ? parseInt(brewTime) : undefined,
-        coffee_grams: coffeeGrams ? parseFloat(coffeeGrams) : undefined,
-        water_grams: waterGrams ? parseFloat(waterGrams) : undefined,
-        overall_rating: parseFloat(overallRating),
-        notes: notes || undefined,
-        tasting_date: tastingDate,
+        water_temperature: waterTemp ? parseInt(waterTemp) : undefined,
+        brew_time: brewTime || undefined,
+        coffee_dose: coffeeGrams ? parseFloat(coffeeGrams) : undefined,
+        water_amount: waterGrams ? parseFloat(waterGrams) : undefined,
+        overall_rating: parseInt(overallRating),
+        session_notes: sessionNotes || undefined,
+        tasting_notes: flavorNotes.map((flavor) => ({ flavor_name: flavor })),
       }
 
       const newSession = await apiClient.createTastingSession(sessionData)
@@ -102,11 +116,14 @@ export default function NewTastingPage() {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Select a coffee</option>
-              {coffees.map((coffee) => (
-                <option key={coffee.id} value={coffee.id}>
-                  {coffee.name} - {coffee.roaster?.name || 'Unknown Roaster'}
-                </option>
-              ))}
+              {coffees.map((coffee) => {
+                const roaster = roasters.find((r) => r.id === coffee.roaster_id)
+                return (
+                  <option key={coffee.id} value={coffee.id}>
+                    {coffee.name} - {roaster?.name || 'Unknown Roaster'}
+                  </option>
+                )
+              })}
             </select>
           </div>
 
@@ -141,15 +158,25 @@ export default function NewTastingPage() {
               >
                 Brew Method *
               </label>
-              <input
+              <select
                 id="brewMethod"
-                type="text"
                 value={brewMethod}
-                onChange={(e) => setBrewMethod(e.target.value)}
+                onChange={(e) =>
+                  setBrewMethod(e.target.value as BrewMethod | '')
+                }
                 required
-                placeholder="e.g., V60, Chemex, Espresso"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+              >
+                <option value="">Select a brew method</option>
+                <option value="pour_over">Pour Over</option>
+                <option value="espresso">Espresso</option>
+                <option value="french_press">French Press</option>
+                <option value="aeropress">Aeropress</option>
+                <option value="cold_brew">Cold Brew</option>
+                <option value="moka_pot">Moka Pot</option>
+                <option value="drip">Drip</option>
+                <option value="other">Other</option>
+              </select>
             </div>
 
             <div>
@@ -159,14 +186,21 @@ export default function NewTastingPage() {
               >
                 Grind Size
               </label>
-              <input
+              <select
                 id="grindSize"
-                type="text"
                 value={grindSize}
-                onChange={(e) => setGrindSize(e.target.value)}
-                placeholder="e.g., Medium, Fine, Coarse"
+                onChange={(e) => setGrindSize(e.target.value as GrindSize | '')}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+              >
+                <option value="">Select a grind size</option>
+                <option value="extra_fine">Extra Fine</option>
+                <option value="fine">Fine</option>
+                <option value="medium_fine">Medium Fine</option>
+                <option value="medium">Medium</option>
+                <option value="medium_coarse">Medium Coarse</option>
+                <option value="coarse">Coarse</option>
+                <option value="extra_coarse">Extra Coarse</option>
+              </select>
             </div>
 
             <div>
@@ -191,14 +225,14 @@ export default function NewTastingPage() {
                 htmlFor="brewTime"
                 className="block text-sm font-medium text-gray-700 mb-2"
               >
-                Brew Time (seconds)
+                Brew Time
               </label>
               <input
                 id="brewTime"
-                type="number"
+                type="text"
                 value={brewTime}
                 onChange={(e) => setBrewTime(e.target.value)}
-                placeholder="e.g., 180"
+                placeholder="e.g., 4:30"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -267,17 +301,76 @@ export default function NewTastingPage() {
 
           <div>
             <label
-              htmlFor="notes"
+              htmlFor="flavors"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              Tasting Notes
+              Flavor Notes
+            </label>
+            <div className="flex gap-2 mb-3">
+              <input
+                id="flavors"
+                type="text"
+                value={currentFlavor}
+                onChange={(e) => setCurrentFlavor(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    if (
+                      currentFlavor.trim() &&
+                      !flavorNotes.includes(currentFlavor.trim())
+                    ) {
+                      setFlavorNotes([...flavorNotes, currentFlavor.trim()])
+                      setCurrentFlavor('')
+                    }
+                  }
+                }}
+                placeholder="Type a flavor and press Enter or click Add"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  if (
+                    currentFlavor.trim() &&
+                    !flavorNotes.includes(currentFlavor.trim())
+                  ) {
+                    setFlavorNotes([...flavorNotes, currentFlavor.trim()])
+                    setCurrentFlavor('')
+                  }
+                }}
+                className="px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700"
+              >
+                Add
+              </button>
+            </div>
+            {flavorNotes.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-4">
+                {flavorNotes.map((flavor, index) => (
+                  <FlavorTag
+                    key={index}
+                    flavor={flavor}
+                    onRemove={() => {
+                      setFlavorNotes(flavorNotes.filter((_, i) => i !== index))
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div>
+            <label
+              htmlFor="sessionNotes"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Session Notes
             </label>
             <textarea
-              id="notes"
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
+              id="sessionNotes"
+              value={sessionNotes}
+              onChange={(e) => setSessionNotes(e.target.value)}
               rows={4}
-              placeholder="Describe the flavors, aromas, and overall experience..."
+              placeholder="Additional notes about the brewing process, environment, or overall experience..."
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>

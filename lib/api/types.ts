@@ -66,8 +66,20 @@ export interface TastingNote {
   flavor_tag_id: string
   intensity?: number
   notes?: string
+  aroma: boolean
+  flavor: boolean
+  aftertaste: boolean
   created_at: string
   flavor_tag?: FlavorTag
+}
+
+export interface TastingNoteCreate {
+  flavor_name: string
+  intensity?: number
+  notes?: string
+  aroma?: boolean
+  flavor?: boolean
+  aftertaste?: boolean
 }
 
 export interface PaginatedResponse<T> {
@@ -182,4 +194,53 @@ export interface CoffeeResponse {
   created_at: string
   updated_at: string
   roaster?: Roaster
+}
+
+// Brew methods type to match Python API
+export type BrewMethod = 
+  | 'pour_over'
+  | 'espresso'
+  | 'french_press'
+  | 'aeropress'
+  | 'cold_brew'
+  | 'moka_pot'
+  | 'drip'
+  | 'other'
+
+// Grind size type to match Python API
+export type GrindSize = 
+  | 'extra_fine'
+  | 'fine'
+  | 'medium_fine'
+  | 'medium'
+  | 'medium_coarse'
+  | 'coarse'
+  | 'extra_coarse'
+
+// Create tasting session request to match Python API schema
+export interface CreateTastingSessionRequest {
+  coffee_id: string
+  
+  // Brewing parameters
+  brew_method: BrewMethod
+  grind_size?: GrindSize
+  
+  // Measurements
+  coffee_dose?: number
+  water_amount?: number
+  water_temperature?: number
+  brew_time?: string
+  
+  // Equipment
+  grinder?: string
+  brewing_device?: string
+  filter_type?: string
+  
+  // Session notes
+  session_notes?: string
+  overall_rating?: number
+  would_buy_again?: boolean
+  
+  // Tasting notes
+  tasting_notes?: TastingNoteCreate[]
 }
