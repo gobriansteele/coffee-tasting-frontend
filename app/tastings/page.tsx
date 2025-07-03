@@ -18,7 +18,7 @@ export default function TastingsPage() {
     try {
       setLoading(true)
       const data = await apiClient.getTastingSessions()
-      setTastings(data.tasting_sessions)
+      setTastings(data.tastings)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load tastings')
     } finally {
@@ -81,13 +81,11 @@ export default function TastingsPage() {
             >
               <div className="mb-2">
                 <h3 className="text-lg font-semibold text-gray-900">
-                  {tasting.coffee?.name || 'Unknown Coffee'}
+                  {tasting.coffee_name || 'Unknown Coffee'}
                 </h3>
-                {tasting.coffee?.roaster && (
-                  <p className="text-sm text-gray-600">
-                    {tasting.coffee.roaster.name}
-                  </p>
-                )}
+                <p className="text-sm text-gray-600">
+                  {tasting.roaster_name || 'Unknown Roaster'}
+                </p>
               </div>
 
               <div className="space-y-2 text-sm">
@@ -104,7 +102,7 @@ export default function TastingsPage() {
                 <div className="flex justify-between">
                   <span className="text-gray-600">Date:</span>
                   <span className="font-medium">
-                    {formatDate(tasting.tasting_date)}
+                    {formatDate(tasting.created_at)}
                   </span>
                 </div>
               </div>

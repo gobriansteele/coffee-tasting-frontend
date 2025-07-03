@@ -163,7 +163,7 @@ class ApiClient {
     if (coffeeId) params.append('coffee_id', coffeeId)
 
     return this.request<TastingSessionListResponse>(
-      `/tasting-sessions?${params.toString()}`
+      `/tastings?${params.toString()}`
     )
   }
 

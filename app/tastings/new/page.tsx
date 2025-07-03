@@ -78,7 +78,7 @@ export default function NewTastingPage() {
       }
 
       const newSession = await apiClient.createTastingSession(sessionData)
-      router.push(`/tastings/${newSession.id}`)
+      router.push(`/tastings`)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create tasting')
       setLoading(false)

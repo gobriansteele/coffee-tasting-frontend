@@ -35,6 +35,8 @@ export interface FlavorTag {
 export interface TastingSession {
   id: string
   coffee_id: string
+  coffee_name: string
+  roaster_name: string
   user_id: string
   brew_method: string
   grind_size?: string
@@ -56,7 +58,6 @@ export interface TastingSession {
   tasting_date: string
   created_at: string
   updated_at: string
-  coffee?: Coffee
   tasting_notes?: TastingNote[]
 }
 
@@ -111,7 +112,7 @@ export interface FlavorTagListResponse {
 }
 
 export interface TastingSessionListResponse {
-  tasting_sessions: TastingSession[]
+  tastings: TastingSession[]
   total: number
   page: number
   size: number
@@ -197,7 +198,7 @@ export interface CoffeeResponse {
 }
 
 // Brew methods type to match Python API
-export type BrewMethod = 
+export type BrewMethod =
   | 'pour_over'
   | 'espresso'
   | 'french_press'
@@ -208,7 +209,7 @@ export type BrewMethod =
   | 'other'
 
 // Grind size type to match Python API
-export type GrindSize = 
+export type GrindSize =
   | 'extra_fine'
   | 'fine'
   | 'medium_fine'
@@ -220,27 +221,27 @@ export type GrindSize =
 // Create tasting session request to match Python API schema
 export interface CreateTastingSessionRequest {
   coffee_id: string
-  
+
   // Brewing parameters
   brew_method: BrewMethod
   grind_size?: GrindSize
-  
+
   // Measurements
   coffee_dose?: number
   water_amount?: number
   water_temperature?: number
   brew_time?: string
-  
+
   // Equipment
   grinder?: string
   brewing_device?: string
   filter_type?: string
-  
+
   // Session notes
   session_notes?: string
   overall_rating?: number
   would_buy_again?: boolean
-  
+
   // Tasting notes
   tasting_notes?: TastingNoteCreate[]
 }
