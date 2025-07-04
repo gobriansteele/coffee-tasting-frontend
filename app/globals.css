@@ -35,6 +35,8 @@ button {
   appearance: none;
   /* Ensure minimum 16px to prevent iOS zoom on focus */
   font-size: 16px;
+  /* Explicitly set text color to use CSS variables */
+  color: var(--foreground);
 }
 
 /* Remove iOS tap highlight */
