@@ -24,3 +24,25 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Safari/iOS form input fixes */
+input,
+textarea,
+select,
+button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  /* Ensure minimum 16px to prevent iOS zoom on focus */
+  font-size: 16px;
+}
+
+/* Remove iOS tap highlight */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevent font size adjustments on iOS */
+html {
+  -webkit-text-size-adjust: 100%;
+}
