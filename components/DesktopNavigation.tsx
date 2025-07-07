@@ -44,7 +44,7 @@ export function DesktopNavigation({ user, onSignOut }: DesktopNavigationProps) {
             <span className="text-sm text-gray-600">{user.email}</span>
             <button
               onClick={onSignOut}
-              className="text-gray-700 hover:text-gray-900 text-sm"
+              className="text-gray-700 hover:text-gray-900 text-sm cursor-pointer"
             >
               Sign Out
             </button>

@@ -18,8 +18,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         router.refresh()
       }
       // Handle sign out
-
-      console.log('session', session)
       if (event === 'SIGNED_OUT') {
         router.push('/login')
         router.refresh()

@@ -112,7 +112,7 @@ export function MobileNavigation({
                       onSignOut()
                       onNavClick()
                     }}
-                    className="block w-full text-left px-4 py-4 text-lg font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg min-h-[44px] flex items-center transition-colors duration-200"
+                    className="block w-full text-left px-4 py-4 text-lg font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg min-h-[44px] flex items-center transition-colors duration-200 cursor-pointer"
                   >
                     Sign Out
                   </button>
