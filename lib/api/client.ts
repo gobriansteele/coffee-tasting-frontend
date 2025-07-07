@@ -47,6 +47,20 @@ class ApiClient {
       },
     })
 
+    // Handle authentication errors
+    if (response.status === 401 || response.status === 403) {
+      // Clear any stale session data
+      const supabase = createClient()
+      await supabase.auth.signOut()
+      
+      // Redirect to login
+      if (typeof window !== 'undefined') {
+        window.location.href = '/login'
+      }
+      
+      throw new Error('Authentication required')
+    }
+
     if (!response.ok) {
       throw new Error(`API Error: ${response.statusText}`)
     }
