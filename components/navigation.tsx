@@ -1,14 +1,17 @@
 'use client'
 
-import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { User } from '@supabase/supabase-js'
-import Logo from './Logo'
+import { useState, useEffect } from 'react'
+import { DesktopNavigation } from './DesktopNavigation'
+import { MobileNavigation } from './MobileNavigation'
 
 export default function Navigation({ user }: { user: User | null }) {
   const router = useRouter()
+  const pathname = usePathname()
   const supabase = createClient()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const handleSignOut = async () => {
     await supabase.auth.signOut()
@@ -16,67 +19,60 @@ export default function Navigation({ user }: { user: User | null }) {
     router.refresh()
   }
 
-  return (
-    <nav className="bg-white shadow-sm border-b">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <Link href="/" className="flex items-center space-x-2">
-              <Logo className="w-10 h-10" />
-            </Link>
-            {user && (
-              <div className="ml-10 flex items-center space-x-6">
-                <Link
-                  href="/tastings"
-                  className="text-gray-700 hover:text-gray-900"
-                >
-                  My Tastings
-                </Link>
-                <Link
-                  href="/tastings/new"
-                  className="text-gray-700 hover:text-gray-900"
-                >
-                  New Tasting
-                </Link>
-                <Link
-                  href="/roasters"
-                  className="text-gray-700 hover:text-gray-900"
-                >
-                  Roasters
-                </Link>
-              </div>
-            )}
-          </div>
+  const handleNavClick = (href?: string) => {
+    // If clicking on the same page we're already on, close the menu
+    if (href && pathname === href) {
+      setIsMobileMenuOpen(false)
+    }
+    // Otherwise, wait for route change to close the menu
+  }
 
-          <div className="flex items-center space-x-4">
-            {user ? (
-              <>
-                <span className="text-sm text-gray-600">{user.email}</span>
-                <button
-                  onClick={handleSignOut}
-                  className="text-gray-700 hover:text-gray-900 text-sm"
-                >
-                  Sign Out
-                </button>
-              </>
-            ) : (
-              <>
-                <Link
-                  href="/login"
-                  className="text-gray-700 hover:text-gray-900"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  href="/signup"
-                  className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700"
-                >
-                  Sign Up
-                </Link>
-              </>
-            )}
-          </div>
-        </div>
+  const handleMobileMenuToggle = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen)
+  }
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setIsMobileMenuOpen(false)
+  }, [pathname])
+
+  // Close mobile menu when viewport crosses 768px threshold
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsMobileMenuOpen(false)
+      }
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isMobileMenuOpen])
+
+  return (
+    <nav className="bg-white shadow-sm border-b relative z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <DesktopNavigation user={user} onSignOut={handleSignOut} />
+        <MobileNavigation
+          user={user}
+          isOpen={isMobileMenuOpen}
+          onToggle={handleMobileMenuToggle}
+          onNavClick={handleNavClick}
+          onSignOut={handleSignOut}
+        />
       </div>
     </nav>
   )
