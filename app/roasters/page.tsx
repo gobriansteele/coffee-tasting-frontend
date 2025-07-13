@@ -1,34 +1,18 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { apiClient } from '@/lib/api/client'
-import type { Roaster } from '@/lib/api/types'
+import { useRoasters } from '@/lib/queries/roasters'
 
 export default function RoastersPage() {
   const router = useRouter()
-  const [roasters, setRoasters] = useState<Roaster[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const {
+    data: roasters,
+    isLoading: isLoadingRoasters,
+    error: errorRoasters,
+  } = useRoasters()
 
-  useEffect(() => {
-    loadRoasters()
-  }, [])
-
-  const loadRoasters = async () => {
-    try {
-      setLoading(true)
-      const data = await apiClient.getRoasters()
-      setRoasters(data.roasters)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load roasters')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  if (loading) {
+  if (isLoadingRoasters) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center">Loading roasters...</div>
@@ -36,10 +20,12 @@ export default function RoastersPage() {
     )
   }
 
-  if (error) {
+  if (errorRoasters) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center text-red-600">Error: {error}</div>
+        <div className="text-center text-red-600">
+          Error: {errorRoasters.message}
+        </div>
       </div>
     )
   }
@@ -56,7 +42,7 @@ export default function RoastersPage() {
         </Link>
       </div>
 
-      {roasters.length === 0 ? (
+      {roasters?.roasters.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-gray-600 mb-4">No roasters found.</p>
           <Link href="/roasters/new" className="text-blue-600 hover:underline">
@@ -65,7 +51,7 @@ export default function RoastersPage() {
         </div>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {roasters.map((roaster) => (
+          {roasters?.roasters.map((roaster) => (
             <div
               key={roaster.id}
               onClick={() => router.push(`/roasters/${roaster.id}`)}

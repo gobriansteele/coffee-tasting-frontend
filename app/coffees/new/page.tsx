@@ -2,21 +2,23 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { apiClient } from '@/lib/api/client'
+import { useRoasters } from '@/lib/queries/roasters'
+import { useCreateCoffee } from '@/lib/queries/coffees'
 import type {
   CreateCoffeeRequest,
   ProcessingMethod,
   RoastLevel,
-  Roaster,
 } from '@/lib/api/types'
 
 export default function NewCoffeePage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [roasters, setRoasters] = useState<Roaster[]>([])
-  const [loadingRoasters, setLoadingRoasters] = useState(true)
+  
+  // React Query hooks
+  const { data: roastersData, isLoading: loadingRoasters, error: roastersError } = useRoasters()
+  const createCoffeeMutation = useCreateCoffee()
+  
+  const roasters = roastersData?.roasters || []
 
   // Form state
   const [name, setName] = useState('')
@@ -45,8 +47,6 @@ export default function NewCoffeePage() {
   const [bagSize, setBagSize] = useState('')
 
   useEffect(() => {
-    loadRoasters()
-
     // Pre-select roaster from query params
     const roasterIdParam = searchParams.get('roasterId')
     if (roasterIdParam) {
@@ -54,47 +54,27 @@ export default function NewCoffeePage() {
     }
   }, [searchParams])
 
-  const loadRoasters = async () => {
-    try {
-      setLoadingRoasters(true)
-      const data = await apiClient.getRoasters()
-      setRoasters(data.roasters)
-    } catch (err) {
-      setError('Failed to load any roasters')
-    } finally {
-      setLoadingRoasters(false)
-    }
-  }
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
-    setError(null)
 
-    try {
-      const coffeeData: CreateCoffeeRequest = {
-        name,
-        roaster_id: roasterId,
-        origin_country: originCountry || undefined,
-        origin_region: originRegion || undefined,
-        farm_name: farmName || undefined,
-        producer: producer || undefined,
-        altitude: altitude || undefined,
-        processing_method: processingMethod || undefined,
-        variety: variety || undefined,
-        roast_level: roastLevel || undefined,
-        roast_date: roastDate || undefined,
-        description: description || undefined,
-        price: price ? parseFloat(price) : undefined,
-        bag_size: bagSize || undefined,
-      }
-
-      await apiClient.createCoffee(coffeeData)
-      router.push(`/roasters/${roasterId}`)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create coffee')
-      setLoading(false)
+    const coffeeData: CreateCoffeeRequest = {
+      name,
+      roaster_id: roasterId,
+      origin_country: originCountry || undefined,
+      origin_region: originRegion || undefined,
+      farm_name: farmName || undefined,
+      producer: producer || undefined,
+      altitude: altitude || undefined,
+      processing_method: processingMethod || undefined,
+      variety: variety || undefined,
+      roast_level: roastLevel || undefined,
+      roast_date: roastDate || undefined,
+      description: description || undefined,
+      price: price ? parseFloat(price) : undefined,
+      bag_size: bagSize || undefined,
     }
+
+    createCoffeeMutation.mutate(coffeeData)
   }
 
   if (loadingRoasters) {
@@ -110,8 +90,10 @@ export default function NewCoffeePage() {
       <h1 className="text-3xl font-bold text-gray-900 mb-8">Add New Coffee</h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {error && (
-          <div className="bg-red-50 text-red-600 p-4 rounded-md">{error}</div>
+        {(roastersError || createCoffeeMutation.error) && (
+          <div className="bg-red-50 text-red-600 p-4 rounded-md">
+            {roastersError?.message || createCoffeeMutation.error?.message || 'An error occurred'}
+          </div>
         )}
 
         {/* Basic Info */}
@@ -421,10 +403,10 @@ export default function NewCoffeePage() {
           </button>
           <button
             type="submit"
-            disabled={loading}
+            disabled={createCoffeeMutation.isPending}
             className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? 'Creating...' : 'Create Coffee'}
+            {createCoffeeMutation.isPending ? 'Creating...' : 'Create Coffee'}
           </button>
         </div>
       </form>

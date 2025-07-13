@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { apiClient } from '@/lib/api/client'
+import { useCoffees } from '@/lib/queries/coffees'
 import type {
-  Coffee,
   Roaster,
   CreateTastingSessionRequest,
   BrewMethod,
@@ -16,9 +16,8 @@ export default function NewTastingPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const { data: coffees, isLoading: isLoadingCoffees } = useCoffees()
 
-  // Form state
-  const [coffees, setCoffees] = useState<Coffee[]>([])
   const [roasters, setRoasters] = useState<Roaster[]>([])
   const [selectedCoffeeId, setSelectedCoffeeId] = useState('')
   const [brewMethod, setBrewMethod] = useState<BrewMethod | ''>('')
@@ -43,11 +42,7 @@ export default function NewTastingPage() {
     try {
       const roastersData = await apiClient.getRoasters()
       setRoasters(roastersData.roasters)
-
-      // Load all coffees for now
-      const coffeesData = await apiClient.getCoffees({ limit: 100 })
-      setCoffees(coffeesData.coffees)
-    } catch (err) {
+    } catch {
       setError('Failed to load data')
     }
   }
@@ -77,7 +72,7 @@ export default function NewTastingPage() {
         tasting_notes: flavorNotes.map((flavor) => ({ flavor_name: flavor })),
       }
 
-      const newSession = await apiClient.createTastingSession(sessionData)
+      await apiClient.createTastingSession(sessionData)
       router.push(`/tastings`)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create tasting')
@@ -90,231 +85,252 @@ export default function NewTastingPage() {
       <h1 className="text-3xl font-bold text-gray-900 mb-8">
         New Tasting Session
       </h1>
+      {isLoadingCoffees ? (
+        <div className="text-center">Loading coffees...</div>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {error && (
+            <div className="bg-red-50 text-red-600 p-4 rounded-md">{error}</div>
+          )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {error && (
-          <div className="bg-red-50 text-red-600 p-4 rounded-md">{error}</div>
-        )}
+          <div className="bg-white shadow-md rounded-lg p-6 space-y-6">
+            <h2 className="text-xl font-semibold text-gray-800">
+              Coffee Details
+            </h2>
 
-        <div className="bg-white shadow-md rounded-lg p-6 space-y-6">
-          <h2 className="text-xl font-semibold text-gray-800">
-            Coffee Details
-          </h2>
-
-          <div>
-            <label
-              htmlFor="coffee"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
-              Coffee *
-            </label>
-            <select
-              id="coffee"
-              value={selectedCoffeeId}
-              onChange={(e) => setSelectedCoffeeId(e.target.value)}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">Select a coffee</option>
-              {coffees.map((coffee) => {
-                const roaster = roasters.find((r) => r.id === coffee.roaster_id)
-                return (
-                  <option key={coffee.id} value={coffee.id}>
-                    {coffee.name} - {roaster?.name || 'Unknown Roaster'}
-                  </option>
-                )
-              })}
-            </select>
-          </div>
-
-          <div>
-            <label
-              htmlFor="tastingDate"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
-              Tasting Date *
-            </label>
-            <input
-              id="tastingDate"
-              type="date"
-              value={tastingDate}
-              onChange={(e) => setTastingDate(e.target.value)}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-        </div>
-
-        <div className="bg-white shadow-md rounded-lg p-6 space-y-6">
-          <h2 className="text-xl font-semibold text-gray-800">
-            Brewing Parameters
-          </h2>
-
-          <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label
-                htmlFor="brewMethod"
+                htmlFor="coffee"
                 className="block text-sm font-medium text-gray-700 mb-2"
               >
-                Brew Method *
+                Coffee *
               </label>
               <select
-                id="brewMethod"
-                value={brewMethod}
-                onChange={(e) =>
-                  setBrewMethod(e.target.value as BrewMethod | '')
-                }
+                id="coffee"
+                value={selectedCoffeeId}
+                onChange={(e) => setSelectedCoffeeId(e.target.value)}
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="">Select a brew method</option>
-                <option value="pour_over">Pour Over</option>
-                <option value="espresso">Espresso</option>
-                <option value="french_press">French Press</option>
-                <option value="aeropress">Aeropress</option>
-                <option value="cold_brew">Cold Brew</option>
-                <option value="moka_pot">Moka Pot</option>
-                <option value="drip">Drip</option>
-                <option value="other">Other</option>
+                <option value="">Select a coffee</option>
+                {coffees?.coffees.map((coffee) => {
+                  const roaster = roasters.find(
+                    (r) => r.id === coffee.roaster_id
+                  )
+                  return (
+                    <option key={coffee.id} value={coffee.id}>
+                      {coffee.name} - {roaster?.name || 'Unknown Roaster'}
+                    </option>
+                  )
+                })}
               </select>
             </div>
 
             <div>
               <label
-                htmlFor="grindSize"
+                htmlFor="tastingDate"
                 className="block text-sm font-medium text-gray-700 mb-2"
               >
-                Grind Size
-              </label>
-              <select
-                id="grindSize"
-                value={grindSize}
-                onChange={(e) => setGrindSize(e.target.value as GrindSize | '')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Select a grind size</option>
-                <option value="extra_fine">Extra Fine</option>
-                <option value="fine">Fine</option>
-                <option value="medium_fine">Medium Fine</option>
-                <option value="medium">Medium</option>
-                <option value="medium_coarse">Medium Coarse</option>
-                <option value="coarse">Coarse</option>
-                <option value="extra_coarse">Extra Coarse</option>
-              </select>
-            </div>
-
-            <div>
-              <label
-                htmlFor="waterTemp"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                Water Temperature (°C)
+                Tasting Date *
               </label>
               <input
-                id="waterTemp"
-                type="number"
-                value={waterTemp}
-                onChange={(e) => setWaterTemp(e.target.value)}
-                placeholder="e.g., 93"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="brewTime"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                Brew Time
-              </label>
-              <input
-                id="brewTime"
-                type="text"
-                value={brewTime}
-                onChange={(e) => setBrewTime(e.target.value)}
-                placeholder="e.g., 4:30"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="coffeeGrams"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                Coffee (grams)
-              </label>
-              <input
-                id="coffeeGrams"
-                type="number"
-                step="0.1"
-                value={coffeeGrams}
-                onChange={(e) => setCoffeeGrams(e.target.value)}
-                placeholder="e.g., 15"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="waterGrams"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                Water (grams)
-              </label>
-              <input
-                id="waterGrams"
-                type="number"
-                value={waterGrams}
-                onChange={(e) => setWaterGrams(e.target.value)}
-                placeholder="e.g., 250"
+                id="tastingDate"
+                type="date"
+                value={tastingDate}
+                onChange={(e) => setTastingDate(e.target.value)}
+                required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           </div>
-        </div>
 
-        <div className="bg-white shadow-md rounded-lg p-6 space-y-6">
-          <h2 className="text-xl font-semibold text-gray-800">
-            Rating & Notes
-          </h2>
+          <div className="bg-white shadow-md rounded-lg p-6 space-y-6">
+            <h2 className="text-xl font-semibold text-gray-800">
+              Brewing Parameters
+            </h2>
 
-          <div>
-            <label
-              htmlFor="overallRating"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
-              Overall Rating * (1-10)
-            </label>
-            <input
-              id="overallRating"
-              type="number"
-              min="1"
-              max="10"
-              step="0.5"
-              value={overallRating}
-              onChange={(e) => setOverallRating(e.target.value)}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <label
+                  htmlFor="brewMethod"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Brew Method *
+                </label>
+                <select
+                  id="brewMethod"
+                  value={brewMethod}
+                  onChange={(e) =>
+                    setBrewMethod(e.target.value as BrewMethod | '')
+                  }
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select a brew method</option>
+                  <option value="pour_over">Pour Over</option>
+                  <option value="espresso">Espresso</option>
+                  <option value="french_press">French Press</option>
+                  <option value="aeropress">Aeropress</option>
+                  <option value="cold_brew">Cold Brew</option>
+                  <option value="moka_pot">Moka Pot</option>
+                  <option value="drip">Drip</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="grindSize"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Grind Size
+                </label>
+                <select
+                  id="grindSize"
+                  value={grindSize}
+                  onChange={(e) =>
+                    setGrindSize(e.target.value as GrindSize | '')
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select a grind size</option>
+                  <option value="extra_fine">Extra Fine</option>
+                  <option value="fine">Fine</option>
+                  <option value="medium_fine">Medium Fine</option>
+                  <option value="medium">Medium</option>
+                  <option value="medium_coarse">Medium Coarse</option>
+                  <option value="coarse">Coarse</option>
+                  <option value="extra_coarse">Extra Coarse</option>
+                </select>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="waterTemp"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Water Temperature (°C)
+                </label>
+                <input
+                  id="waterTemp"
+                  type="number"
+                  value={waterTemp}
+                  onChange={(e) => setWaterTemp(e.target.value)}
+                  placeholder="e.g., 93"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="brewTime"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Brew Time
+                </label>
+                <input
+                  id="brewTime"
+                  type="text"
+                  value={brewTime}
+                  onChange={(e) => setBrewTime(e.target.value)}
+                  placeholder="e.g., 4:30"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="coffeeGrams"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Coffee (grams)
+                </label>
+                <input
+                  id="coffeeGrams"
+                  type="number"
+                  step="0.1"
+                  value={coffeeGrams}
+                  onChange={(e) => setCoffeeGrams(e.target.value)}
+                  placeholder="e.g., 15"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="waterGrams"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Water (grams)
+                </label>
+                <input
+                  id="waterGrams"
+                  type="number"
+                  value={waterGrams}
+                  onChange={(e) => setWaterGrams(e.target.value)}
+                  placeholder="e.g., 250"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            </div>
           </div>
 
-          <div>
-            <label
-              htmlFor="flavors"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
-              Flavor Notes
-            </label>
-            <div className="flex gap-2 mb-3">
+          <div className="bg-white shadow-md rounded-lg p-6 space-y-6">
+            <h2 className="text-xl font-semibold text-gray-800">
+              Rating & Notes
+            </h2>
+
+            <div>
+              <label
+                htmlFor="overallRating"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Overall Rating * (1-10)
+              </label>
               <input
-                id="flavors"
-                type="text"
-                value={currentFlavor}
-                onChange={(e) => setCurrentFlavor(e.target.value)}
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault()
+                id="overallRating"
+                type="number"
+                min="1"
+                max="10"
+                step="0.5"
+                value={overallRating}
+                onChange={(e) => setOverallRating(e.target.value)}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="flavors"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Flavor Notes
+              </label>
+              <div className="flex gap-2 mb-3">
+                <input
+                  id="flavors"
+                  type="text"
+                  value={currentFlavor}
+                  onChange={(e) => setCurrentFlavor(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      if (
+                        currentFlavor.trim() &&
+                        !flavorNotes.includes(currentFlavor.trim())
+                      ) {
+                        setFlavorNotes([...flavorNotes, currentFlavor.trim()])
+                        setCurrentFlavor('')
+                      }
+                    }
+                  }}
+                  placeholder="Type a flavor and press Enter or click Add"
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
                     if (
                       currentFlavor.trim() &&
                       !flavorNotes.includes(currentFlavor.trim())
@@ -322,77 +338,65 @@ export default function NewTastingPage() {
                       setFlavorNotes([...flavorNotes, currentFlavor.trim()])
                       setCurrentFlavor('')
                     }
-                  }
-                }}
-                placeholder="Type a flavor and press Enter or click Add"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <button
-                type="button"
-                onClick={() => {
-                  if (
-                    currentFlavor.trim() &&
-                    !flavorNotes.includes(currentFlavor.trim())
-                  ) {
-                    setFlavorNotes([...flavorNotes, currentFlavor.trim()])
-                    setCurrentFlavor('')
-                  }
-                }}
-                className="px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700"
-              >
-                Add
-              </button>
-            </div>
-            {flavorNotes.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-4">
-                {flavorNotes.map((flavor, index) => (
-                  <FlavorTag
-                    key={index}
-                    flavor={flavor}
-                    onRemove={() => {
-                      setFlavorNotes(flavorNotes.filter((_, i) => i !== index))
-                    }}
-                  />
-                ))}
+                  }}
+                  className="px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700"
+                >
+                  Add
+                </button>
               </div>
-            )}
+              {flavorNotes.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {flavorNotes.map((flavor, index) => (
+                    <FlavorTag
+                      key={index}
+                      flavor={flavor}
+                      onRemove={() => {
+                        setFlavorNotes(
+                          flavorNotes.filter((_, i) => i !== index)
+                        )
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div>
+              <label
+                htmlFor="sessionNotes"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Session Notes
+              </label>
+              <textarea
+                id="sessionNotes"
+                value={sessionNotes}
+                onChange={(e) => setSessionNotes(e.target.value)}
+                rows={4}
+                placeholder="Additional notes about the brewing process, environment, or overall experience..."
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
           </div>
 
-          <div>
-            <label
-              htmlFor="sessionNotes"
-              className="block text-sm font-medium text-gray-700 mb-2"
+          <div className="flex justify-end space-x-4">
+            <button
+              type="button"
+              onClick={() => router.push('/tastings')}
+              className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
             >
-              Session Notes
-            </label>
-            <textarea
-              id="sessionNotes"
-              value={sessionNotes}
-              onChange={(e) => setSessionNotes(e.target.value)}
-              rows={4}
-              placeholder="Additional notes about the brewing process, environment, or overall experience..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? 'Creating...' : 'Create Tasting'}
+            </button>
           </div>
-        </div>
-
-        <div className="flex justify-end space-x-4">
-          <button
-            type="button"
-            onClick={() => router.push('/tastings')}
-            className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={loading}
-            className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading ? 'Creating...' : 'Create Tasting'}
-          </button>
-        </div>
-      </form>
+        </form>
+      )}
     </div>
   )
 }
