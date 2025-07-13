@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { apiClient } from '@/lib/api/client'
@@ -17,13 +17,7 @@ export default function RoasterDetailPage() {
   const [error, setError] = useState<string | null>(null)
   const [deleting, setDeleting] = useState(false)
 
-  useEffect(() => {
-    if (roasterId) {
-      loadData()
-    }
-  }, [roasterId])
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true)
       const [roasterData, coffeesData] = await Promise.all([
@@ -38,7 +32,13 @@ export default function RoasterDetailPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [roasterId])
+
+  useEffect(() => {
+    if (roasterId) {
+      loadData()
+    }
+  }, [roasterId, loadData])
 
   const handleDelete = async () => {
     if (!window.confirm('Are you sure you want to delete this roaster?')) {

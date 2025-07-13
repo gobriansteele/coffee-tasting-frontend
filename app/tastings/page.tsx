@@ -65,7 +65,7 @@ export default function TastingsPage() {
       {tastings.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-gray-600 mb-4">
-            You haven't recorded any tastings yet.
+            You haven&apos;t recorded any tastings yet.
           </p>
           <Link href="/tastings/new" className="text-blue-600 hover:underline">
             Record your first tasting

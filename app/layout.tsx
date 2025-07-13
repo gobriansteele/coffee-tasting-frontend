@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import Navigation from '@/components/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { AuthProvider } from '@/app/providers/AuthProvider'
+import { Providers } from '@/app/providers/Providers'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -35,10 +35,10 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>
+        <Providers>
           <Navigation user={user} />
           <main className="min-h-screen bg-gray-50">{children}</main>
-        </AuthProvider>
+        </Providers>
       </body>
     </html>
   )

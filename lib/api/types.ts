@@ -8,6 +8,8 @@ export interface Roaster {
   updated_at: string
 }
 
+export type CreateRoasterRequest = Omit<Roaster, 'id' | 'created_at' | 'updated_at'>
+
 export interface Coffee {
   id: string
   roaster_id: string
