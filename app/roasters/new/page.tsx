@@ -2,13 +2,29 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api/client'
+import type { CreateRoasterRequest } from '@/lib/api/types'
+import { queryKeys } from '@/lib/query-keys'
 
 export default function NewRoasterPage() {
+  const queryClient = useQueryClient()
   const router = useRouter()
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
+  const {
+    mutate: createRoaster,
+    isPending: isCreating,
+    error: createError,
+  } = useMutation({
+    mutationFn: (roasterData: CreateRoasterRequest) =>
+      apiClient.createRoaster(roasterData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.roasters.all() })
+      router.push('/roasters')
+    },
+    onError: () => {
+      // do error stuff
+    },
+  })
   // Form state
   const [name, setName] = useState('')
   const [location, setLocation] = useState('')
@@ -17,23 +33,14 @@ export default function NewRoasterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
-    setError(null)
-
-    try {
-      const roasterData = {
-        name,
-        location: location || undefined,
-        website: website || undefined,
-        notes: notes || undefined,
-      }
-
-      await apiClient.createRoaster(roasterData)
-      router.push('/roasters')
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create roaster')
-      setLoading(false)
+    const roasterData = {
+      name,
+      location: location || undefined,
+      website: website || undefined,
+      notes: notes || undefined,
     }
+
+    createRoaster(roasterData)
   }
 
   return (
@@ -41,8 +48,10 @@ export default function NewRoasterPage() {
       <h1 className="text-3xl font-bold text-gray-900 mb-8">Add New Roaster</h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {error && (
-          <div className="bg-red-50 text-red-600 p-4 rounded-md">{error}</div>
+        {createError && (
+          <div className="bg-red-50 text-red-600 p-4 rounded-md">
+            {createError.message}
+          </div>
         )}
 
         <div className="bg-white shadow-md rounded-lg p-6 space-y-6">
@@ -126,10 +135,10 @@ export default function NewRoasterPage() {
           </button>
           <button
             type="submit"
-            disabled={loading}
+            disabled={isCreating}
             className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? 'Creating...' : 'Create Roaster'}
+            {isCreating ? 'Creating...' : 'Create Roaster'}
           </button>
         </div>
       </form>

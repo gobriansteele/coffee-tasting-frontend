@@ -2,7 +2,9 @@
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useRoasters } from '@/lib/queries/roasters'
+import { useQuery } from '@tanstack/react-query'
+import { apiClient } from '@/lib/api/client'
+import { queryKeys } from '@/lib/query-keys'
 
 export default function RoastersPage() {
   const router = useRouter()
@@ -10,7 +12,10 @@ export default function RoastersPage() {
     data: roasters,
     isLoading: isLoadingRoasters,
     error: errorRoasters,
-  } = useRoasters()
+  } = useQuery({
+    queryKey: queryKeys.roasters.all(),
+    queryFn: () => apiClient.getRoasters(),
+  })
 
   if (isLoadingRoasters) {
     return (

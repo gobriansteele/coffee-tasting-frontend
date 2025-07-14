@@ -224,5 +224,5 @@ class ApiClient {
   }
 }
 
-export { ApiClient }
+export type { ApiClient }
 export const apiClient = new ApiClient()
