@@ -1,18 +1,26 @@
 'use client'
 
 import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const supabase = createClient()
+  const pathname = usePathname()
 
   useEffect(() => {
     // Listen for auth state changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
+      const publicRoutes = ['/login', '/signup', '/auth', '/']
+      const isPublicRoute = publicRoutes.some(
+        (route) => pathname.startsWith(route) || pathname === route
+      )
+      if (isPublicRoute) {
+        return
+      }
       if (!session) {
         router.push('/login')
         router.refresh()
@@ -42,7 +50,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => {
       subscription.unsubscribe()
     }
-  }, [router, supabase])
+  }, [router, supabase, pathname])
 
   return <>{children}</>
 }

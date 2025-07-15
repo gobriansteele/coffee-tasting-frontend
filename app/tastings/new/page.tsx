@@ -1,24 +1,30 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api/client'
-import { useCoffees } from '@/lib/queries/coffees'
 import type {
-  Roaster,
   CreateTastingSessionRequest,
   BrewMethod,
   GrindSize,
 } from '@/lib/api/types'
 import FlavorTag from '@/components/FlavorTag'
+import { queryKeys } from '@/lib/query-keys'
 
 export default function NewTastingPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const { data: coffees, isLoading: isLoadingCoffees } = useCoffees()
+  const { data: coffees, isLoading: isLoadingCoffees } = useQuery({
+    queryKey: queryKeys.coffees.all(),
+    queryFn: () => apiClient.getCoffees({ limit: 100 }),
+  })
+  const { data: roasters, isLoading: isLoadingRoasters } = useQuery({
+    queryKey: queryKeys.roasters.all(),
+    queryFn: () => apiClient.getRoasters(),
+  })
 
-  const [roasters, setRoasters] = useState<Roaster[]>([])
   const [selectedCoffeeId, setSelectedCoffeeId] = useState('')
   const [brewMethod, setBrewMethod] = useState<BrewMethod | ''>('')
   const [grindSize, setGrindSize] = useState<GrindSize | ''>('')
@@ -33,19 +39,6 @@ export default function NewTastingPage() {
   const [tastingDate, setTastingDate] = useState(
     new Date().toISOString().split('T')[0]
   )
-
-  useEffect(() => {
-    loadData()
-  }, [])
-
-  const loadData = async () => {
-    try {
-      const roastersData = await apiClient.getRoasters()
-      setRoasters(roastersData.roasters)
-    } catch {
-      setError('Failed to load data')
-    }
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -85,7 +78,7 @@ export default function NewTastingPage() {
       <h1 className="text-3xl font-bold text-gray-900 mb-8">
         New Tasting Session
       </h1>
-      {isLoadingCoffees ? (
+      {isLoadingCoffees || isLoadingRoasters ? (
         <div className="text-center">Loading coffees...</div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -114,7 +107,7 @@ export default function NewTastingPage() {
               >
                 <option value="">Select a coffee</option>
                 {coffees?.coffees.map((coffee) => {
-                  const roaster = roasters.find(
+                  const roaster = roasters?.roasters.find(
                     (r) => r.id === coffee.roaster_id
                   )
                   return (

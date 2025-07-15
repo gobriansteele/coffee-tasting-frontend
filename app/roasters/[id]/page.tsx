@@ -1,61 +1,57 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useRef } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api/client'
-import type { Roaster, Coffee } from '@/lib/api/types'
+import { queryKeys } from '@/lib/query-keys'
 
 export default function RoasterDetailPage() {
   const params = useParams()
   const router = useRouter()
   const roasterId = params.id as string
+  const queryClient = useQueryClient()
+  const isDeletingRef = useRef(false)
 
-  const [roaster, setRoaster] = useState<Roaster | null>(null)
-  const [coffees, setCoffees] = useState<Coffee[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [deleting, setDeleting] = useState(false)
+  const {
+    data: roaster,
+    isLoading: isLoadingRoaster,
+    error: errorRoaster,
+  } = useQuery({
+    queryKey: queryKeys.roasters.detail(roasterId),
+    queryFn: () => apiClient.getRoaster(roasterId),
+    enabled: !!roasterId && !isDeletingRef.current,
+  })
+  const {
+    data: coffees,
+    isLoading: isLoadingCoffees,
+    error: errorCoffees,
+  } = useQuery({
+    queryKey: queryKeys.coffees.list({ roasterId }),
+    queryFn: () => apiClient.getCoffees({ roasterId }),
+    enabled: !!roasterId,
+  })
 
-  const loadData = useCallback(async () => {
-    try {
-      setLoading(true)
-      const [roasterData, coffeesData] = await Promise.all([
-        apiClient.getRoaster(roasterId),
-        apiClient.getCoffees({ roasterId }),
-      ])
-      setRoaster(roasterData)
-      // TODO: update code when coffee endpoint is updated
-      setCoffees(coffeesData.coffees || [])
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load roaster')
-    } finally {
-      setLoading(false)
-    }
-  }, [roasterId])
+  const { mutate: deleteRoaster, isPending: deleting } = useMutation({
+    mutationFn: (roasterId: string) => apiClient.deleteRoaster(roasterId),
+  })
 
-  useEffect(() => {
-    if (roasterId) {
-      loadData()
-    }
-  }, [roasterId, loadData])
-
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (!window.confirm('Are you sure you want to delete this roaster?')) {
       return
     }
 
-    setDeleting(true)
-    try {
-      await apiClient.deleteRoaster(roasterId)
-      router.push('/roasters')
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete roaster')
-      setDeleting(false)
-    }
+    isDeletingRef.current = true
+    deleteRoaster(roasterId, {
+      onSuccess: () => {
+        router.push('/roasters')
+        queryClient.invalidateQueries({ queryKey: queryKeys.roasters.all() })
+      },
+    })
   }
 
-  if (loading) {
+  if (isLoadingRoaster || isLoadingCoffees) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center">Loading roaster details...</div>
@@ -63,11 +59,14 @@ export default function RoasterDetailPage() {
     )
   }
 
-  if (error || !roaster) {
+  if (errorRoaster || errorCoffees || !roaster) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center text-red-600">
-          Error: {error || 'Roaster not found'}
+          Error:{' '}
+          {errorRoaster?.message ||
+            errorCoffees?.message ||
+            'Roaster not found'}
         </div>
       </div>
     )
@@ -131,13 +130,13 @@ export default function RoasterDetailPage() {
         </Link>
       </div>
 
-      {coffees?.length === 0 ? (
+      {coffees?.coffees.length === 0 ? (
         <div className="text-center py-8 bg-gray-50 rounded-lg">
           <p className="text-gray-600">No coffees found for this roaster.</p>
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {coffees?.map((coffee) => (
+          {coffees?.coffees.map((coffee) => (
             <Link
               key={coffee.id}
               href={`/coffees/${coffee.id}`}

@@ -1,30 +1,19 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api/client'
-import type { TastingSession } from '@/lib/api/types'
+import { queryKeys } from '@/lib/query-keys'
 
 export default function TastingsPage() {
-  const [tastings, setTastings] = useState<TastingSession[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    loadTastings()
-  }, [])
-
-  const loadTastings = async () => {
-    try {
-      setLoading(true)
-      const data = await apiClient.getTastingSessions()
-      setTastings(data.tastings)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load tastings')
-    } finally {
-      setLoading(false)
-    }
-  }
+  const {
+    data: tastings,
+    isLoading: isLoadingTastings,
+    error: errorTastings,
+  } = useQuery({
+    queryKey: queryKeys.tastings.all(),
+    queryFn: () => apiClient.getTastingSessions(),
+  })
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -34,7 +23,7 @@ export default function TastingsPage() {
     })
   }
 
-  if (loading) {
+  if (isLoadingTastings) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center">Loading your tastings...</div>
@@ -42,10 +31,12 @@ export default function TastingsPage() {
     )
   }
 
-  if (error) {
+  if (errorTastings) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center text-red-600">Error: {error}</div>
+        <div className="text-center text-red-600">
+          Error: {errorTastings.message}
+        </div>
       </div>
     )
   }
@@ -62,7 +53,7 @@ export default function TastingsPage() {
         </Link>
       </div>
 
-      {tastings.length === 0 ? (
+      {tastings?.tastings.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-gray-600 mb-4">
             You haven&apos;t recorded any tastings yet.
@@ -73,7 +64,7 @@ export default function TastingsPage() {
         </div>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {tastings.map((tasting) => (
+          {tastings?.tastings.map((tasting) => (
             <Link
               key={tasting.id}
               href={`/tastings/${tasting.id}`}

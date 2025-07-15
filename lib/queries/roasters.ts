@@ -13,7 +13,7 @@ interface RoasterFilters {
 // React Query hook to fetch list of roasters
 export const useRoasters = (filters?: RoasterFilters) => {
   const apiClient = useApiClient()
-  
+
   return useQuery({
     queryKey: queryKeys.roasters.list(filters),
     queryFn: () => roasterQueries.getRoasters(apiClient, filters),
