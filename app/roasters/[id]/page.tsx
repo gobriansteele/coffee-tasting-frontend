@@ -2,7 +2,8 @@
 
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { useQuery, useMutation } from '@tanstack/react-query'
+import { useRef } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api/client'
 import { queryKeys } from '@/lib/query-keys'
 
@@ -10,6 +11,8 @@ export default function RoasterDetailPage() {
   const params = useParams()
   const router = useRouter()
   const roasterId = params.id as string
+  const queryClient = useQueryClient()
+  const isDeletingRef = useRef(false)
 
   const {
     data: roaster,
@@ -18,6 +21,7 @@ export default function RoasterDetailPage() {
   } = useQuery({
     queryKey: queryKeys.roasters.detail(roasterId),
     queryFn: () => apiClient.getRoaster(roasterId),
+    enabled: !!roasterId && !isDeletingRef.current,
   })
   const {
     data: coffees,
@@ -33,14 +37,16 @@ export default function RoasterDetailPage() {
     mutationFn: (roasterId: string) => apiClient.deleteRoaster(roasterId),
   })
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (!window.confirm('Are you sure you want to delete this roaster?')) {
       return
     }
 
+    isDeletingRef.current = true
     deleteRoaster(roasterId, {
       onSuccess: () => {
         router.push('/roasters')
+        queryClient.invalidateQueries({ queryKey: queryKeys.roasters.all() })
       },
     })
   }
