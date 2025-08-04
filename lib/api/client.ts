@@ -37,6 +37,8 @@ class ApiClient {
   ): Promise<T> {
     const token = await this.getAuthToken()
 
+    console.log('api url', `${API_URL}/api/v1${endpoint}`)
+
     const response = await fetch(`${API_URL}/api/v1${endpoint}`, {
       ...options,
       headers: {
