@@ -126,7 +126,7 @@ class ApiClient {
     return this.request<CoffeeListResponse>(`/coffees?${params.toString()}`)
   }
 
-  async getCoffee(id: string): Promise<Coffee> {
+  async getCoffee(id: string): Promise<CoffeeResponse> {
     return this.request<Coffee>(`/coffees/${id}`)
   }
 
@@ -188,7 +188,7 @@ class ApiClient {
   }
 
   async getTastingSession(id: string): Promise<TastingSession> {
-    return this.request<TastingSession>(`/tasting-sessions/${id}`)
+    return this.request<TastingSession>(`/tastings/${id}`)
   }
 
   async createTastingSession(

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api/client'
 import { queryKeys } from '@/lib/query-keys'
+import { formatShortDate } from '@/lib/utils/date'
 
 export default function TastingsPage() {
   const {
@@ -14,14 +15,6 @@ export default function TastingsPage() {
     queryKey: queryKeys.tastings.all(),
     queryFn: () => apiClient.getTastingSessions(),
   })
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    })
-  }
 
   if (isLoadingTastings) {
     return (
@@ -93,7 +86,7 @@ export default function TastingsPage() {
                 <div className="flex justify-between">
                   <span className="text-gray-600">Date:</span>
                   <span className="font-medium">
-                    {formatDate(tasting.created_at)}
+                    {formatShortDate(tasting.created_at)}
                   </span>
                 </div>
               </div>
