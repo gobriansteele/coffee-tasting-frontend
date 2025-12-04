@@ -34,6 +34,12 @@ export function DesktopNavigation({ user, onSignOut }: DesktopNavigationProps) {
             >
               Roasters
             </Link>
+            <Link
+              href="/coffees"
+              className="text-gray-700 hover:text-gray-900"
+            >
+              Coffees
+            </Link>
           </div>
         )}
       </div>

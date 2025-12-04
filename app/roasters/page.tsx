@@ -39,19 +39,16 @@ export default function RoastersPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Coffee Roasters</h1>
-        <Link
-          href="/roasters/new"
-          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
-        >
-          Add Roaster
-        </Link>
       </div>
 
       {roasters?.roasters.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-gray-600 mb-4">No roasters found.</p>
-          <Link href="/roasters/new" className="text-blue-600 hover:underline">
-            Add the first roaster
+          <p className="text-gray-600 mb-4">No roasters yet.</p>
+          <p className="text-gray-500 text-sm mb-4">
+            Roasters are added when you create a new coffee.
+          </p>
+          <Link href="/coffees/new" className="text-blue-600 hover:underline">
+            Add your first coffee
           </Link>
         </div>
       ) : (

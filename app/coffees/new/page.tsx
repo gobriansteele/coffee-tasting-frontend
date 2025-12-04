@@ -8,7 +8,9 @@ import type {
   CreateCoffeeRequest,
   ProcessingMethod,
   RoastLevel,
+  Roaster,
 } from '@/lib/api/types'
+import { RoasterQuickCreate } from '@/components/RoasterQuickCreate'
 
 export default function NewCoffeePage() {
   const router = useRouter()
@@ -23,6 +25,7 @@ export default function NewCoffeePage() {
   // Form state
   const [name, setName] = useState('')
   const [roasterId, setRoasterId] = useState('')
+  const [showRoasterForm, setShowRoasterForm] = useState(false)
 
   // Origin info
   const [originCountry, setOriginCountry] = useState('')
@@ -55,6 +58,21 @@ export default function NewCoffeePage() {
       setRoasterId(roasterIdParam)
     }
   }, [searchParams])
+
+  const handleRoasterCreated = (newRoaster: Roaster) => {
+    setRoasterId(newRoaster.id)
+    setShowRoasterForm(false)
+  }
+
+  const handleRoasterSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value
+    if (value === 'new') {
+      setShowRoasterForm(true)
+    } else {
+      setRoasterId(value)
+      setShowRoasterForm(false)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -131,9 +149,9 @@ export default function NewCoffeePage() {
             </label>
             <select
               id="roaster"
-              value={roasterId}
-              onChange={(e) => setRoasterId(e.target.value)}
-              required
+              value={showRoasterForm ? 'new' : roasterId}
+              onChange={handleRoasterSelectChange}
+              required={!showRoasterForm}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Select a roaster</option>
@@ -142,7 +160,15 @@ export default function NewCoffeePage() {
                   {roaster.name}
                 </option>
               ))}
+              <option value="new">+ Add New Roaster</option>
             </select>
+
+            {showRoasterForm && (
+              <RoasterQuickCreate
+                onRoasterCreated={handleRoasterCreated}
+                onCancel={() => setShowRoasterForm(false)}
+              />
+            )}
           </div>
         </div>
 

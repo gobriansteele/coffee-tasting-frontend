@@ -22,16 +22,22 @@ export default async function Home() {
             <p className="text-lg text-gray-700">Welcome back, {user.email}!</p>
             <div className="flex justify-center space-x-4">
               <Link
+                href="/coffees/new"
+                className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors"
+              >
+                Add Coffee
+              </Link>
+              <Link
                 href="/tastings/new"
                 className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors"
               >
-                Record New Tasting
+                Record Tasting
               </Link>
               <Link
                 href="/tastings"
                 className="bg-gray-200 text-gray-800 px-6 py-3 rounded-md hover:bg-gray-300 transition-colors"
               >
-                View My Tastings
+                View Tastings
               </Link>
             </div>
           </div>
