@@ -48,8 +48,10 @@ export default function NewCoffeePage() {
 
   useEffect(() => {
     // Pre-select roaster from query params
+    // Using useEffect to avoid hydration mismatch with useSearchParams
     const roasterIdParam = searchParams.get('roasterId')
     if (roasterIdParam) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setRoasterId(roasterIdParam)
     }
   }, [searchParams])

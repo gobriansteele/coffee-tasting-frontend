@@ -1,9 +1,9 @@
 /**
  * Safely parses an ISO date string that may contain microseconds
- * and returns a Date object
+ * and returns a Date object, or null if invalid
  */
-export function parseISODate(dateString?: string | null): Date | string {
-  if (!dateString) return 'Invalid Date'
+export function parseISODate(dateString?: string | null): Date | null {
+  if (!dateString) return null
 
   try {
     // Handle ISO format with microseconds by truncating to milliseconds
@@ -14,10 +14,15 @@ export function parseISODate(dateString?: string | null): Date | string {
       // If no timezone info, add Z
       cleanDateString = dateString + 'Z'
     }
-    return new Date(cleanDateString)
+    const date = new Date(cleanDateString)
+    // Return null for Invalid Date
+    if (isNaN(date.getTime())) {
+      return null
+    }
+    return date
   } catch (error) {
     console.error('Error parsing date:', dateString, error)
-    return 'Invalid Date'
+    return null
   }
 }
 
@@ -30,7 +35,7 @@ export function formatDate(
 ): string {
   try {
     const date = parseISODate(dateString)
-    if (typeof date === 'string') return 'Invalid date'
+    if (!date) return 'Invalid date'
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
@@ -52,7 +57,7 @@ export function formatTime(
 ): string {
   try {
     const date = parseISODate(dateString)
-    if (typeof date === 'string') return 'Invalid time'
+    if (!date) return 'Invalid time'
     return date.toLocaleTimeString('en-US', {
       hour: '2-digit',
       minute: '2-digit',
@@ -72,7 +77,7 @@ export function formatDateTime(dateString?: string | null): string {
 
   try {
     const date = parseISODate(dateString)
-    if (typeof date === 'string') return 'Invalid date'
+    if (!date) return 'Invalid date'
     return date.toLocaleString('en-US', {
       year: 'numeric',
       month: 'short',

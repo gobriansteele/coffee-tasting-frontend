@@ -13,51 +13,50 @@ describe('Date Utils', () => {
       const dateString = '2025-07-02T14:21:33.666826'
       const result = parseISODate(dateString)
       expect(result).toBeInstanceOf(Date)
-      expect(result.getFullYear()).toBe(2025)
-      expect(result.getMonth()).toBe(6) // July is month 6 (0-indexed)
-      expect(result.getDate()).toBe(2)
+      expect(result!.getFullYear()).toBe(2025)
+      expect(result!.getMonth()).toBe(6) // July is month 6 (0-indexed)
+      expect(result!.getDate()).toBe(2)
       // Note: Hours may vary due to timezone, so we'll just check that it's a valid date
-      expect(result.getHours()).toBeGreaterThanOrEqual(0)
-      expect(result.getHours()).toBeLessThan(24)
-      expect(result.getMinutes()).toBe(21)
-      expect(result.getSeconds()).toBe(33)
+      expect(result!.getHours()).toBeGreaterThanOrEqual(0)
+      expect(result!.getHours()).toBeLessThan(24)
+      expect(result!.getMinutes()).toBe(21)
+      expect(result!.getSeconds()).toBe(33)
     })
 
     it('should parse ISO date without microseconds correctly', () => {
       const dateString = '2025-07-02T14:21:33Z'
       const result = parseISODate(dateString)
       expect(result).toBeInstanceOf(Date)
-      expect(result.getFullYear()).toBe(2025)
-      expect(result.getMonth()).toBe(6)
-      expect(result.getDate()).toBe(2)
+      expect(result!.getFullYear()).toBe(2025)
+      expect(result!.getMonth()).toBe(6)
+      expect(result!.getDate()).toBe(2)
     })
 
     it('should parse ISO date with timezone offset correctly', () => {
       const dateString = '2025-07-02T14:21:33.666826+00:00'
       const result = parseISODate(dateString)
       expect(result).toBeInstanceOf(Date)
-      expect(result.getFullYear()).toBe(2025)
+      expect(result!.getFullYear()).toBe(2025)
     })
 
     it('should handle null input', () => {
       const result = parseISODate(null)
-      expect(result).toBe('Invalid Date')
+      expect(result).toBeNull()
     })
 
     it('should handle undefined input', () => {
       const result = parseISODate(undefined)
-      expect(result).toBe('Invalid Date')
+      expect(result).toBeNull()
     })
 
     it('should handle empty string', () => {
       const result = parseISODate('')
-      expect(result).toBe('Invalid Date')
+      expect(result).toBeNull()
     })
 
     it('should handle invalid date format', () => {
       const result = parseISODate('not-a-date')
-      expect(result).toBeInstanceOf(Date)
-      expect(result.toString()).toContain('Invalid Date')
+      expect(result).toBeNull()
     })
   })
 
@@ -78,9 +77,9 @@ describe('Date Utils', () => {
       expect(result).toBe('July 2, 2025')
     })
 
-    it('should return "Invalid Date" for invalid input', () => {
-      const result = formatDate('invalid-date')
-      expect(result).toBe('Invalid Date')
+    it('should return "Invalid date" for invalid input', () => {
+      const result = formatDate('not-a-date')
+      expect(result).toBe('Invalid date')
     })
   })
 
@@ -103,9 +102,9 @@ describe('Date Utils', () => {
       expect(result).toMatch(/^\d{1,2}:\d{2}:\d{2} (AM|PM)$/)
     })
 
-    it('should return "Invalid Date" for invalid input', () => {
-      const result = formatTime('invalid-time')
-      expect(result).toBe('Invalid Date')
+    it('should return "Invalid time" for invalid input', () => {
+      const result = formatTime('not-a-time')
+      expect(result).toBe('Invalid time')
     })
   })
 
@@ -127,9 +126,9 @@ describe('Date Utils', () => {
       expect(result).toBe('No date available')
     })
 
-    it('should return "Invalid Date" for invalid input', () => {
-      const result = formatDateTime('invalid-datetime')
-      expect(result).toBe('Invalid Date')
+    it('should return "Invalid date" for invalid input', () => {
+      const result = formatDateTime('not-a-datetime')
+      expect(result).toBe('Invalid date')
     })
   })
 
@@ -140,9 +139,9 @@ describe('Date Utils', () => {
       expect(result).toBe('July 2, 2025')
     })
 
-    it('should return "Invalid Date" for invalid input', () => {
-      const result = formatLongDate('invalid-long-date')
-      expect(result).toBe('Invalid Date')
+    it('should return "Invalid date" for invalid input', () => {
+      const result = formatLongDate('not-a-date')
+      expect(result).toBe('Invalid date')
     })
   })
 
@@ -153,9 +152,9 @@ describe('Date Utils', () => {
       expect(result).toBe('Jul 2, 2025')
     })
 
-    it('should return "Invalid Date" for invalid input', () => {
-      const result = formatShortDate('invalid-short-date')
-      expect(result).toBe('Invalid Date')
+    it('should return "Invalid date" for invalid input', () => {
+      const result = formatShortDate('not-a-date')
+      expect(result).toBe('Invalid date')
     })
   })
 
@@ -170,7 +169,7 @@ describe('Date Utils', () => {
       dateStrings.forEach((dateString) => {
         const result = parseISODate(dateString)
         expect(result).toBeInstanceOf(Date)
-        expect(result.getFullYear()).toBe(2025)
+        expect(result!.getFullYear()).toBe(2025)
       })
     })
 
@@ -188,7 +187,7 @@ describe('Date Utils', () => {
       dateStrings.forEach((dateString) => {
         const result = parseISODate(dateString)
         expect(result).toBeInstanceOf(Date)
-        expect(result.getFullYear()).toBe(2025)
+        expect(result!.getFullYear()).toBe(2025)
       })
     })
 
@@ -196,11 +195,11 @@ describe('Date Utils', () => {
       const dateString = '2025-07-02'
       const result = parseISODate(dateString)
       expect(result).toBeInstanceOf(Date)
-      expect(result.getFullYear()).toBe(2025)
-      expect(result.getMonth()).toBe(6)
+      expect(result!.getFullYear()).toBe(2025)
+      expect(result!.getMonth()).toBe(6)
       // Note: Date may vary due to timezone, so we'll just check it's a valid date
-      expect(result.getDate()).toBeGreaterThanOrEqual(1)
-      expect(result.getDate()).toBeLessThanOrEqual(31)
+      expect(result!.getDate()).toBeGreaterThanOrEqual(1)
+      expect(result!.getDate()).toBeLessThanOrEqual(31)
     })
   })
 })

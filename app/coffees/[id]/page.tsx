@@ -2,7 +2,6 @@
 
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api/client'
 import { queryKeys } from '@/lib/query-keys'
@@ -13,7 +12,10 @@ export default function CoffeeDetailPage() {
   const router = useRouter()
   const coffeeId = params.id as string
   const queryClient = useQueryClient()
-  const isDeletingRef = useRef(false)
+
+  const { mutate: deleteCoffee, isPending: isDeleting } = useMutation({
+    mutationFn: (coffeeId: string) => apiClient.deleteCoffee(coffeeId),
+  })
 
   const {
     data: coffee,
@@ -22,7 +24,7 @@ export default function CoffeeDetailPage() {
   } = useQuery({
     queryKey: queryKeys.coffees.detail(coffeeId),
     queryFn: () => apiClient.getCoffee(coffeeId),
-    enabled: !!coffeeId && !isDeletingRef.current,
+    enabled: !!coffeeId && !isDeleting,
   })
 
   const {
@@ -35,16 +37,11 @@ export default function CoffeeDetailPage() {
     enabled: !!coffeeId,
   })
 
-  const { mutate: deleteCoffee, isPending: deleting } = useMutation({
-    mutationFn: (coffeeId: string) => apiClient.deleteCoffee(coffeeId),
-  })
-
   const handleDelete = () => {
     if (!window.confirm('Are you sure you want to delete this coffee?')) {
       return
     }
 
-    isDeletingRef.current = true
     deleteCoffee(coffeeId, {
       onSuccess: () => {
         router.push('/coffees')
@@ -97,10 +94,10 @@ export default function CoffeeDetailPage() {
             </Link>
             <button
               onClick={handleDelete}
-              disabled={deleting}
+              disabled={isDeleting}
               className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors disabled:opacity-50"
             >
-              {deleting ? 'Deleting...' : 'Delete'}
+              {isDeleting ? 'Deleting...' : 'Delete'}
             </button>
           </div>
         </div>

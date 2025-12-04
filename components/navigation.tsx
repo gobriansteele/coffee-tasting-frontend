@@ -33,6 +33,7 @@ export default function Navigation({ user }: { user: User | null }) {
 
   // Close mobile menu when route changes
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMobileMenuOpen(false)
   }, [pathname])
 

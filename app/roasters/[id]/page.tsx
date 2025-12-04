@@ -2,7 +2,6 @@
 
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api/client'
 import { queryKeys } from '@/lib/query-keys'
@@ -12,7 +11,10 @@ export default function RoasterDetailPage() {
   const router = useRouter()
   const roasterId = params.id as string
   const queryClient = useQueryClient()
-  const isDeletingRef = useRef(false)
+
+  const { mutate: deleteRoaster, isPending: isDeleting } = useMutation({
+    mutationFn: (roasterId: string) => apiClient.deleteRoaster(roasterId),
+  })
 
   const {
     data: roaster,
@@ -21,8 +23,9 @@ export default function RoasterDetailPage() {
   } = useQuery({
     queryKey: queryKeys.roasters.detail(roasterId),
     queryFn: () => apiClient.getRoaster(roasterId),
-    enabled: !!roasterId && !isDeletingRef.current,
+    enabled: !!roasterId && !isDeleting,
   })
+
   const {
     data: coffees,
     isLoading: isLoadingCoffees,
@@ -33,16 +36,11 @@ export default function RoasterDetailPage() {
     enabled: !!roasterId,
   })
 
-  const { mutate: deleteRoaster, isPending: deleting } = useMutation({
-    mutationFn: (roasterId: string) => apiClient.deleteRoaster(roasterId),
-  })
-
   const handleDelete = () => {
     if (!window.confirm('Are you sure you want to delete this roaster?')) {
       return
     }
 
-    isDeletingRef.current = true
     deleteRoaster(roasterId, {
       onSuccess: () => {
         router.push('/roasters')
@@ -86,10 +84,10 @@ export default function RoasterDetailPage() {
             </Link>
             <button
               onClick={handleDelete}
-              disabled={deleting}
+              disabled={isDeleting}
               className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors disabled:opacity-50"
             >
-              {deleting ? 'Deleting...' : 'Delete'}
+              {isDeleting ? 'Deleting...' : 'Delete'}
             </button>
           </div>
         </div>
