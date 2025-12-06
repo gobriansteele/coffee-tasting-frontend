@@ -1,21 +1,20 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
-import { apiClient } from '@/lib/api/client'
-import type {
-  CreateTastingSessionRequest,
-  BrewMethod,
-  GrindSize,
-} from '@/lib/api/types'
+import { useApiClient } from '@/hooks/use-api-client'
+import { useCreateTastingSession } from '@/lib/queries/tastings'
+import type { BrewMethod, GrindSize } from '@/lib/api/types'
 import FlavorTag from '@/components/FlavorTag'
 import { queryKeys } from '@/lib/query-keys'
 
 export default function NewTastingPage() {
   const router = useRouter()
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const searchParams = useSearchParams()
+  const apiClient = useApiClient()
+  const createTastingMutation = useCreateTastingSession()
+
   const { data: coffees, isLoading: isLoadingCoffees } = useQuery({
     queryKey: queryKeys.coffees.all(),
     queryFn: () => apiClient.getCoffees({ limit: 100 }),
@@ -40,19 +39,23 @@ export default function NewTastingPage() {
     new Date().toISOString().split('T')[0]
   )
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  useEffect(() => {
+    const coffeeIdParam = searchParams.get('coffeeId')
+    if (coffeeIdParam) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setSelectedCoffeeId(coffeeIdParam)
+    }
+  }, [searchParams])
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
-    setError(null)
 
     if (!selectedCoffeeId || !brewMethod) {
-      setError('Please select a coffee and brew method')
-      setLoading(false)
       return
     }
 
-    try {
-      const sessionData: CreateTastingSessionRequest = {
+    createTastingMutation.mutate(
+      {
         coffee_id: selectedCoffeeId,
         brew_method: brewMethod,
         grind_size: grindSize || undefined,
@@ -63,14 +66,13 @@ export default function NewTastingPage() {
         overall_rating: parseInt(overallRating),
         session_notes: sessionNotes || undefined,
         tasting_notes: flavorNotes.map((flavor) => ({ flavor_name: flavor })),
+      },
+      {
+        onSuccess: (newTasting) => {
+          router.push(`/tastings/${newTasting.id}`)
+        },
       }
-
-      await apiClient.createTastingSession(sessionData)
-      router.push(`/tastings`)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create tasting')
-      setLoading(false)
-    }
+    )
   }
 
   return (
@@ -82,8 +84,10 @@ export default function NewTastingPage() {
         <div className="text-center">Loading coffees...</div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-6">
-          {error && (
-            <div className="bg-red-50 text-red-600 p-4 rounded-md">{error}</div>
+          {createTastingMutation.error && (
+            <div className="bg-red-50 text-red-600 p-4 rounded-md">
+              {createTastingMutation.error.message}
+            </div>
           )}
 
           <div className="bg-white shadow-md rounded-lg p-6 space-y-6">
@@ -382,10 +386,10 @@ export default function NewTastingPage() {
             </button>
             <button
               type="submit"
-              disabled={loading}
+              disabled={createTastingMutation.isPending}
               className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Creating...' : 'Create Tasting'}
+              {createTastingMutation.isPending ? 'Creating...' : 'Create Tasting'}
             </button>
           </div>
         </form>
