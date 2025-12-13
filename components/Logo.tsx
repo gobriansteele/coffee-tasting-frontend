@@ -5,54 +5,39 @@ export default function Logo({
 }) {
   return (
     <svg
+      width="200"
+      height="200"
       viewBox="0 0 200 200"
+      fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      {/* Background circle */}
-      <circle cx="100" cy="100" r="95" fill="#1D1D1F" />
-
-      {/* Coffee cup silhouette */}
       <path
-        d="M65 70 L65 130 Q65 145 80 145 L120 145 Q135 145 135 130 L135 70 Z"
-        fill="#F5F5F7"
-        stroke="none"
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M100 180L30.718 140V60L100 20L169.282 60V140L100 180ZM100 180"
+        fill="#2C3E50"
       />
-
-      {/* Cup handle */}
       <path
-        d="M135 90 Q155 90 155 110 Q155 130 135 130"
-        fill="none"
-        stroke="#F5F5F7"
-        strokeWidth="8"
+        d="M100 160C90 140 85 130 85 100C85 70 100 60 115 40"
+        stroke="#FFFFFF"
+        strokeWidth="12"
         strokeLinecap="round"
       />
-
-      {/* Refined steam */}
-      <path
-        d="M85 60 Q87 52 85 45"
-        fill="none"
-        stroke="#F5F5F7"
-        strokeWidth="2"
-        strokeLinecap="round"
-        opacity="0.8"
-      />
-      <path
-        d="M100 60 Q98 52 100 45"
-        fill="none"
-        stroke="#F5F5F7"
-        strokeWidth="2"
-        strokeLinecap="round"
-        opacity="0.6"
-      />
-      <path
-        d="M115 60 Q113 52 115 45"
-        fill="none"
-        stroke="#F5F5F7"
-        strokeWidth="2"
-        strokeLinecap="round"
-        opacity="0.8"
-      />
+      <circle cx="115" cy="40" r="10" fill="#E67E22" />
+      <defs>
+        <linearGradient
+          id="paint0_linear"
+          x1="100"
+          y1="20"
+          x2="100"
+          y2="180"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#34495E" />
+          <stop offset="1" stopColor="#2C3E50" />
+        </linearGradient>
+      </defs>
     </svg>
   )
 }
