@@ -15,11 +15,11 @@ import { RoasterQuickCreate } from '@/components/RoasterQuickCreate'
 export default function NewCoffeePage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  
+
   // React Query hooks
   const { data: roastersData, isLoading: loadingRoasters, error: roastersError } = useRoasters()
   const createCoffeeMutation = useCreateCoffee()
-  
+
   const roasters = roastersData?.roasters || []
 
   // Form state
@@ -100,32 +100,32 @@ export default function NewCoffeePage() {
   if (loadingRoasters) {
     return (
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center">Loading roasters...</div>
+        <div className="text-center text-ink-muted">Loading roasters...</div>
       </div>
     )
   }
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Add New Coffee</h1>
+      <h1 className="font-display text-3xl font-bold text-ink mb-8">Add New Coffee</h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {(roastersError || createCoffeeMutation.error) && (
-          <div className="bg-red-50 text-red-600 p-4 rounded-md">
+          <div className="bg-danger-soft text-danger p-4 rounded-md">
             {roastersError?.message || createCoffeeMutation.error?.message || 'An error occurred'}
           </div>
         )}
 
         {/* Basic Info */}
-        <div className="bg-white shadow-md rounded-lg p-6 space-y-6">
-          <h2 className="text-lg font-semibold text-gray-900">
+        <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
+          <h2 className="font-display text-lg font-semibold text-ink">
             Basic Information
           </h2>
 
           <div>
             <label
               htmlFor="name"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-sm font-medium text-ink-muted mb-2"
             >
               Coffee Name *
             </label>
@@ -136,14 +136,14 @@ export default function NewCoffeePage() {
               onChange={(e) => setName(e.target.value)}
               required
               placeholder="e.g., Ethiopian Yirgacheffe"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             />
           </div>
 
           <div>
             <label
               htmlFor="roaster"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-sm font-medium text-ink-muted mb-2"
             >
               Roaster *
             </label>
@@ -152,7 +152,7 @@ export default function NewCoffeePage() {
               value={showRoasterForm ? 'new' : roasterId}
               onChange={handleRoasterSelectChange}
               required={!showRoasterForm}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               <option value="">Select a roaster</option>
               {roasters.map((roaster) => (
@@ -173,8 +173,8 @@ export default function NewCoffeePage() {
         </div>
 
         {/* Origin Information */}
-        <div className="bg-white shadow-md rounded-lg p-6 space-y-6">
-          <h2 className="text-lg font-semibold text-gray-900">
+        <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
+          <h2 className="font-display text-lg font-semibold text-ink">
             Origin Information
           </h2>
 
@@ -182,7 +182,7 @@ export default function NewCoffeePage() {
             <div>
               <label
                 htmlFor="originCountry"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-ink-muted mb-2"
               >
                 Country
               </label>
@@ -192,14 +192,14 @@ export default function NewCoffeePage() {
                 value={originCountry}
                 onChange={(e) => setOriginCountry(e.target.value)}
                 placeholder="e.g., Ethiopia"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
 
             <div>
               <label
                 htmlFor="originRegion"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-ink-muted mb-2"
               >
                 Region
               </label>
@@ -209,14 +209,14 @@ export default function NewCoffeePage() {
                 value={originRegion}
                 onChange={(e) => setOriginRegion(e.target.value)}
                 placeholder="e.g., Yirgacheffe"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
 
             <div>
               <label
                 htmlFor="farmName"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-ink-muted mb-2"
               >
                 Farm Name
               </label>
@@ -226,14 +226,14 @@ export default function NewCoffeePage() {
                 value={farmName}
                 onChange={(e) => setFarmName(e.target.value)}
                 placeholder="e.g., Chelchele Farm"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
 
             <div>
               <label
                 htmlFor="producer"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-ink-muted mb-2"
               >
                 Producer
               </label>
@@ -243,14 +243,14 @@ export default function NewCoffeePage() {
                 value={producer}
                 onChange={(e) => setProducer(e.target.value)}
                 placeholder="e.g., Kebede Alemu"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
 
             <div>
               <label
                 htmlFor="altitude"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-ink-muted mb-2"
               >
                 Altitude
               </label>
@@ -260,14 +260,14 @@ export default function NewCoffeePage() {
                 value={altitude}
                 onChange={(e) => setAltitude(e.target.value)}
                 placeholder="e.g., 1800-2000m"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
 
             <div>
               <label
                 htmlFor="variety"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-ink-muted mb-2"
               >
                 Variety
               </label>
@@ -277,15 +277,15 @@ export default function NewCoffeePage() {
                 value={variety}
                 onChange={(e) => setVariety(e.target.value)}
                 placeholder="e.g., Heirloom"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
           </div>
         </div>
 
         {/* Processing & Roasting */}
-        <div className="bg-white shadow-md rounded-lg p-6 space-y-6">
-          <h2 className="text-lg font-semibold text-gray-900">
+        <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
+          <h2 className="font-display text-lg font-semibold text-ink">
             Processing & Roasting
           </h2>
 
@@ -293,7 +293,7 @@ export default function NewCoffeePage() {
             <div>
               <label
                 htmlFor="processingMethod"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-ink-muted mb-2"
               >
                 Processing Method
               </label>
@@ -303,7 +303,7 @@ export default function NewCoffeePage() {
                 onChange={(e) =>
                   setProcessingMethod(e.target.value as ProcessingMethod)
                 }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               >
                 <option value="">Select processing method</option>
                 <option value="washed">Washed</option>
@@ -320,7 +320,7 @@ export default function NewCoffeePage() {
             <div>
               <label
                 htmlFor="roastLevel"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-ink-muted mb-2"
               >
                 Roast Level
               </label>
@@ -328,7 +328,7 @@ export default function NewCoffeePage() {
                 id="roastLevel"
                 value={roastLevel}
                 onChange={(e) => setRoastLevel(e.target.value as RoastLevel)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               >
                 <option value="">Select roast level</option>
                 <option value="light">Light</option>
@@ -344,7 +344,7 @@ export default function NewCoffeePage() {
             <div>
               <label
                 htmlFor="roastDate"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-ink-muted mb-2"
               >
                 Roast Date
               </label>
@@ -354,15 +354,15 @@ export default function NewCoffeePage() {
                 value={roastDate}
                 onChange={(e) => setRoastDate(e.target.value)}
                 placeholder="e.g., 2024-01-15 or Jan 15, 2024"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
           </div>
         </div>
 
         {/* Additional Information */}
-        <div className="bg-white shadow-md rounded-lg p-6 space-y-6">
-          <h2 className="text-lg font-semibold text-gray-900">
+        <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
+          <h2 className="font-display text-lg font-semibold text-ink">
             Additional Information
           </h2>
 
@@ -370,7 +370,7 @@ export default function NewCoffeePage() {
             <div>
               <label
                 htmlFor="price"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-ink-muted mb-2"
               >
                 Price
               </label>
@@ -381,14 +381,14 @@ export default function NewCoffeePage() {
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
                 placeholder="e.g., 18.50"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
 
             <div>
               <label
                 htmlFor="bagSize"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-ink-muted mb-2"
               >
                 Bag Size
               </label>
@@ -398,7 +398,7 @@ export default function NewCoffeePage() {
                 value={bagSize}
                 onChange={(e) => setBagSize(e.target.value)}
                 placeholder="e.g., 12oz, 340g"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
           </div>
@@ -406,7 +406,7 @@ export default function NewCoffeePage() {
           <div>
             <label
               htmlFor="description"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-sm font-medium text-ink-muted mb-2"
             >
               Description
             </label>
@@ -416,7 +416,7 @@ export default function NewCoffeePage() {
               onChange={(e) => setDescription(e.target.value)}
               rows={4}
               placeholder="Describe the coffee's flavor profile, tasting notes, etc..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             />
           </div>
         </div>
@@ -425,14 +425,14 @@ export default function NewCoffeePage() {
           <button
             type="button"
             onClick={() => router.push('/roasters')}
-            className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+            className="px-6 py-2 border border-border rounded-md text-ink hover:bg-sand transition-colors"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={createCoffeeMutation.isPending}
-            className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {createCoffeeMutation.isPending ? 'Creating...' : 'Create Coffee'}
           </button>

@@ -53,7 +53,7 @@ export default function CoffeeDetailPage() {
   if (isLoadingCoffee || isLoadingTastings) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center">Loading coffee details...</div>
+        <div className="text-center text-ink-muted">Loading coffee details...</div>
       </div>
     )
   }
@@ -61,7 +61,7 @@ export default function CoffeeDetailPage() {
   if (errorCoffee || errorTastings || !coffee) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center text-red-600">
+        <div className="text-center text-danger">
           Error:{' '}
           {errorCoffee?.message || errorTastings?.message || 'Coffee not found'}
         </div>
@@ -72,14 +72,14 @@ export default function CoffeeDetailPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Coffee Information Section */}
-      <div className="bg-white shadow-md rounded-lg p-6 mb-8">
+      <div className="bg-card shadow-sm rounded-lg p-6 mb-8">
         <div className="flex justify-between items-start mb-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">{coffee.name}</h1>
+            <h1 className="font-display text-3xl font-bold text-ink">{coffee.name}</h1>
             {coffee.roaster && (
               <Link
                 href={`/roasters/${coffee.roaster_id}`}
-                className="text-lg text-blue-600 hover:underline"
+                className="text-lg text-primary hover:underline"
               >
                 by {coffee.roaster.name}
               </Link>
@@ -88,14 +88,14 @@ export default function CoffeeDetailPage() {
           <div className="flex space-x-2">
             <Link
               href={`/coffees/${coffeeId}/edit`}
-              className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors"
+              className="bg-sand text-ink px-4 py-2 rounded-md hover:bg-border transition-colors"
             >
               Edit
             </Link>
             <button
               onClick={handleDelete}
               disabled={isDeleting}
-              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors disabled:opacity-50"
+              className="bg-danger text-white px-4 py-2 rounded-md hover:bg-danger/90 transition-colors disabled:opacity-50"
             >
               {isDeleting ? 'Deleting...' : 'Delete'}
             </button>
@@ -105,8 +105,8 @@ export default function CoffeeDetailPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Origin Information */}
           <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-gray-900">Origin</h3>
-            <div className="space-y-2 text-gray-600">
+            <h3 className="text-lg font-semibold text-ink">Origin</h3>
+            <div className="space-y-2 text-ink-muted">
               {coffee.origin_country && (
                 <p>🌍 Country: {coffee.origin_country}</p>
               )}
@@ -119,10 +119,10 @@ export default function CoffeeDetailPage() {
 
           {/* Processing & Roasting */}
           <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-gray-900">
+            <h3 className="text-lg font-semibold text-ink">
               Processing & Roasting
             </h3>
-            <div className="space-y-2 text-gray-600">
+            <div className="space-y-2 text-ink-muted">
               {coffee.processing_method && (
                 <p>⚙️ Process: {coffee.processing_method}</p>
               )}
@@ -139,30 +139,30 @@ export default function CoffeeDetailPage() {
 
         {coffee.description && (
           <div className="mt-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <h3 className="text-lg font-semibold text-ink mb-2">
               Description
             </h3>
-            <p className="text-gray-600">{coffee.description}</p>
+            <p className="text-ink-muted">{coffee.description}</p>
           </div>
         )}
       </div>
 
       {/* Tastings Section */}
       <div className="mb-6 flex justify-between items-center">
-        <h2 className="text-2xl font-semibold text-gray-900">
+        <h2 className="font-display text-2xl font-semibold text-ink">
           Tasting Sessions
         </h2>
         <Link
           href={`/tastings/new?coffeeId=${coffeeId}`}
-          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+          className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary-hover transition-colors"
         >
           Add Tasting
         </Link>
       </div>
 
       {tastings?.tastings.length === 0 ? (
-        <div className="text-center py-8 bg-gray-50 rounded-lg">
-          <p className="text-gray-600">
+        <div className="text-center py-8 bg-sand rounded-lg">
+          <p className="text-ink-muted">
             No tasting sessions found for this coffee.
           </p>
         </div>
@@ -172,44 +172,44 @@ export default function CoffeeDetailPage() {
             <Link
               key={tasting.id}
               href={`/tastings/${tasting.id}`}
-              className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow"
+              className="bg-card rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow"
             >
               <div className="flex justify-between items-start mb-2">
-                <h3 className="font-semibold text-gray-900">
+                <h3 className="font-semibold text-ink">
                   {tasting.brew_method.replace('_', ' ')}
                 </h3>
                 <div className="flex items-center">
-                  <span className="text-yellow-500">⭐</span>
-                  <span className="ml-1 text-sm font-medium">
+                  <span className="text-warning">⭐</span>
+                  <span className="ml-1 text-sm font-medium text-ink tabular-nums">
                     {tasting.overall_rating}/10
                   </span>
                 </div>
               </div>
 
-              <div className="space-y-1 text-sm text-gray-600">
+              <div className="space-y-1 text-sm text-ink-muted">
                 {tasting.coffee_grams && tasting.water_grams && (
-                  <p>
+                  <p className="tabular-nums">
                     ☕ {tasting.coffee_grams}g coffee, {tasting.water_grams}g
                     water
                   </p>
                 )}
                 {tasting.water_temp_celsius && (
-                  <p>🌡️ {tasting.water_temp_celsius}°C</p>
+                  <p className="tabular-nums">🌡️ {tasting.water_temp_celsius}°C</p>
                 )}
                 {tasting.brew_time_seconds && (
-                  <p>⏱️ {tasting.brew_time_seconds}s</p>
+                  <p className="tabular-nums">⏱️ {tasting.brew_time_seconds}s</p>
                 )}
                 {tasting.grind_size && (
                   <p>🔧 {tasting.grind_size.replace('_', ' ')}</p>
                 )}
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-ink-muted">
                   {formatShortDate(tasting.created_at)}
                 </p>
               </div>
 
               {tasting.notes && (
                 <div className="mt-2">
-                  <p className="text-xs text-gray-600 line-clamp-2">
+                  <p className="text-xs text-ink-muted line-clamp-2">
                     {tasting.notes}
                   </p>
                 </div>

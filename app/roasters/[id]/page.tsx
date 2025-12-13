@@ -52,7 +52,7 @@ export default function RoasterDetailPage() {
   if (isLoadingRoaster || isLoadingCoffees) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center">Loading roaster details...</div>
+        <div className="text-center text-ink-muted">Loading roaster details...</div>
       </div>
     )
   }
@@ -60,7 +60,7 @@ export default function RoasterDetailPage() {
   if (errorRoaster || errorCoffees || !roaster) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center text-red-600">
+        <div className="text-center text-danger">
           Error:{' '}
           {errorRoaster?.message ||
             errorCoffees?.message ||
@@ -72,27 +72,27 @@ export default function RoasterDetailPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="bg-white shadow-md rounded-lg p-6 mb-8">
+      <div className="bg-card shadow-sm rounded-lg p-6 mb-8">
         <div className="flex justify-between items-start mb-4">
-          <h1 className="text-3xl font-bold text-gray-900">{roaster.name}</h1>
+          <h1 className="font-display text-3xl font-bold text-ink">{roaster.name}</h1>
           <div className="flex space-x-2">
             <Link
               href={`/roasters/${roasterId}/edit`}
-              className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors"
+              className="bg-sand text-ink px-4 py-2 rounded-md hover:bg-border transition-colors"
             >
               Edit
             </Link>
             <button
               onClick={handleDelete}
               disabled={isDeleting}
-              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors disabled:opacity-50"
+              className="bg-danger text-white px-4 py-2 rounded-md hover:bg-danger/90 transition-colors disabled:opacity-50"
             >
               {isDeleting ? 'Deleting...' : 'Delete'}
             </button>
           </div>
         </div>
 
-        <div className="space-y-2 text-gray-600">
+        <div className="space-y-2 text-ink-muted">
           {roaster.location && <p>📍 Location: {roaster.location}</p>}
           {roaster.website && (
             <p>
@@ -101,7 +101,7 @@ export default function RoasterDetailPage() {
                 href={roaster.website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 hover:underline"
+                className="text-primary hover:underline"
               >
                 {roaster.website}
               </a>
@@ -109,7 +109,7 @@ export default function RoasterDetailPage() {
           )}
           {roaster.notes && (
             <div className="mt-4">
-              <p className="font-semibold text-gray-700">Notes:</p>
+              <p className="font-semibold text-ink">Notes:</p>
               <p className="mt-1">{roaster.notes}</p>
             </div>
           )}
@@ -117,20 +117,20 @@ export default function RoasterDetailPage() {
       </div>
 
       <div className="mb-6 flex justify-between items-center">
-        <h2 className="text-2xl font-semibold text-gray-900">
+        <h2 className="font-display text-2xl font-semibold text-ink">
           Coffees from {roaster.name}
         </h2>
         <Link
           href={`/coffees/new?roasterId=${roasterId}`}
-          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+          className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary-hover transition-colors"
         >
           Add Coffee
         </Link>
       </div>
 
       {coffees?.coffees.length === 0 ? (
-        <div className="text-center py-8 bg-gray-50 rounded-lg">
-          <p className="text-gray-600">No coffees found for this roaster.</p>
+        <div className="text-center py-8 bg-sand rounded-lg">
+          <p className="text-ink-muted">No coffees found for this roaster.</p>
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -138,12 +138,12 @@ export default function RoasterDetailPage() {
             <Link
               key={coffee.id}
               href={`/coffees/${coffee.id}`}
-              className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow"
+              className="bg-card rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow"
             >
-              <h3 className="font-semibold text-gray-900 mb-2">
+              <h3 className="font-semibold text-ink mb-2">
                 {coffee.name}
               </h3>
-              <div className="space-y-1 text-sm text-gray-600">
+              <div className="space-y-1 text-sm text-ink-muted">
                 {coffee.origin && <p>🌍 {coffee.origin}</p>}
                 {coffee.process && <p>⚙️ {coffee.process}</p>}
                 {coffee.varietal && <p>🌱 {coffee.varietal}</p>}

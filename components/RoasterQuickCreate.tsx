@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useCreateRoaster } from '@/lib/queries/roasters'
 import type { Roaster } from '@/lib/api/types'
 
-interface RoasterQuickCreateProps {
+type RoasterQuickCreateProps = {
   onRoasterCreated: (roaster: Roaster) => void
   onCancel: () => void
 }
@@ -26,9 +26,9 @@ export function RoasterQuickCreate({
   }
 
   return (
-    <div className="border border-blue-200 bg-blue-50 rounded-md p-4 mt-2 space-y-3">
+    <div className="border border-primary-soft bg-primary-soft rounded-md p-4 mt-2 space-y-3">
       {createRoasterMutation.error && (
-        <div className="bg-red-50 text-red-600 p-2 rounded-md text-sm">
+        <div className="bg-danger-soft text-danger p-2 rounded-md text-sm">
           {createRoasterMutation.error.message}
         </div>
       )}
@@ -36,7 +36,7 @@ export function RoasterQuickCreate({
       <div>
         <label
           htmlFor="roaster-name"
-          className="block text-sm font-medium text-gray-700 mb-1"
+          className="block text-sm font-medium text-ink-muted mb-1"
         >
           Roaster Name *
         </label>
@@ -46,14 +46,14 @@ export function RoasterQuickCreate({
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="e.g., Blue Bottle Coffee"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+          className="w-full px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-sm text-ink placeholder:text-ink-muted"
         />
       </div>
 
       <div>
         <label
           htmlFor="roaster-location"
-          className="block text-sm font-medium text-gray-700 mb-1"
+          className="block text-sm font-medium text-ink-muted mb-1"
         >
           Location
         </label>
@@ -63,7 +63,7 @@ export function RoasterQuickCreate({
           value={location}
           onChange={(e) => setLocation(e.target.value)}
           placeholder="e.g., Oakland, CA"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+          className="w-full px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-sm text-ink placeholder:text-ink-muted"
         />
       </div>
 
@@ -71,7 +71,7 @@ export function RoasterQuickCreate({
         <button
           type="button"
           onClick={onCancel}
-          className="px-3 py-1.5 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 text-sm"
+          className="px-3 py-1.5 border border-border rounded-md text-ink hover:bg-sand text-sm"
         >
           Cancel
         </button>
@@ -79,7 +79,7 @@ export function RoasterQuickCreate({
           type="button"
           onClick={handleCreate}
           disabled={createRoasterMutation.isPending || !name.trim()}
-          className="px-3 py-1.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+          className="px-3 py-1.5 bg-primary text-white rounded-md hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed text-sm"
         >
           {createRoasterMutation.isPending ? 'Creating...' : 'Create Roaster'}
         </button>

@@ -9,6 +9,13 @@ export default function Logo({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
+      style={
+        {
+          '--logo-fill': 'var(--ink)',
+          '--logo-stroke': 'var(--card)',
+          '--logo-accent': 'var(--copper)',
+        } as React.CSSProperties
+      }
     >
       <defs>
         <linearGradient
@@ -19,8 +26,8 @@ export default function Logo({
           y2="180"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#34495E" />
-          <stop offset="1" stopColor="#2C3E50" />
+          <stop stopColor="var(--logo-fill)" stopOpacity="0.9" />
+          <stop offset="1" stopColor="var(--logo-fill)" />
         </linearGradient>
       </defs>
       <path
@@ -35,18 +42,18 @@ export default function Logo({
         cy="100"
         rx="45"
         ry="55"
-        stroke="#FFFFFF"
+        stroke="var(--logo-stroke)"
         strokeWidth="8"
         fill="none"
       />
       {/* Inner coffee bean seam/crease */}
       <path
         d="M100 155C90 135 85 120 85 100C85 80 100 65 115 45"
-        stroke="#FFFFFF"
+        stroke="var(--logo-stroke)"
         strokeWidth="8"
         strokeLinecap="round"
       />
-      <circle cx="115" cy="45" r="10" fill="#E67E22" />
+      <circle cx="115" cy="45" r="10" fill="var(--logo-accent)" />
     </svg>
   )
 }

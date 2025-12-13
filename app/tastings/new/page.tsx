@@ -77,28 +77,28 @@ export default function NewTastingPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">
+      <h1 className="font-display text-3xl font-bold text-ink mb-8">
         New Tasting Session
       </h1>
       {isLoadingCoffees || isLoadingRoasters ? (
-        <div className="text-center">Loading coffees...</div>
+        <div className="text-center text-ink-muted">Loading coffees...</div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-6">
           {createTastingMutation.error && (
-            <div className="bg-red-50 text-red-600 p-4 rounded-md">
+            <div className="bg-danger-soft text-danger p-4 rounded-md">
               {createTastingMutation.error.message}
             </div>
           )}
 
-          <div className="bg-white shadow-md rounded-lg p-6 space-y-6">
-            <h2 className="text-xl font-semibold text-gray-800">
+          <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
+            <h2 className="font-display text-xl font-semibold text-ink">
               Coffee Details
             </h2>
 
             <div>
               <label
                 htmlFor="coffee"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-ink-muted mb-2"
               >
                 Coffee *
               </label>
@@ -107,7 +107,7 @@ export default function NewTastingPage() {
                 value={selectedCoffeeId}
                 onChange={(e) => setSelectedCoffeeId(e.target.value)}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-ink"
               >
                 <option value="">Select a coffee</option>
                 {coffees?.coffees.map((coffee) => {
@@ -126,7 +126,7 @@ export default function NewTastingPage() {
             <div>
               <label
                 htmlFor="tastingDate"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-ink-muted mb-2"
               >
                 Tasting Date *
               </label>
@@ -136,13 +136,13 @@ export default function NewTastingPage() {
                 value={tastingDate}
                 onChange={(e) => setTastingDate(e.target.value)}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-ink"
               />
             </div>
           </div>
 
-          <div className="bg-white shadow-md rounded-lg p-6 space-y-6">
-            <h2 className="text-xl font-semibold text-gray-800">
+          <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
+            <h2 className="font-display text-xl font-semibold text-ink">
               Brewing Parameters
             </h2>
 
@@ -150,7 +150,7 @@ export default function NewTastingPage() {
               <div>
                 <label
                   htmlFor="brewMethod"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium text-ink-muted mb-2"
                 >
                   Brew Method *
                 </label>
@@ -161,7 +161,7 @@ export default function NewTastingPage() {
                     setBrewMethod(e.target.value as BrewMethod | '')
                   }
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-ink"
                 >
                   <option value="">Select a brew method</option>
                   <option value="pour_over">Pour Over</option>
@@ -178,7 +178,7 @@ export default function NewTastingPage() {
               <div>
                 <label
                   htmlFor="grindSize"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium text-ink-muted mb-2"
                 >
                   Grind Size
                 </label>
@@ -188,7 +188,7 @@ export default function NewTastingPage() {
                   onChange={(e) =>
                     setGrindSize(e.target.value as GrindSize | '')
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-ink"
                 >
                   <option value="">Select a grind size</option>
                   <option value="extra_fine">Extra Fine</option>
@@ -204,7 +204,7 @@ export default function NewTastingPage() {
               <div>
                 <label
                   htmlFor="waterTemp"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium text-ink-muted mb-2"
                 >
                   Water Temperature (°C)
                 </label>
@@ -214,14 +214,14 @@ export default function NewTastingPage() {
                   value={waterTemp}
                   onChange={(e) => setWaterTemp(e.target.value)}
                   placeholder="e.g., 93"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-ink placeholder:text-ink-muted"
                 />
               </div>
 
               <div>
                 <label
                   htmlFor="brewTime"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium text-ink-muted mb-2"
                 >
                   Brew Time
                 </label>
@@ -231,14 +231,14 @@ export default function NewTastingPage() {
                   value={brewTime}
                   onChange={(e) => setBrewTime(e.target.value)}
                   placeholder="e.g., 4:30"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-ink placeholder:text-ink-muted"
                 />
               </div>
 
               <div>
                 <label
                   htmlFor="coffeeGrams"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium text-ink-muted mb-2"
                 >
                   Coffee (grams)
                 </label>
@@ -249,14 +249,14 @@ export default function NewTastingPage() {
                   value={coffeeGrams}
                   onChange={(e) => setCoffeeGrams(e.target.value)}
                   placeholder="e.g., 15"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-ink placeholder:text-ink-muted"
                 />
               </div>
 
               <div>
                 <label
                   htmlFor="waterGrams"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium text-ink-muted mb-2"
                 >
                   Water (grams)
                 </label>
@@ -266,21 +266,21 @@ export default function NewTastingPage() {
                   value={waterGrams}
                   onChange={(e) => setWaterGrams(e.target.value)}
                   placeholder="e.g., 250"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-ink placeholder:text-ink-muted"
                 />
               </div>
             </div>
           </div>
 
-          <div className="bg-white shadow-md rounded-lg p-6 space-y-6">
-            <h2 className="text-xl font-semibold text-gray-800">
+          <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
+            <h2 className="font-display text-xl font-semibold text-ink">
               Rating & Notes
             </h2>
 
             <div>
               <label
                 htmlFor="overallRating"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-ink-muted mb-2"
               >
                 Overall Rating * (1-10)
               </label>
@@ -293,14 +293,14 @@ export default function NewTastingPage() {
                 value={overallRating}
                 onChange={(e) => setOverallRating(e.target.value)}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-ink"
               />
             </div>
 
             <div>
               <label
                 htmlFor="flavors"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-ink-muted mb-2"
               >
                 Flavor Notes
               </label>
@@ -323,7 +323,7 @@ export default function NewTastingPage() {
                     }
                   }}
                   placeholder="Type a flavor and press Enter or click Add"
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-ink placeholder:text-ink-muted"
                 />
                 <button
                   type="button"
@@ -336,7 +336,7 @@ export default function NewTastingPage() {
                       setCurrentFlavor('')
                     }
                   }}
-                  className="px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700"
+                  className="px-4 py-2 border border-primary text-primary rounded-md hover:bg-primary-soft transition-colors"
                 >
                   Add
                 </button>
@@ -361,7 +361,7 @@ export default function NewTastingPage() {
             <div>
               <label
                 htmlFor="sessionNotes"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-ink-muted mb-2"
               >
                 Session Notes
               </label>
@@ -371,7 +371,7 @@ export default function NewTastingPage() {
                 onChange={(e) => setSessionNotes(e.target.value)}
                 rows={4}
                 placeholder="Additional notes about the brewing process, environment, or overall experience..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-ink placeholder:text-ink-muted"
               />
             </div>
           </div>
@@ -380,14 +380,14 @@ export default function NewTastingPage() {
             <button
               type="button"
               onClick={() => router.push('/tastings')}
-              className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+              className="px-6 py-2 border border-border rounded-md text-ink hover:bg-sand"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={createTastingMutation.isPending}
-              className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {createTastingMutation.isPending ? 'Creating...' : 'Create Tasting'}
             </button>

@@ -64,7 +64,7 @@ export default function Navigation({ user }: { user: User | null }) {
   }, [isMobileMenuOpen])
 
   return (
-    <nav className="bg-white shadow-sm border-b relative z-50">
+    <nav className="bg-card shadow-sm border-b border-border relative z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <DesktopNavigation user={user} onSignOut={handleSignOut} />
         <MobileNavigation

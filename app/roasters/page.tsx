@@ -20,7 +20,7 @@ export default function RoastersPage() {
   if (isLoadingRoasters) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center">Loading roasters...</div>
+        <div className="text-center text-ink-muted">Loading roasters...</div>
       </div>
     )
   }
@@ -28,7 +28,7 @@ export default function RoastersPage() {
   if (errorRoasters) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center text-red-600">
+        <div className="text-center text-danger">
           Error: {errorRoasters.message}
         </div>
       </div>
@@ -38,16 +38,16 @@ export default function RoastersPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Coffee Roasters</h1>
+        <h1 className="font-display text-3xl font-bold text-ink">Coffee Roasters</h1>
       </div>
 
       {roasters?.roasters.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-gray-600 mb-4">No roasters yet.</p>
-          <p className="text-gray-500 text-sm mb-4">
+          <p className="text-ink-muted mb-4">No roasters yet.</p>
+          <p className="text-ink-muted text-sm mb-4">
             Roasters are added when you create a new coffee.
           </p>
-          <Link href="/coffees/new" className="text-blue-600 hover:underline">
+          <Link href="/coffees/new" className="text-primary hover:underline">
             Add your first coffee
           </Link>
         </div>
@@ -57,14 +57,14 @@ export default function RoastersPage() {
             <div
               key={roaster.id}
               onClick={() => router.push(`/roasters/${roaster.id}`)}
-              className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer"
+              className="bg-card rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow cursor-pointer"
             >
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg font-semibold text-ink mb-2">
                 {roaster.name}
               </h3>
 
               {roaster.location && (
-                <p className="text-sm text-gray-600 mb-2">
+                <p className="text-sm text-ink-muted mb-2">
                   📍 {roaster.location}
                 </p>
               )}
@@ -79,14 +79,14 @@ export default function RoastersPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={(e) => e.stopPropagation()}
-                  className="text-sm text-blue-600 hover:underline mb-2 block"
+                  className="text-sm text-primary hover:underline mb-2 block"
                 >
                   🌐 {roaster.website}
                 </a>
               )}
 
               {roaster.notes && (
-                <p className="text-sm text-gray-600 line-clamp-3">
+                <p className="text-sm text-ink-muted line-clamp-3">
                   {roaster.notes}
                 </p>
               )}

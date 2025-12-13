@@ -1,42 +1,173 @@
 @import 'tailwindcss';
 
+/* ===== CUPPING NOTEBOOK DESIGN TOKENS ===== */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Surfaces */
+  --paper: #FBFAF3;
+  --sand: #EEE9DF;
+  --card: #FFFFFF;
+
+  /* Text */
+  --ink: #161513;
+  --ink-muted: #6B6A64;
+
+  /* Border */
+  --border: #E2DDD3;
+
+  /* Primary (Copper - main actions) */
+  --primary: #9C4221;
+  --primary-hover: #7C3118;
+  --primary-soft: #F4E3DD;
+
+  /* Link color (warm slate) */
+  --link: #6B5B4F;
+  --link-hover: #4A3F36;
+
+  /* Accent (Copper alias for compatibility) */
+  --copper: #9C4221;
+  --copper-soft: #F4E3DD;
+
+  /* Semantic */
+  --success: #2E7D32;
+  --success-soft: #E8F5E9;
+  --warning: #B76E00;
+  --warning-soft: #FFF8E1;
+  --danger: #C62828;
+  --danger-soft: #FFEBEE;
+
+  /* Shape */
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+
+  /* Shadow */
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
+  --shadow-md: 0 4px 8px rgba(16, 24, 40, 0.08);
+
+  /* Legacy compatibility */
+  --background: var(--paper);
+  --foreground: var(--ink);
+}
+
+/* Dark mode via data attribute */
+[data-theme="dark"] {
+  --paper: #0E0F11;
+  --sand: #15171A;
+  --card: #1C1F24;
+
+  --ink: #F4F2EC;
+  --ink-muted: #B8B3AA;
+
+  --border: #2A2F36;
+
+  --primary: #D4856A;
+  --primary-hover: #E09980;
+  --primary-soft: rgba(156, 66, 33, 0.2);
+
+  --link: #B8A89A;
+  --link-hover: #D4C4B6;
+
+  --copper: #D4856A;
+  --copper-soft: #2E1F1A;
+
+  --success: #66BB6A;
+  --success-soft: #1A2E1A;
+  --warning: #FFB74D;
+  --warning-soft: #2E2510;
+  --danger: #EF5350;
+  --danger-soft: #2E1515;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
+
+  --background: var(--paper);
+  --foreground: var(--ink);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* Surface colors */
+  --color-paper: var(--paper);
+  --color-sand: var(--sand);
+  --color-card: var(--card);
+
+  /* Text colors */
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+
+  /* Border */
+  --color-border: var(--border);
+
+  /* Primary */
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-soft: var(--primary-soft);
+
+  /* Links */
+  --color-link: var(--link);
+  --color-link-hover: var(--link-hover);
+
+  /* Accent (copper alias) */
+  --color-copper: var(--copper);
+  --color-copper-soft: var(--copper-soft);
+
+  /* Semantic */
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+
+  /* Border radius */
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+
+  /* Fonts */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-display: var(--font-fraunces);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Typography utilities */
+.text-micro {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
 }
 
 /* Safari/iOS form input fixes */
 input,
 textarea,
-select,
-button {
+select {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
   /* Ensure minimum 16px to prevent iOS zoom on focus */
   font-size: 16px;
-  /* Explicitly set text color to use CSS variables */
-  color: #171717;
+  /* Use theme color */
+  color: var(--ink);
+}
+
+button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  font-size: 16px;
+  cursor: pointer;
+  /* Let Tailwind classes control button text color */
 }
 
 /* Remove iOS tap highlight */
