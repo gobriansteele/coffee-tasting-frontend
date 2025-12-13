@@ -10,15 +10,13 @@ export function useTheme() {
 
   // Initialize theme from localStorage after mount
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: need to track mount state for hydration
     setMounted(true)
 
     const stored = localStorage.getItem('theme')
     if (stored === 'dark' || stored === 'light') {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setThemeState(stored)
     } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setThemeState('dark')
     }
   }, [])
