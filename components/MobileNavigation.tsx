@@ -11,6 +11,7 @@ type MobileNavigationProps = {
   onToggle: () => void
   onNavClick: (href?: string) => void
   onSignOut: () => void
+  isRecoveryMode?: boolean
 }
 
 export function MobileNavigation({
@@ -19,6 +20,7 @@ export function MobileNavigation({
   onToggle,
   onNavClick,
   onSignOut,
+  isRecoveryMode = false,
 }: MobileNavigationProps) {
   const { toggleTheme, resolvedTheme, mounted } = useTheme()
 
@@ -62,39 +64,41 @@ export function MobileNavigation({
             )}
           </button>
 
-          <button
-            onClick={onToggle}
-            className="p-2 rounded-md text-ink-muted hover:text-ink hover:bg-sand focus:outline-none focus:ring-2 focus:ring-primary"
-            aria-label="Toggle mobile menu"
-          >
-            <svg
-              className="h-6 w-6"
-              stroke="currentColor"
-              fill="none"
-              viewBox="0 0 24 24"
+          {!isRecoveryMode && (
+            <button
+              onClick={onToggle}
+              className="p-2 rounded-md text-ink-muted hover:text-ink hover:bg-sand focus:outline-none focus:ring-2 focus:ring-primary"
+              aria-label="Toggle mobile menu"
             >
-              {isOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              )}
-            </svg>
-          </button>
+              <svg
+                className="h-6 w-6"
+                stroke="currentColor"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                {isOpen ? (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                ) : (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                )}
+              </svg>
+            </button>
+          )}
         </div>
       </div>
 
       {/* Backdrop overlay for mobile menu */}
-      {isOpen && (
+      {isOpen && !isRecoveryMode && (
         <div
           className="fixed inset-0 bg-opacity-25 z-30 md:hidden transition-opacity duration-300"
           onClick={() => onNavClick()}
@@ -102,6 +106,7 @@ export function MobileNavigation({
       )}
 
       {/* Mobile menu full-screen overlay */}
+      {!isRecoveryMode && (
       <div
         className={`fixed left-0 right-0 bg-card z-40 md:hidden transition-transform duration-300 ease-in-out ${
           isOpen ? 'transform translate-y-0' : 'transform -translate-y-full'
@@ -180,6 +185,7 @@ export function MobileNavigation({
           </div>
         </div>
       </div>
+      )}
     </>
   )
 }

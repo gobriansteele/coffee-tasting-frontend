@@ -38,7 +38,7 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser()
 
   // Define public routes that don't require authentication
-  const publicRoutes = ['/login', '/signup', '/auth', '/']
+  const publicRoutes = ['/login', '/signup', '/auth', '/forgot-password', '/']
   const isPublicRoute = publicRoutes.some(
     (route) =>
       request.nextUrl.pathname.startsWith(route) ||
@@ -49,6 +49,16 @@ export async function updateSession(request: NextRequest) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone()
     url.pathname = '/login'
+    return NextResponse.redirect(url)
+  }
+
+  // If in recovery mode, only allow access to reset password page
+  const isRecoveryMode = request.cookies.get('recovery_mode')?.value === 'true'
+  const isResetPasswordPage = request.nextUrl.pathname === '/auth/reset-password'
+
+  if (isRecoveryMode && !isResetPasswordPage && !isPublicRoute) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/auth/reset-password'
     return NextResponse.redirect(url)
   }
 

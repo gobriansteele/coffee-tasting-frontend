@@ -8,9 +8,10 @@ import { useTheme } from '@/hooks/use-theme'
 type DesktopNavigationProps = {
   user: User | null
   onSignOut: () => void
+  isRecoveryMode?: boolean
 }
 
-export function DesktopNavigation({ user, onSignOut }: DesktopNavigationProps) {
+export function DesktopNavigation({ user, onSignOut, isRecoveryMode = false }: DesktopNavigationProps) {
   const { toggleTheme, resolvedTheme, mounted } = useTheme()
 
   return (
@@ -19,7 +20,7 @@ export function DesktopNavigation({ user, onSignOut }: DesktopNavigationProps) {
         <Link href="/" className="flex items-center space-x-2">
           <Logo className="w-10 h-10" />
         </Link>
-        {user && (
+        {user && !isRecoveryMode && (
           <div className="ml-10 flex items-center space-x-6">
             <Link
               href="/tastings"
@@ -45,6 +46,11 @@ export function DesktopNavigation({ user, onSignOut }: DesktopNavigationProps) {
             >
               Coffees
             </Link>
+          </div>
+        )}
+        {isRecoveryMode && (
+          <div className="ml-10">
+            <span className="text-ink-muted text-sm">Complete your password reset</span>
           </div>
         )}
       </div>
@@ -77,7 +83,7 @@ export function DesktopNavigation({ user, onSignOut }: DesktopNavigationProps) {
           )}
         </button>
 
-        {user ? (
+        {isRecoveryMode ? null : user ? (
           <>
             <span className="text-sm text-ink-muted">{user.email}</span>
             <button

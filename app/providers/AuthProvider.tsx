@@ -14,7 +14,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
-      const publicRoutes = ['/login', '/signup', '/auth', '/']
+      const publicRoutes = ['/login', '/signup', '/auth', '/forgot-password', '/']
       const isPublicRoute = publicRoutes.some(
         (route) => pathname.startsWith(route) || pathname === route
       )

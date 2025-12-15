@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono, Fraunces } from 'next/font/google'
+import { cookies } from 'next/headers'
 import './globals.css'
 import Navigation from '@/components/navigation'
 import { createClient } from '@/lib/supabase/server'
@@ -36,6 +37,9 @@ export default async function RootLayout({
     data: { user },
   } = await supabase.auth.getUser()
 
+  const cookieStore = await cookies()
+  const isRecoveryMode = cookieStore.get('recovery_mode')?.value === 'true'
+
   // Blocking script to set theme before paint (prevents flash)
   const themeScript = `
     (function() {
@@ -55,7 +59,7 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} antialiased`}
       >
         <Providers>
-          <Navigation user={user} />
+          <Navigation user={user} isRecoveryMode={isRecoveryMode} />
           <main className="min-h-screen bg-paper">{children}</main>
         </Providers>
       </body>

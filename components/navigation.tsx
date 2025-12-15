@@ -7,7 +7,12 @@ import { useState, useEffect } from 'react'
 import { DesktopNavigation } from './DesktopNavigation'
 import { MobileNavigation } from './MobileNavigation'
 
-export default function Navigation({ user }: { user: User | null }) {
+type NavigationProps = {
+  user: User | null
+  isRecoveryMode?: boolean
+}
+
+export default function Navigation({ user, isRecoveryMode = false }: NavigationProps) {
   const router = useRouter()
   const pathname = usePathname()
   const supabase = createClient()
@@ -66,13 +71,14 @@ export default function Navigation({ user }: { user: User | null }) {
   return (
     <nav className="bg-card shadow-sm border-b border-border relative z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <DesktopNavigation user={user} onSignOut={handleSignOut} />
+        <DesktopNavigation user={user} onSignOut={handleSignOut} isRecoveryMode={isRecoveryMode} />
         <MobileNavigation
           user={user}
           isOpen={isMobileMenuOpen}
           onToggle={handleMobileMenuToggle}
           onNavClick={handleNavClick}
           onSignOut={handleSignOut}
+          isRecoveryMode={isRecoveryMode}
         />
       </div>
     </nav>
