@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { User } from '@supabase/supabase-js'
 import Logo from './Logo'
 import { useTheme } from '@/hooks/use-theme'
+import { AdminGraphSyncButton } from './dashboard/AdminGraphSyncButton'
 
 type MobileNavigationProps = {
   user: User | null
@@ -37,6 +38,9 @@ export function MobileNavigation({
         </Link>
 
         <div className="flex items-center space-x-2">
+          {/* Admin Graph Sync - only visible to admins */}
+          <AdminGraphSyncButton />
+
           {/* Theme Toggle */}
           <button
             onClick={toggleTheme}

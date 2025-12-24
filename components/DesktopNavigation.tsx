@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { User } from '@supabase/supabase-js'
 import Logo from './Logo'
 import { useTheme } from '@/hooks/use-theme'
+import { AdminGraphSyncButton } from './dashboard/AdminGraphSyncButton'
 
 type DesktopNavigationProps = {
   user: User | null
@@ -56,6 +57,9 @@ export function DesktopNavigation({ user, onSignOut, isRecoveryMode = false }: D
       </div>
 
       <div className="flex items-center space-x-4">
+        {/* Admin Graph Sync - only visible to admins */}
+        <AdminGraphSyncButton />
+
         {/* Theme Toggle */}
         <button
           onClick={toggleTheme}

@@ -229,6 +229,13 @@ class ApiClient {
       method: 'DELETE',
     })
   }
+
+  // Admin
+  async syncGraphDatabase(): Promise<void> {
+    return this.request<void>('/admin/graph/sync', {
+      method: 'POST',
+    })
+  }
 }
 
 export type { ApiClient }
