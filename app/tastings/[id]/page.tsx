@@ -17,10 +17,9 @@ export default function TastingDetailPage() {
     error: errorTasting,
   } = useQuery({
     queryKey: queryKeys.tastings.detail(tastingId),
-    queryFn: () => apiClient.getTastingSession(tastingId),
+    queryFn: () => apiClient.getTasting(tastingId),
     enabled: !!tastingId,
   })
-  console.log(tasting)
 
   if (isLoadingTasting) {
     return (
@@ -47,21 +46,25 @@ export default function TastingDetailPage() {
         <div className="flex justify-between items-start mb-4">
           <div>
             <h1 className="font-display text-3xl font-bold text-ink">
-              {tasting.coffee_name}
+              {tasting.coffee.name}
             </h1>
-            <p className="text-lg text-ink-muted">by {tasting.roaster_name}</p>
+            <p className="text-lg text-ink-muted">
+              by {tasting.coffee.roaster?.name || 'Unknown Roaster'}
+            </p>
             <p className="text-sm text-ink-muted">
               Tasted on {formatLongDate(tasting.created_at)}
             </p>
           </div>
-          <div className="flex items-center space-x-2">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-warning tabular-nums">
-                {tasting.overall_rating}/10
+          {tasting.rating && (
+            <div className="flex items-center space-x-2">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-warning tabular-nums">
+                  {tasting.rating.score}/5
+                </div>
+                <div className="text-sm text-ink-muted">Rating</div>
               </div>
-              <div className="text-sm text-ink-muted">Overall Rating</div>
             </div>
-          </div>
+          )}
         </div>
       </div>
 
@@ -72,164 +75,75 @@ export default function TastingDetailPage() {
             Brewing Parameters
           </h2>
           <div className="space-y-3">
-            <div className="flex justify-between">
-              <span className="text-ink-muted">Method:</span>
-              <span className="font-medium text-ink">
-                {tasting.brew_method.replace('_', ' ')}
-              </span>
-            </div>
+            {tasting.brew_method && (
+              <div className="flex justify-between">
+                <span className="text-ink-muted">Method:</span>
+                <span className="font-medium text-ink capitalize">
+                  {tasting.brew_method.replace('_', ' ')}
+                </span>
+              </div>
+            )}
             {tasting.grind_size && (
               <div className="flex justify-between">
                 <span className="text-ink-muted">Grind Size:</span>
-                <span className="font-medium text-ink">
+                <span className="font-medium text-ink capitalize">
                   {tasting.grind_size.replace('_', ' ')}
                 </span>
               </div>
             )}
-            {tasting.coffee_grams && (
-              <div className="flex justify-between">
-                <span className="text-ink-muted">Coffee:</span>
-                <span className="font-medium text-ink tabular-nums">{tasting.coffee_grams}g</span>
-              </div>
-            )}
-            {tasting.water_grams && (
-              <div className="flex justify-between">
-                <span className="text-ink-muted">Water:</span>
-                <span className="font-medium text-ink tabular-nums">{tasting.water_grams}g</span>
-              </div>
-            )}
-            {tasting.water_temp_celsius && (
-              <div className="flex justify-between">
-                <span className="text-ink-muted">Water Temperature:</span>
-                <span className="font-medium text-ink tabular-nums">
-                  {tasting.water_temp_celsius}°C
-                </span>
-              </div>
-            )}
-            {tasting.brew_time_seconds && (
-              <div className="flex justify-between">
-                <span className="text-ink-muted">Brew Time:</span>
-                <span className="font-medium text-ink tabular-nums">
-                  {tasting.brew_time_seconds}s
-                </span>
-              </div>
-            )}
           </div>
         </div>
 
-        {/* Ratings */}
+        {/* Rating & Notes */}
         <div className="bg-card shadow-sm rounded-lg p-6">
           <h2 className="font-display text-xl font-semibold text-ink mb-4">
-            Detailed Ratings
+            Rating
           </h2>
-          <div className="space-y-3">
-            {tasting.aroma_rating && (
+          {tasting.rating ? (
+            <div className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-ink-muted">Aroma:</span>
-                <span className="font-medium text-ink tabular-nums">{tasting.aroma_rating}/10</span>
-              </div>
-            )}
-            {tasting.flavor_rating && (
-              <div className="flex justify-between">
-                <span className="text-ink-muted">Flavor:</span>
-                <span className="font-medium text-ink tabular-nums">{tasting.flavor_rating}/10</span>
-              </div>
-            )}
-            {tasting.aftertaste_rating && (
-              <div className="flex justify-between">
-                <span className="text-ink-muted">Aftertaste:</span>
+                <span className="text-ink-muted">Score:</span>
                 <span className="font-medium text-ink tabular-nums">
-                  {tasting.aftertaste_rating}/10
+                  {tasting.rating.score}/5
                 </span>
               </div>
-            )}
-            {tasting.acidity_rating && (
-              <div className="flex justify-between">
-                <span className="text-ink-muted">Acidity:</span>
-                <span className="font-medium text-ink tabular-nums">{tasting.acidity_rating}/10</span>
-              </div>
-            )}
-            {tasting.body_rating && (
-              <div className="flex justify-between">
-                <span className="text-ink-muted">Body:</span>
-                <span className="font-medium text-ink tabular-nums">{tasting.body_rating}/10</span>
-              </div>
-            )}
-            {tasting.balance_rating && (
-              <div className="flex justify-between">
-                <span className="text-ink-muted">Balance:</span>
-                <span className="font-medium text-ink tabular-nums">{tasting.balance_rating}/10</span>
-              </div>
-            )}
-            {tasting.uniformity_rating && (
-              <div className="flex justify-between">
-                <span className="text-ink-muted">Uniformity:</span>
-                <span className="font-medium text-ink tabular-nums">
-                  {tasting.uniformity_rating}/10
-                </span>
-              </div>
-            )}
-            {tasting.clean_cup_rating && (
-              <div className="flex justify-between">
-                <span className="text-ink-muted">Clean Cup:</span>
-                <span className="font-medium text-ink tabular-nums">
-                  {tasting.clean_cup_rating}/10
-                </span>
-              </div>
-            )}
-            {tasting.sweetness_rating && (
-              <div className="flex justify-between">
-                <span className="text-ink-muted">Sweetness:</span>
-                <span className="font-medium text-ink tabular-nums">
-                  {tasting.sweetness_rating}/10
-                </span>
-              </div>
-            )}
-          </div>
+              {tasting.rating.notes && (
+                <div>
+                  <span className="text-ink-muted">Rating Notes:</span>
+                  <p className="mt-1 text-ink">{tasting.rating.notes}</p>
+                </div>
+              )}
+            </div>
+          ) : (
+            <p className="text-ink-muted">No rating recorded</p>
+          )}
         </div>
       </div>
 
-      {/* Tasting Notes */}
-      {tasting.tasting_notes && tasting.tasting_notes.length > 0 && (
+      {/* Detected Flavors */}
+      {tasting.detected_flavors && tasting.detected_flavors.length > 0 && (
         <div className="bg-card shadow-sm rounded-lg p-6 mt-8">
           <h2 className="font-display text-xl font-semibold text-ink mb-4">
-            Flavor Notes
+            Detected Flavors
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {tasting.tasting_notes.map((note) => (
+            {tasting.detected_flavors.map((df, index) => (
               <div
-                key={note.id}
+                key={index}
                 className="border border-border rounded-lg p-3"
               >
-                <div className="flex justify-between items-start mb-2">
+                <div className="flex justify-between items-start">
                   <span className="font-medium text-ink">
-                    {note.flavor_tag?.name || 'Unknown'}
+                    {df.flavor.name}
                   </span>
-                  {note.intensity && (
-                    <span className="text-sm text-ink-muted">
-                      Intensity: {note.intensity}
-                    </span>
-                  )}
+                  <span className="text-sm text-ink-muted">
+                    Intensity: {df.intensity}/10
+                  </span>
                 </div>
-                <div className="flex flex-wrap gap-1 mb-2">
-                  {note.aroma && (
-                    <span className="text-xs bg-primary-soft text-primary px-2 py-1 rounded">
-                      Aroma
-                    </span>
-                  )}
-                  {note.flavor && (
-                    <span className="text-xs bg-success-soft text-success px-2 py-1 rounded">
-                      Flavor
-                    </span>
-                  )}
-                  {note.aftertaste && (
-                    <span className="text-xs bg-copper-soft text-copper px-2 py-1 rounded">
-                      Aftertaste
-                    </span>
-                  )}
-                </div>
-                {note.notes && (
-                  <p className="text-sm text-ink-muted">{note.notes}</p>
+                {df.flavor.category && (
+                  <span className="text-xs bg-sand text-ink-muted px-2 py-1 rounded mt-2 inline-block">
+                    {df.flavor.category}
+                  </span>
                 )}
               </div>
             ))}
@@ -252,12 +166,6 @@ export default function TastingDetailPage() {
             Session created: {formatLongDate(tasting.created_at)} at{' '}
             {formatTime(tasting.created_at)}
           </p>
-          {tasting.updated_at !== tasting.created_at && (
-            <p>
-              Last updated: {formatLongDate(tasting.updated_at)} at{' '}
-              {formatTime(tasting.updated_at)}
-            </p>
-          )}
         </div>
       </div>
 

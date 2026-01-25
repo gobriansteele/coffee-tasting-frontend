@@ -14,7 +14,7 @@ export function SignedInDashboard({ userEmail }: SignedInDashboardProps) {
   // Fetch all tastings for accurate stats - recent section will limit display
   const { data, isLoading, error } = useQuery({
     queryKey: queryKeys.tastings.all(),
-    queryFn: () => apiClient.getTastingSessions(0, 100),
+    queryFn: () => apiClient.getTastings({ limit: 100 }),
   })
 
   if (isLoading) {
@@ -31,7 +31,7 @@ export function SignedInDashboard({ userEmail }: SignedInDashboardProps) {
   return (
     <DashboardContent
       userEmail={userEmail}
-      tastings={data?.tastings ?? []}
+      tastings={data?.items ?? []}
       totalTastings={data?.total ?? 0}
     />
   )

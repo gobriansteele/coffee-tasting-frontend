@@ -4,13 +4,16 @@ import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useRoasters } from '@/lib/queries/roasters'
 import { useCreateCoffee } from '@/lib/queries/coffees'
+import { useFlavors } from '@/lib/queries/flavors'
 import type {
   CreateCoffeeRequest,
   ProcessingMethod,
   RoastLevel,
   Roaster,
+  Flavor,
 } from '@/lib/api/types'
 import { RoasterQuickCreate } from '@/components/RoasterQuickCreate'
+import { FlavorQuickCreate } from '@/components/FlavorQuickCreate'
 
 export default function NewCoffeePage() {
   const router = useRouter()
@@ -18,9 +21,24 @@ export default function NewCoffeePage() {
 
   // React Query hooks
   const { data: roastersData, isLoading: loadingRoasters, error: roastersError } = useRoasters()
+  const { data: flavorsData, isLoading: loadingFlavors } = useFlavors()
   const createCoffeeMutation = useCreateCoffee()
 
-  const roasters = roastersData?.roasters || []
+  const roasters = roastersData?.items || []
+  const flavors = flavorsData?.items || []
+
+  // Group flavors by category
+  const flavorsByCategory = flavors.reduce<Record<string, Flavor[]>>(
+    (acc, flavor) => {
+      const category = flavor.category || 'Other'
+      if (!acc[category]) {
+        acc[category] = []
+      }
+      acc[category].push(flavor)
+      return acc
+    },
+    {}
+  )
 
   // Form state
   const [name, setName] = useState('')
@@ -30,9 +48,6 @@ export default function NewCoffeePage() {
   // Origin info
   const [originCountry, setOriginCountry] = useState('')
   const [originRegion, setOriginRegion] = useState('')
-  const [farmName, setFarmName] = useState('')
-  const [producer, setProducer] = useState('')
-  const [altitude, setAltitude] = useState('')
 
   // Processing
   const [processingMethod, setProcessingMethod] = useState<
@@ -42,19 +57,31 @@ export default function NewCoffeePage() {
 
   // Roasting
   const [roastLevel, setRoastLevel] = useState<RoastLevel | ''>('')
-  const [roastDate, setRoastDate] = useState('')
 
   // Additional info
   const [description, setDescription] = useState('')
-  const [price, setPrice] = useState('')
-  const [bagSize, setBagSize] = useState('')
+
+  // Expected flavors
+  const [selectedFlavorIds, setSelectedFlavorIds] = useState<string[]>([])
+  const [showFlavorForm, setShowFlavorForm] = useState(false)
+
+  const toggleFlavor = (flavorId: string) => {
+    setSelectedFlavorIds((prev) =>
+      prev.includes(flavorId)
+        ? prev.filter((id) => id !== flavorId)
+        : [...prev, flavorId]
+    )
+  }
+
+  const handleFlavorCreated = (newFlavor: Flavor) => {
+    setSelectedFlavorIds((prev) => [...prev, newFlavor.id])
+    setShowFlavorForm(false)
+  }
 
   useEffect(() => {
     // Pre-select roaster from query params
-    // Using useEffect to avoid hydration mismatch with useSearchParams
     const roasterIdParam = searchParams.get('roasterId')
     if (roasterIdParam) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setRoasterId(roasterIdParam)
     }
   }, [searchParams])
@@ -82,25 +109,20 @@ export default function NewCoffeePage() {
       roaster_id: roasterId,
       origin_country: originCountry || undefined,
       origin_region: originRegion || undefined,
-      farm_name: farmName || undefined,
-      producer: producer || undefined,
-      altitude: altitude || undefined,
       processing_method: processingMethod || undefined,
       variety: variety || undefined,
       roast_level: roastLevel || undefined,
-      roast_date: roastDate || undefined,
       description: description || undefined,
-      price: price ? parseFloat(price) : undefined,
-      bag_size: bagSize || undefined,
+      flavor_ids: selectedFlavorIds.length > 0 ? selectedFlavorIds : undefined,
     }
 
     createCoffeeMutation.mutate(coffeeData)
   }
 
-  if (loadingRoasters) {
+  if (loadingRoasters || loadingFlavors) {
     return (
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center text-ink-muted">Loading roasters...</div>
+        <div className="text-center text-ink-muted">Loading...</div>
       </div>
     )
   }
@@ -215,57 +237,6 @@ export default function NewCoffeePage() {
 
             <div>
               <label
-                htmlFor="farmName"
-                className="block text-sm font-medium text-ink-muted mb-2"
-              >
-                Farm Name
-              </label>
-              <input
-                id="farmName"
-                type="text"
-                value={farmName}
-                onChange={(e) => setFarmName(e.target.value)}
-                placeholder="e.g., Chelchele Farm"
-                className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="producer"
-                className="block text-sm font-medium text-ink-muted mb-2"
-              >
-                Producer
-              </label>
-              <input
-                id="producer"
-                type="text"
-                value={producer}
-                onChange={(e) => setProducer(e.target.value)}
-                placeholder="e.g., Kebede Alemu"
-                className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="altitude"
-                className="block text-sm font-medium text-ink-muted mb-2"
-              >
-                Altitude
-              </label>
-              <input
-                id="altitude"
-                type="text"
-                value={altitude}
-                onChange={(e) => setAltitude(e.target.value)}
-                placeholder="e.g., 1800-2000m"
-                className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-              />
-            </div>
-
-            <div>
-              <label
                 htmlFor="variety"
                 className="block text-sm font-medium text-ink-muted mb-2"
               >
@@ -309,11 +280,7 @@ export default function NewCoffeePage() {
                 <option value="washed">Washed</option>
                 <option value="natural">Natural</option>
                 <option value="honey">Honey</option>
-                <option value="semi_washed">Semi-washed</option>
-                <option value="wet_hulled">Wet Hulled</option>
                 <option value="anaerobic">Anaerobic</option>
-                <option value="carbonic_maceration">Carbonic Maceration</option>
-                <option value="other">Other</option>
               </select>
             </div>
 
@@ -332,76 +299,113 @@ export default function NewCoffeePage() {
               >
                 <option value="">Select roast level</option>
                 <option value="light">Light</option>
-                <option value="medium_light">Medium-Light</option>
                 <option value="medium">Medium</option>
                 <option value="medium_dark">Medium-Dark</option>
                 <option value="dark">Dark</option>
-                <option value="french">French</option>
-                <option value="italian">Italian</option>
               </select>
-            </div>
-
-            <div>
-              <label
-                htmlFor="roastDate"
-                className="block text-sm font-medium text-ink-muted mb-2"
-              >
-                Roast Date
-              </label>
-              <input
-                id="roastDate"
-                type="text"
-                value={roastDate}
-                onChange={(e) => setRoastDate(e.target.value)}
-                placeholder="e.g., 2024-01-15 or Jan 15, 2024"
-                className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-              />
             </div>
           </div>
         </div>
 
-        {/* Additional Information */}
+        {/* Expected Flavors */}
+        <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
+          <div className="flex justify-between items-start">
+            <div>
+              <h2 className="font-display text-lg font-semibold text-ink">
+                Expected Flavors
+              </h2>
+              <p className="text-sm text-ink-muted mt-1">
+                Select the flavor notes you expect from this coffee.
+              </p>
+            </div>
+            {!showFlavorForm && (
+              <button
+                type="button"
+                onClick={() => setShowFlavorForm(true)}
+                className="text-sm text-primary hover:text-primary-hover"
+              >
+                + Add New Flavor
+              </button>
+            )}
+          </div>
+
+          {/* Flavor Quick Create Form */}
+          {showFlavorForm && (
+            <FlavorQuickCreate
+              onFlavorCreated={handleFlavorCreated}
+              onCancel={() => setShowFlavorForm(false)}
+            />
+          )}
+
+          {/* Selected flavors */}
+          {selectedFlavorIds.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {selectedFlavorIds.map((id) => {
+                const flavor = flavors.find((f) => f.id === id)
+                return flavor ? (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => toggleFlavor(id)}
+                    className="px-3 py-1 bg-primary text-white rounded-full text-sm hover:bg-primary-hover transition-colors"
+                  >
+                    {flavor.name} ×
+                  </button>
+                ) : null
+              })}
+            </div>
+          )}
+
+          {/* Flavor picker by category */}
+          <div className="border border-border rounded-lg max-h-64 overflow-y-auto">
+            {Object.keys(flavorsByCategory).length === 0 && !showFlavorForm ? (
+              <div className="p-4 text-center text-ink-muted text-sm">
+                <p>No flavors available.</p>
+                <button
+                  type="button"
+                  onClick={() => setShowFlavorForm(true)}
+                  className="text-primary hover:underline mt-2"
+                >
+                  Create your first flavor
+                </button>
+              </div>
+            ) : Object.keys(flavorsByCategory).length === 0 ? (
+              <div className="p-4 text-center text-ink-muted text-sm">
+                Create a flavor above to get started
+              </div>
+            ) : (
+              Object.entries(flavorsByCategory).map(([category, categoryFlavors]) => (
+                <div key={category}>
+                  <div className="px-3 py-1.5 bg-sand text-xs font-medium text-ink-muted uppercase tracking-wide sticky top-0">
+                    {category}
+                  </div>
+                  <div className="p-3 flex flex-wrap gap-2">
+                    {categoryFlavors.map((flavor) => (
+                      <button
+                        key={flavor.id}
+                        type="button"
+                        onClick={() => toggleFlavor(flavor.id)}
+                        className={`px-3 py-1 text-sm rounded-full border transition-colors ${
+                          selectedFlavorIds.includes(flavor.id)
+                            ? 'bg-primary text-white border-primary'
+                            : 'bg-card border-border hover:border-primary hover:text-primary'
+                        }`}
+                      >
+                        {flavor.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        {/* Description */}
         <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
           <h2 className="font-display text-lg font-semibold text-ink">
-            Additional Information
+            Description
           </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label
-                htmlFor="price"
-                className="block text-sm font-medium text-ink-muted mb-2"
-              >
-                Price
-              </label>
-              <input
-                id="price"
-                type="number"
-                step="0.01"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                placeholder="e.g., 18.50"
-                className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="bagSize"
-                className="block text-sm font-medium text-ink-muted mb-2"
-              >
-                Bag Size
-              </label>
-              <input
-                id="bagSize"
-                type="text"
-                value={bagSize}
-                onChange={(e) => setBagSize(e.target.value)}
-                placeholder="e.g., 12oz, 340g"
-                className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-              />
-            </div>
-          </div>
 
           <div>
             <label
@@ -424,7 +428,7 @@ export default function NewCoffeePage() {
         <div className="flex justify-end space-x-4">
           <button
             type="button"
-            onClick={() => router.push('/roasters')}
+            onClick={() => router.push('/coffees')}
             className="px-6 py-2 border border-border rounded-md text-ink hover:bg-sand transition-colors"
           >
             Cancel

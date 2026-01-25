@@ -3,16 +3,31 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useApiClient } from '@/hooks/use-api-client'
 import { queryKeys } from '@/lib/query-keys'
-import type { Coffee, CreateCoffeeRequest } from '@/lib/api/types'
+import type { Coffee, CreateCoffeeRequest, UpdateCoffeeRequest } from '@/lib/api/types'
 import { useRouter } from 'next/navigation'
-import * as coffeeQueries from './coffee-queries'
+
+type CoffeeFilters = {
+  skip?: number
+  limit?: number
+  roaster_id?: string
+}
+
+export const useCoffees = (filters?: CoffeeFilters) => {
+  const apiClient = useApiClient()
+
+  return useQuery({
+    queryKey: queryKeys.coffees.list(filters),
+    queryFn: () => apiClient.getCoffees(filters),
+    staleTime: 5 * 60 * 1000,
+  })
+}
 
 export const useCoffee = (id: string) => {
   const apiClient = useApiClient()
 
   return useQuery({
     queryKey: queryKeys.coffees.detail(id),
-    queryFn: () => coffeeQueries.getCoffee(apiClient, id),
+    queryFn: () => apiClient.getCoffee(id),
     staleTime: 5 * 60 * 1000,
     enabled: !!id,
   })
@@ -24,8 +39,7 @@ export const useCreateCoffee = () => {
   const router = useRouter()
 
   return useMutation({
-    mutationFn: (data: CreateCoffeeRequest) =>
-      coffeeQueries.createCoffee(apiClient, data),
+    mutationFn: (data: CreateCoffeeRequest) => apiClient.createCoffee(data),
     onSuccess: (newCoffee) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.coffees.lists() })
       queryClient.setQueryData(
@@ -42,8 +56,8 @@ export const useUpdateCoffee = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<Coffee> }) =>
-      coffeeQueries.updateCoffee(apiClient, id, data),
+    mutationFn: ({ id, data }: { id: string; data: UpdateCoffeeRequest }) =>
+      apiClient.updateCoffee(id, data),
     onMutate: async ({ id, data }) => {
       await queryClient.cancelQueries({
         queryKey: queryKeys.coffees.detail(id),
@@ -60,7 +74,7 @@ export const useUpdateCoffee = () => {
 
       return { previousCoffee }
     },
-    onError: (err, { id }, context) => {
+    onError: (_err, { id }, context) => {
       if (context?.previousCoffee) {
         queryClient.setQueryData(
           queryKeys.coffees.detail(id),
@@ -68,7 +82,7 @@ export const useUpdateCoffee = () => {
         )
       }
     },
-    onSettled: (data, error, { id }) => {
+    onSettled: (_data, _error, { id }) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.coffees.detail(id) })
       queryClient.invalidateQueries({ queryKey: queryKeys.coffees.lists() })
     },
@@ -81,7 +95,7 @@ export const useDeleteCoffee = () => {
   const router = useRouter()
 
   return useMutation({
-    mutationFn: (id: string) => coffeeQueries.deleteCoffee(apiClient, id),
+    mutationFn: (id: string) => apiClient.deleteCoffee(id),
     onSuccess: (_, id) => {
       queryClient.removeQueries({ queryKey: queryKeys.coffees.detail(id) })
       queryClient.invalidateQueries({ queryKey: queryKeys.coffees.lists() })

@@ -31,8 +31,8 @@ export default function RoasterDetailPage() {
     isLoading: isLoadingCoffees,
     error: errorCoffees,
   } = useQuery({
-    queryKey: queryKeys.coffees.list({ roasterId }),
-    queryFn: () => apiClient.getCoffees({ roasterId }),
+    queryKey: queryKeys.coffees.list({ roaster_id: roasterId }),
+    queryFn: () => apiClient.getCoffees({ roaster_id: roasterId }),
     enabled: !!roasterId,
   })
 
@@ -93,10 +93,10 @@ export default function RoasterDetailPage() {
         </div>
 
         <div className="space-y-2 text-ink-muted">
-          {roaster.location && <p>📍 Location: {roaster.location}</p>}
+          {roaster.location && <p>Location: {roaster.location}</p>}
           {roaster.website && (
             <p>
-              🌐 Website:{' '}
+              Website:{' '}
               <a
                 href={roaster.website}
                 target="_blank"
@@ -107,10 +107,10 @@ export default function RoasterDetailPage() {
               </a>
             </p>
           )}
-          {roaster.notes && (
+          {roaster.description && (
             <div className="mt-4">
-              <p className="font-semibold text-ink">Notes:</p>
-              <p className="mt-1">{roaster.notes}</p>
+              <p className="font-semibold text-ink">Description:</p>
+              <p className="mt-1">{roaster.description}</p>
             </div>
           )}
         </div>
@@ -128,13 +128,13 @@ export default function RoasterDetailPage() {
         </Link>
       </div>
 
-      {coffees?.coffees.length === 0 ? (
+      {coffees?.items.length === 0 ? (
         <div className="text-center py-8 bg-sand rounded-lg">
           <p className="text-ink-muted">No coffees found for this roaster.</p>
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {coffees?.coffees.map((coffee) => (
+          {coffees?.items.map((coffee) => (
             <Link
               key={coffee.id}
               href={`/coffees/${coffee.id}`}
@@ -144,10 +144,14 @@ export default function RoasterDetailPage() {
                 {coffee.name}
               </h3>
               <div className="space-y-1 text-sm text-ink-muted">
-                {coffee.origin && <p>🌍 {coffee.origin}</p>}
-                {coffee.process && <p>⚙️ {coffee.process}</p>}
-                {coffee.varietal && <p>🌱 {coffee.varietal}</p>}
-                {coffee.price && <p>💰 ${coffee.price}</p>}
+                {coffee.origin_country && <p>{coffee.origin_country}</p>}
+                {coffee.processing_method && (
+                  <p className="capitalize">{coffee.processing_method}</p>
+                )}
+                {coffee.variety && <p>{coffee.variety}</p>}
+                {coffee.roast_level && (
+                  <p className="capitalize">{coffee.roast_level.replace('_', ' ')}</p>
+                )}
               </div>
             </Link>
           ))}

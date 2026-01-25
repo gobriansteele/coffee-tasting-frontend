@@ -1,9 +1,9 @@
 import Link from 'next/link'
-import type { TastingSession } from '@/lib/api/types'
+import type { Tasting } from '@/lib/api/types'
 import { formatShortDate } from '@/lib/utils/date'
 
 type RecentTastingCardProps = {
-  tasting: TastingSession
+  tasting: Tasting
 }
 
 function formatBrewMethod(method: string): string {
@@ -20,26 +20,30 @@ export function RecentTastingCard({ tasting }: RecentTastingCardProps) {
     >
       <div className="mb-2">
         <h3 className="text-lg font-semibold text-ink">
-          {tasting.coffee_name || 'Unknown Coffee'}
+          {tasting.coffee.name}
         </h3>
         <p className="text-sm text-ink-muted">
-          {tasting.roaster_name || 'Unknown Roaster'}
+          {tasting.coffee.roaster?.name || 'Unknown Roaster'}
         </p>
       </div>
 
       <div className="space-y-2 text-sm">
-        <div className="flex justify-between">
-          <span className="text-ink-muted">Method:</span>
-          <span className="font-medium text-ink">
-            {formatBrewMethod(tasting.brew_method)}
-          </span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-ink-muted">Rating:</span>
-          <span className="font-medium text-ink tabular-nums">
-            {tasting.overall_rating}/10
-          </span>
-        </div>
+        {tasting.brew_method && (
+          <div className="flex justify-between">
+            <span className="text-ink-muted">Method:</span>
+            <span className="font-medium text-ink">
+              {formatBrewMethod(tasting.brew_method)}
+            </span>
+          </div>
+        )}
+        {tasting.rating && (
+          <div className="flex justify-between">
+            <span className="text-ink-muted">Rating:</span>
+            <span className="font-medium text-ink tabular-nums">
+              {tasting.rating.score}/5
+            </span>
+          </div>
+        )}
         <div className="flex justify-between">
           <span className="text-ink-muted">Date:</span>
           <span className="font-medium text-ink">
