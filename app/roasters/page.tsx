@@ -41,7 +41,7 @@ export default function RoastersPage() {
         <h1 className="font-display text-3xl font-bold text-ink">Coffee Roasters</h1>
       </div>
 
-      {roasters?.roasters.length === 0 ? (
+      {roasters?.items.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-ink-muted mb-4">No roasters yet.</p>
           <p className="text-ink-muted text-sm mb-4">
@@ -53,7 +53,7 @@ export default function RoastersPage() {
         </div>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {roasters?.roasters.map((roaster) => (
+          {roasters?.items.map((roaster) => (
             <div
               key={roaster.id}
               onClick={() => router.push(`/roasters/${roaster.id}`)}
@@ -65,7 +65,7 @@ export default function RoastersPage() {
 
               {roaster.location && (
                 <p className="text-sm text-ink-muted mb-2">
-                  📍 {roaster.location}
+                  {roaster.location}
                 </p>
               )}
 
@@ -81,13 +81,13 @@ export default function RoastersPage() {
                   onClick={(e) => e.stopPropagation()}
                   className="text-sm text-primary hover:underline mb-2 block"
                 >
-                  🌐 {roaster.website}
+                  {roaster.website}
                 </a>
               )}
 
-              {roaster.notes && (
+              {roaster.description && (
                 <p className="text-sm text-ink-muted line-clamp-3">
-                  {roaster.notes}
+                  {roaster.description}
                 </p>
               )}
             </div>

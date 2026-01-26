@@ -1,8 +1,8 @@
 import Link from 'next/link'
-import type { TastingSession } from '@/lib/api/types'
+import type { Tasting } from '@/lib/api/types'
 
 type QuickStatsProps = {
-  tastings: TastingSession[]
+  tastings: Tasting[]
   totalTastings: number
 }
 
@@ -43,7 +43,7 @@ function StatsContent({
                 <span className="text-2xl font-bold text-warning tabular-nums">
                   {coffee.avgRating.toFixed(1)}
                 </span>
-                <span className="text-sm text-ink-muted">/10</span>
+                <span className="text-sm text-ink-muted">/5</span>
               </div>
             </div>
           ))}
@@ -96,9 +96,9 @@ function PlaceholderStats() {
             </div>
             <div className="flex items-baseline gap-1">
               <span className="text-2xl font-bold text-warning tabular-nums">
-                9.2
+                4.5
               </span>
-              <span className="text-sm text-ink-muted">/10</span>
+              <span className="text-sm text-ink-muted">/5</span>
             </div>
           </div>
           <div className="flex items-center justify-between">
@@ -108,9 +108,9 @@ function PlaceholderStats() {
             </div>
             <div className="flex items-baseline gap-1">
               <span className="text-2xl font-bold text-warning tabular-nums">
-                8.7
+                4.2
               </span>
-              <span className="text-sm text-ink-muted">/10</span>
+              <span className="text-sm text-ink-muted">/5</span>
             </div>
           </div>
         </div>
@@ -124,7 +124,7 @@ function PlaceholderStats() {
         <div>
           <div className="text-2xl font-bold text-ink mb-1">Pour Over</div>
           <div className="flex items-baseline gap-2">
-            <span className="text-lg text-warning tabular-nums">8.4</span>
+            <span className="text-lg text-warning tabular-nums">4.3</span>
             <span className="text-sm text-ink-muted">avg rating</span>
           </div>
           <p className="text-sm text-ink-muted mt-3">
@@ -139,20 +139,26 @@ function PlaceholderStats() {
 export function QuickStats({ tastings, totalTastings }: QuickStatsProps) {
   const hasEnoughData = totalTastings >= MIN_TASTINGS_FOR_INSIGHTS
 
+  // Filter tastings with ratings
+  const tastingsWithRatings = tastings.filter((t) => t.rating)
+
   // Group tastings by coffee and calculate average ratings
-  const coffeeRatings = tastings.reduce<
+  const coffeeRatings = tastingsWithRatings.reduce<
     Record<string, { roaster: string; ratings: number[] }>
   >((acc, t) => {
-    const name = t.coffee_name || 'Unknown Coffee'
+    const name = t.coffee.name
     if (!acc[name]) {
-      acc[name] = { roaster: t.roaster_name || 'Unknown Roaster', ratings: [] }
+      acc[name] = { roaster: t.coffee.roaster?.name || 'Unknown Roaster', ratings: [] }
     }
-    acc[name].ratings.push(t.overall_rating)
+    if (t.rating) {
+      acc[name].ratings.push(t.rating.score)
+    }
     return acc
   }, {})
 
   // Calculate top rated coffees (top 2 by average rating)
   const topRated = Object.entries(coffeeRatings)
+    .filter(([, { ratings }]) => ratings.length > 0)
     .map(([name, { roaster, ratings }]) => ({
       name,
       roaster,
@@ -163,11 +169,13 @@ export function QuickStats({ tastings, totalTastings }: QuickStatsProps) {
     .slice(0, 2)
 
   // Calculate best brew method
-  const methodRatings = tastings.reduce<Record<string, number[]>>((acc, t) => {
-    if (!acc[t.brew_method]) {
-      acc[t.brew_method] = []
+  const methodRatings = tastingsWithRatings.reduce<Record<string, number[]>>((acc, t) => {
+    if (t.brew_method && t.rating) {
+      if (!acc[t.brew_method]) {
+        acc[t.brew_method] = []
+      }
+      acc[t.brew_method].push(t.rating.score)
     }
-    acc[t.brew_method].push(t.overall_rating)
     return acc
   }, {})
 
@@ -181,7 +189,7 @@ export function QuickStats({ tastings, totalTastings }: QuickStatsProps) {
 
   const bestMethod = methodAverages[0] ?? null
 
-  if (hasEnoughData) {
+  if (hasEnoughData && topRated.length > 0) {
     return <StatsContent topRated={topRated} bestMethod={bestMethod} />
   }
 

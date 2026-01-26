@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api/client'
 import { queryKeys } from '@/lib/query-keys'
-import { formatShortDate } from '@/lib/utils/date'
 
 export default function CoffeesPage() {
   const router = useRouter()
@@ -46,7 +45,7 @@ export default function CoffeesPage() {
         </Link>
       </div>
 
-      {coffees?.coffees.length === 0 ? (
+      {coffees?.items.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-ink-muted mb-4">No coffees yet.</p>
           <Link href="/coffees/new" className="text-primary hover:underline">
@@ -55,7 +54,7 @@ export default function CoffeesPage() {
         </div>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {coffees?.coffees.map((coffee) => (
+          {coffees?.items.map((coffee) => (
             <div
               key={coffee.id}
               onClick={() => router.push(`/coffees/${coffee.id}`)}
@@ -76,10 +75,10 @@ export default function CoffeesPage() {
                     </Link>
                   </p>
                 )}
-                {coffee.roast_date && (
-                  <p>Roasted: {formatShortDate(coffee.roast_date)}</p>
+                {coffee.origin_country && <p>{coffee.origin_country}</p>}
+                {coffee.roast_level && (
+                  <p className="capitalize">{coffee.roast_level.replace('_', ' ')}</p>
                 )}
-                {coffee.origin && <p>{coffee.origin}</p>}
               </div>
             </div>
           ))}

@@ -1,11 +1,11 @@
 import Link from 'next/link'
-import type { TastingSession } from '@/lib/api/types'
+import type { Tasting } from '@/lib/api/types'
 import { QuickStats } from './QuickStats'
 import { RecentTastingCard } from './RecentTastingCard'
 
 type DashboardContentProps = {
   userEmail: string
-  tastings: TastingSession[]
+  tastings: Tasting[]
   totalTastings: number
   recentTastingsLimit?: number
 }
