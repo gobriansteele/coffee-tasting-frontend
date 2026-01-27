@@ -8,6 +8,7 @@ import type {
   UserProfile,
   FlavorProfile,
   ApiFlavorProfileResponse,
+  ApiFlavorMatchResponse,
   RoasterListResponse,
   CoffeeListResponse,
   FlavorListResponse,
@@ -318,9 +319,27 @@ class ApiClient {
       searchParams.append('exclude_tasted', excludeTasted.toString())
     }
 
-    return this.request<FlavorMatchResponse>(
+    const response = await this.request<ApiFlavorMatchResponse>(
       `/recommendations/by-flavor?${searchParams.toString()}`
     )
+
+    const flavorIdSet = new Set(response.flavor_ids)
+
+    return {
+      flavor_ids: response.flavor_ids,
+      matches: response.items.map((item) => {
+        const { matching_flavors: matchCount, ...coffee } = item
+        const matchingFlavorNames = coffee.flavors
+          .filter((f) => flavorIdSet.has(f.id))
+          .map((f) => f.name)
+
+        return {
+          coffee,
+          matching_flavors: matchingFlavorNames,
+          match_count: matchCount,
+        }
+      }),
+    }
   }
 }
 

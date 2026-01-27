@@ -122,6 +122,17 @@ export type FlavorMatchCoffee = {
   match_count: number
 }
 
+// API response types for flavor match endpoint
+export type ApiFlavorMatchItem = Coffee & {
+  matching_flavors: number
+}
+
+export type ApiFlavorMatchResponse = {
+  items: ApiFlavorMatchItem[]
+  flavor_ids: string[]
+  exclude_tasted: boolean
+}
+
 // =============================================================================
 // Request Types
 // =============================================================================
