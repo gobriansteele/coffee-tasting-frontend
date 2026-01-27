@@ -21,7 +21,7 @@ export function FlavorProfileList({ flavorProfile }: FlavorProfileListProps) {
   return (
     <div className="space-y-6">
       {/* Top Flavors */}
-      {top_flavors.length > 0 && (
+      {top_flavors?.length > 0 && (
         <div>
           <h3 className="text-lg font-semibold text-ink mb-3">Top Flavors</h3>
           <div className="space-y-3">
@@ -60,7 +60,7 @@ export function FlavorProfileList({ flavorProfile }: FlavorProfileListProps) {
       )}
 
       {/* Flavor Categories */}
-      {Object.keys(flavor_categories).length > 0 && (
+      {flavor_categories && Object.keys(flavor_categories).length > 0 && (
         <div>
           <h3 className="text-lg font-semibold text-ink mb-3">
             Category Distribution

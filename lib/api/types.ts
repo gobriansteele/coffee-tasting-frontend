@@ -85,6 +85,19 @@ export type UserProfile = {
   display_name?: string
 }
 
+// API response types (raw from backend)
+export type ApiFlavorProfileEntry = {
+  flavor: Flavor
+  detection_count: number
+  avg_intensity: number
+}
+
+export type ApiFlavorProfileResponse = {
+  items: ApiFlavorProfileEntry[]
+  total: number
+}
+
+// Transformed types (used by frontend)
 export type FlavorProfileEntry = {
   flavor: Flavor
   count: number

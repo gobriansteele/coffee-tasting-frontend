@@ -7,6 +7,7 @@ import type {
   Rating,
   UserProfile,
   FlavorProfile,
+  ApiFlavorProfileResponse,
   RoasterListResponse,
   CoffeeListResponse,
   FlavorListResponse,
@@ -273,7 +274,24 @@ class ApiClient {
   }
 
   async getFlavorProfile(): Promise<FlavorProfile> {
-    return this.request<FlavorProfile>('/me/flavor-profile')
+    const response = await this.request<ApiFlavorProfileResponse>('/me/flavor-profile')
+
+    // Build flavor_categories by aggregating counts per category
+    const flavorCategories: Record<string, number> = {}
+    for (const entry of response.items) {
+      const category = entry.flavor.category ?? 'Uncategorized'
+      flavorCategories[category] = (flavorCategories[category] ?? 0) + entry.detection_count
+    }
+
+    return {
+      total_tastings: response.total,
+      top_flavors: response.items.map((entry) => ({
+        flavor: entry.flavor,
+        count: entry.detection_count,
+        avg_intensity: entry.avg_intensity,
+      })),
+      flavor_categories: flavorCategories,
+    }
   }
 
   // ===========================================================================
