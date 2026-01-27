@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from 'react'
 import { useProfile, useFlavorProfile, useUpdateProfile } from '@/lib/queries/user'
+import { useTastings } from '@/lib/queries/tastings'
 import { FlavorProfileList } from '@/components/FlavorProfileList'
 
 export default function ProfilePage() {
   const { data: profile, isLoading: isLoadingProfile, error: profileError } = useProfile()
   const { data: flavorProfile, isLoading: isLoadingFlavor, error: flavorError } = useFlavorProfile()
+  const { data: tastingsData, isLoading: isLoadingTastings } = useTastings({ limit: 1 })
   const updateProfile = useUpdateProfile()
 
   const [isEditing, setIsEditing] = useState(false)
@@ -44,7 +46,7 @@ export default function ProfilePage() {
     setIsEditing(false)
   }
 
-  if (isLoadingProfile || isLoadingFlavor) {
+  if (isLoadingProfile || isLoadingFlavor || isLoadingTastings) {
     return (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center text-ink-muted">Loading profile...</div>
@@ -174,7 +176,12 @@ export default function ProfilePage() {
             Failed to load flavor profile
           </div>
         ) : flavorProfile ? (
-          <FlavorProfileList flavorProfile={flavorProfile} />
+          <FlavorProfileList
+            flavorProfile={{
+              ...flavorProfile,
+              total_tastings: tastingsData?.total ?? 0,
+            }}
+          />
         ) : (
           <div className="text-center text-ink-muted py-4">
             No flavor profile data available
