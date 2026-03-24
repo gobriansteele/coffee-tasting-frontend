@@ -228,3 +228,40 @@ export type FlavorMatchResponse = {
   flavor_ids: string[]
   matches: FlavorMatchCoffee[]
 }
+
+// =============================================================================
+// Identification Types (coffee photo identification)
+// =============================================================================
+
+export type IdentifiedFlavor = {
+  name: string
+  category: string | null
+}
+
+export type IdentifiedRoaster = {
+  name: string
+  location: string | null
+}
+
+export type CoffeeIdentificationResponse = {
+  // Coffee-level fields
+  coffee_name: string | null
+  roaster: IdentifiedRoaster | null
+  origin_country: string | null
+  origin_region: string | null
+  processing_method: ProcessingMethod | null
+  variety: string | null
+  roast_level: RoastLevel | null
+  description: string | null
+  flavor_notes: IdentifiedFlavor[]
+  altitude: string | null
+  producer: string | null
+
+  // Tasting-level fields
+  roast_date: string | null
+  best_by_date: string | null
+  lot_number: string | null
+
+  // Debug/transparency
+  raw_text: string | null
+}

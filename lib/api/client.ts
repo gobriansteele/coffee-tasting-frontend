@@ -15,6 +15,7 @@ import type {
   TastingListResponse,
   SimilarCoffeesResponse,
   FlavorMatchResponse,
+  CoffeeIdentificationResponse,
   CreateRoasterRequest,
   UpdateRoasterRequest,
   CreateCoffeeRequest,
@@ -340,6 +341,44 @@ class ApiClient {
         }
       }),
     }
+  }
+
+  // ===========================================================================
+  // Identification
+  // ===========================================================================
+
+  async identifyCoffee(images: File[]): Promise<CoffeeIdentificationResponse> {
+    const token = await this.getAuthToken()
+
+    const formData = new FormData()
+    for (const image of images) {
+      formData.append('images', image)
+    }
+
+    const response = await fetch(`${API_URL}/api/v1/identify-coffee`, {
+      method: 'POST',
+      headers: {
+        Authorization: token ? `Bearer ${token}` : '',
+      },
+      body: formData,
+    })
+
+    if (response.status === 401 || response.status === 403) {
+      const supabase = createClient()
+      await supabase.auth.signOut()
+
+      if (typeof window !== 'undefined') {
+        window.location.href = '/login'
+      }
+
+      throw new Error('Authentication required')
+    }
+
+    if (!response.ok) {
+      throw new Error(`API Error: ${response.statusText}`)
+    }
+
+    return response.json()
   }
 }
 
