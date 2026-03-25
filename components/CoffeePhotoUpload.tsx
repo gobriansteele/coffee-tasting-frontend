@@ -42,11 +42,12 @@ export function CoffeePhotoUpload({ onIdentified, onSkip }: CoffeePhotoUploadPro
         setValidationError(`You can upload up to ${MAX_IMAGES} images.`)
         return prev
       }
-
-      const newUrls = fileArray.map((file) => URL.createObjectURL(file))
-      setPreviews((prevPreviews) => [...prevPreviews, ...newUrls])
-
       return combined
+    })
+
+    setPreviews((prev) => {
+      if (prev.length + fileArray.length > MAX_IMAGES) return prev
+      return [...prev, ...fileArray.map((file) => URL.createObjectURL(file))]
     })
   }, [])
 

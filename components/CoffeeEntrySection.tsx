@@ -17,6 +17,7 @@ import { formatRoastLevel } from '@/lib/format'
 
 type CoffeeEntryProps = {
   onChange: (result: CoffeeEntryResult | null) => void
+  onIdentified?: (response: CoffeeIdentificationResponse) => void
 }
 
 type EntryMode = 'scan' | 'search' | 'manual'
@@ -65,7 +66,7 @@ function fieldsToInput(f: CoffeeFields): CoffeeInput {
 
 
 
-export function CoffeeEntrySection({ onChange }: CoffeeEntryProps) {
+export function CoffeeEntrySection({ onChange, onIdentified }: CoffeeEntryProps) {
   const [mode, setMode] = useState<EntryMode>('scan')
   const [fields, setFields] = useState<CoffeeFields>(EMPTY_FIELDS)
   const [aiFilledFields, setAiFilledFields] = useState<Set<keyof CoffeeFields>>(new Set())
@@ -109,6 +110,7 @@ export function CoffeeEntrySection({ onChange }: CoffeeEntryProps) {
     setFields(newFields)
     setAiFilledFields(filled)
     setScanCompleted(true)
+    onIdentified?.(result)
 
     if (newFields.name.trim()) {
       onChange({ mode: 'new', input: fieldsToInput(newFields) })
