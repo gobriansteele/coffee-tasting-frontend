@@ -5,6 +5,7 @@ type PaginationFilters = {
 
 type CoffeeFilters = PaginationFilters & {
   roaster_id?: string
+  search?: string
 }
 
 type TastingFilters = PaginationFilters & {
@@ -64,6 +65,14 @@ export const queryKeys = {
     all: () => [...queryKeys.all, 'user'] as const,
     profile: () => [...queryKeys.user.all(), 'profile'] as const,
     flavorProfile: () => [...queryKeys.user.all(), 'flavor-profile'] as const,
+  },
+
+  search: {
+    all: () => [...queryKeys.all, 'search'] as const,
+    roasters: (query: string) =>
+      [...queryKeys.search.all(), 'roasters', query] as const,
+    coffees: (query: string) =>
+      [...queryKeys.search.all(), 'coffees', query] as const,
   },
 
   recommendations: {
