@@ -227,6 +227,21 @@ export type IdentifiedFlavor = {
   category: string | null
 }
 
+export type CoffeeIdentificationResponse = {
+  coffee_name?: string
+  roaster?: {
+    name: string
+    location?: string
+  }
+  origin_country?: string
+  origin_region?: string
+  processing_method?: ProcessingMethod
+  roast_level?: RoastLevel
+  variety?: string
+  description?: string
+  flavor_notes: IdentifiedFlavor[]
+}
+
 // =============================================================================
 // Response Types (List endpoints)
 // =============================================================================
