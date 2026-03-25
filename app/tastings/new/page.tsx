@@ -1,27 +1,34 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useQuery } from '@tanstack/react-query'
-import { useApiClient } from '@/hooks/use-api-client'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useCreateTasting } from '@/lib/queries/tastings'
-import type { BrewMethod, GrindSize, DetectedFlavorInput } from '@/lib/api/types'
-import { queryKeys } from '@/lib/query-keys'
+import { useCreateCoffeeFromInput } from '@/lib/queries/submit-coffee'
+import { useFlavors } from '@/lib/queries/flavors'
+import type {
+  BrewMethod,
+  GrindSize,
+  DetectedFlavorInput,
+  CoffeeEntryResult,
+  CoffeeIdentificationResponse,
+} from '@/lib/api/types'
+import { CoffeeEntrySection } from '@/components/CoffeeEntrySection'
+import { BagFlavorSuggestions } from '@/components/BagFlavorSuggestions'
 import { FlavorPicker } from '@/components/FlavorPicker'
 import { RatingInput } from '@/components/RatingInput'
 
 export default function NewTastingPage() {
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const apiClient = useApiClient()
   const createTastingMutation = useCreateTasting()
+  const createCoffeeMutation = useCreateCoffeeFromInput()
 
-  const { data: coffees, isLoading: isLoadingCoffees } = useQuery({
-    queryKey: queryKeys.coffees.all(),
-    queryFn: () => apiClient.getCoffees({ limit: 100 }),
-  })
+  const { data: flavorsData } = useFlavors()
+  const allFlavors = flavorsData?.items ?? []
 
-  const [selectedCoffeeId, setSelectedCoffeeId] = useState('')
+  const [coffeeEntry, setCoffeeEntry] = useState<CoffeeEntryResult | null>(null)
+  const [identification, setIdentification] = useState<CoffeeIdentificationResponse | null>(null)
+  const [roastDate, setRoastDate] = useState('')
+  const [lotNumber, setLotNumber] = useState('')
   const [brewMethod, setBrewMethod] = useState<BrewMethod | ''>('')
   const [grindSize, setGrindSize] = useState<GrindSize | ''>('')
   const [notes, setNotes] = useState('')
@@ -29,22 +36,48 @@ export default function NewTastingPage() {
   const [ratingScore, setRatingScore] = useState<number | null>(null)
   const [ratingNotes, setRatingNotes] = useState('')
 
-  useEffect(() => {
-    const coffeeIdParam = searchParams.get('coffeeId')
-    if (coffeeIdParam) {
-      setSelectedCoffeeId(coffeeIdParam)
+  const isSubmitting = createTastingMutation.isPending || createCoffeeMutation.isPending
+  const submitError = createTastingMutation.error || createCoffeeMutation.error
+
+  const handleIdentified = (response: CoffeeIdentificationResponse) => {
+    setIdentification(response)
+    if (response.roast_date) setRoastDate(response.roast_date)
+    if (response.lot_number) setLotNumber(response.lot_number)
+  }
+
+  const handleAddBagFlavor = (flavorName: string, category: string | null) => {
+    const existing = allFlavors.find(
+      (f) => f.name.toLowerCase() === flavorName.toLowerCase()
+    )
+    if (existing) {
+      const alreadyAdded = detectedFlavors.some((df) => df.flavor_id === existing.id)
+      if (!alreadyAdded) {
+        setDetectedFlavors((prev) => [...prev, { flavor_id: existing.id, intensity: 5 }])
+      }
     }
-  }, [searchParams])
+  }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const addedFlavorNames = new Set(
+    detectedFlavors
+      .map((df) => allFlavors.find((f) => f.id === df.flavor_id)?.name)
+      .filter((name): name is string => name !== undefined)
+  )
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!coffeeEntry) return
 
-    if (!selectedCoffeeId) {
-      return
+    let coffeeId: string
+
+    if (coffeeEntry.mode === 'existing') {
+      coffeeId = coffeeEntry.coffee.id
+    } else {
+      const coffee = await createCoffeeMutation.mutateAsync(coffeeEntry.input)
+      coffeeId = coffee.id
     }
 
     createTastingMutation.mutate({
-      coffee_id: selectedCoffeeId,
+      coffee_id: coffeeId,
       brew_method: brewMethod || undefined,
       grind_size: grindSize || undefined,
       notes: notes || undefined,
@@ -53,187 +86,211 @@ export default function NewTastingPage() {
     })
   }
 
+  const inputClass =
+    'w-full px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-ink'
+
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <h1 className="font-display text-3xl font-bold text-ink mb-8">
         New Tasting
       </h1>
-      {isLoadingCoffees ? (
-        <div className="text-center text-ink-muted">Loading coffees...</div>
-      ) : (
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {createTastingMutation.error && (
-            <div className="bg-danger-soft text-danger p-4 rounded-md">
-              {createTastingMutation.error.message}
-            </div>
-          )}
 
-          <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
-            <h2 className="font-display text-xl font-semibold text-ink">
-              Coffee
-            </h2>
-
-            <div>
-              <label
-                htmlFor="coffee"
-                className="block text-sm font-medium text-ink-muted mb-2"
-              >
-                Select Coffee *
-              </label>
-              <select
-                id="coffee"
-                value={selectedCoffeeId}
-                onChange={(e) => setSelectedCoffeeId(e.target.value)}
-                required
-                className="w-full px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-ink"
-              >
-                <option value="">Select a coffee</option>
-                {coffees?.items.map((coffee) => (
-                  <option key={coffee.id} value={coffee.id}>
-                    {coffee.name} - {coffee.roaster?.name || 'Unknown Roaster'}
-                  </option>
-                ))}
-              </select>
-            </div>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {submitError && (
+          <div className="bg-danger-soft text-danger p-4 rounded-md">
+            {submitError.message}
           </div>
+        )}
 
+        <CoffeeEntrySection
+          onChange={setCoffeeEntry}
+          onIdentified={handleIdentified}
+        />
+
+        {(roastDate || lotNumber || identification) && (
           <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
             <h2 className="font-display text-xl font-semibold text-ink">
-              Brewing Parameters
+              Bag Info
             </h2>
-
             <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <label
-                  htmlFor="brewMethod"
+                  htmlFor="roastDate"
                   className="block text-sm font-medium text-ink-muted mb-2"
                 >
-                  Brew Method
+                  Roast Date
                 </label>
-                <select
-                  id="brewMethod"
-                  value={brewMethod}
-                  onChange={(e) =>
-                    setBrewMethod(e.target.value as BrewMethod | '')
-                  }
-                  className="w-full px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-ink"
-                >
-                  <option value="">Select a brew method</option>
-                  <option value="pourover">Pour Over</option>
-                  <option value="espresso">Espresso</option>
-                  <option value="french_press">French Press</option>
-                  <option value="aeropress">Aeropress</option>
-                  <option value="cold_brew">Cold Brew</option>
-                  <option value="drip">Drip</option>
-                </select>
+                <input
+                  id="roastDate"
+                  type="date"
+                  value={roastDate}
+                  onChange={(e) => setRoastDate(e.target.value)}
+                  className={inputClass}
+                />
               </div>
-
               <div>
                 <label
-                  htmlFor="grindSize"
+                  htmlFor="lotNumber"
                   className="block text-sm font-medium text-ink-muted mb-2"
                 >
-                  Grind Size
+                  Lot Number
                 </label>
-                <select
-                  id="grindSize"
-                  value={grindSize}
-                  onChange={(e) =>
-                    setGrindSize(e.target.value as GrindSize | '')
-                  }
-                  className="w-full px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-ink"
-                >
-                  <option value="">Select a grind size</option>
-                  <option value="fine">Fine</option>
-                  <option value="medium_fine">Medium Fine</option>
-                  <option value="medium">Medium</option>
-                  <option value="medium_coarse">Medium Coarse</option>
-                  <option value="coarse">Coarse</option>
-                </select>
+                <input
+                  id="lotNumber"
+                  type="text"
+                  value={lotNumber}
+                  onChange={(e) => setLotNumber(e.target.value)}
+                  placeholder="e.g. L-274"
+                  className={inputClass}
+                />
               </div>
             </div>
           </div>
+        )}
 
-          <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
-            <h2 className="font-display text-xl font-semibold text-ink">
-              Detected Flavors
-            </h2>
-            <p className="text-sm text-ink-muted">
-              What flavors did you taste? Add them and rate their intensity.
-            </p>
-            <FlavorPicker
-              selectedFlavors={detectedFlavors}
-              onChange={setDetectedFlavors}
-            />
-          </div>
+        <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
+          <h2 className="font-display text-xl font-semibold text-ink">
+            Brewing Parameters
+          </h2>
 
-          <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
-            <h2 className="font-display text-xl font-semibold text-ink">
-              Rating
-            </h2>
-            <RatingInput
-              value={ratingScore}
-              onChange={setRatingScore}
-            />
+          <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label
-                htmlFor="ratingNotes"
+                htmlFor="brewMethod"
                 className="block text-sm font-medium text-ink-muted mb-2"
               >
-                Rating Notes (optional)
+                Brew Method
               </label>
-              <textarea
-                id="ratingNotes"
-                value={ratingNotes}
-                onChange={(e) => setRatingNotes(e.target.value)}
-                rows={2}
-                placeholder="Why did you give this rating?"
-                className="w-full px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-ink placeholder:text-ink-muted"
-              />
+              <select
+                id="brewMethod"
+                value={brewMethod}
+                onChange={(e) =>
+                  setBrewMethod(e.target.value as BrewMethod | '')
+                }
+                className={inputClass}
+              >
+                <option value="">Select a brew method</option>
+                <option value="pourover">Pour Over</option>
+                <option value="espresso">Espresso</option>
+                <option value="french_press">French Press</option>
+                <option value="aeropress">Aeropress</option>
+                <option value="cold_brew">Cold Brew</option>
+                <option value="drip">Drip</option>
+              </select>
             </div>
-          </div>
-
-          <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
-            <h2 className="font-display text-xl font-semibold text-ink">
-              Notes
-            </h2>
 
             <div>
               <label
-                htmlFor="notes"
+                htmlFor="grindSize"
                 className="block text-sm font-medium text-ink-muted mb-2"
               >
-                General Notes
+                Grind Size
               </label>
-              <textarea
-                id="notes"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                rows={4}
-                placeholder="Describe your tasting experience..."
-                className="w-full px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-ink placeholder:text-ink-muted"
-              />
+              <select
+                id="grindSize"
+                value={grindSize}
+                onChange={(e) =>
+                  setGrindSize(e.target.value as GrindSize | '')
+                }
+                className={inputClass}
+              >
+                <option value="">Select a grind size</option>
+                <option value="fine">Fine</option>
+                <option value="medium_fine">Medium Fine</option>
+                <option value="medium">Medium</option>
+                <option value="medium_coarse">Medium Coarse</option>
+                <option value="coarse">Coarse</option>
+              </select>
             </div>
           </div>
+        </div>
 
-          <div className="flex justify-end space-x-4">
-            <button
-              type="button"
-              onClick={() => router.push('/tastings')}
-              className="px-6 py-2 border border-border rounded-md text-ink hover:bg-sand"
+        <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
+          <h2 className="font-display text-xl font-semibold text-ink">
+            Detected Flavors
+          </h2>
+          <p className="text-sm text-ink-muted">
+            What flavors did you taste? Add them and rate their intensity.
+          </p>
+          {identification && identification.flavor_notes.length > 0 && (
+            <BagFlavorSuggestions
+              flavors={identification.flavor_notes}
+              onAdd={handleAddBagFlavor}
+              addedNames={addedFlavorNames}
+            />
+          )}
+          <FlavorPicker
+            selectedFlavors={detectedFlavors}
+            onChange={setDetectedFlavors}
+          />
+        </div>
+
+        <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
+          <h2 className="font-display text-xl font-semibold text-ink">
+            Rating
+          </h2>
+          <RatingInput
+            value={ratingScore}
+            onChange={setRatingScore}
+          />
+          <div>
+            <label
+              htmlFor="ratingNotes"
+              className="block text-sm font-medium text-ink-muted mb-2"
             >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={createTastingMutation.isPending}
-              className="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {createTastingMutation.isPending ? 'Creating...' : 'Create Tasting'}
-            </button>
+              Rating Notes (optional)
+            </label>
+            <textarea
+              id="ratingNotes"
+              value={ratingNotes}
+              onChange={(e) => setRatingNotes(e.target.value)}
+              rows={2}
+              placeholder="Why did you give this rating?"
+              className="w-full px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-ink placeholder:text-ink-muted"
+            />
           </div>
-        </form>
-      )}
+        </div>
+
+        <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
+          <h2 className="font-display text-xl font-semibold text-ink">
+            Notes
+          </h2>
+
+          <div>
+            <label
+              htmlFor="notes"
+              className="block text-sm font-medium text-ink-muted mb-2"
+            >
+              General Notes
+            </label>
+            <textarea
+              id="notes"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              rows={4}
+              placeholder="Describe your tasting experience..."
+              className="w-full px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-ink placeholder:text-ink-muted"
+            />
+          </div>
+        </div>
+
+        <div className="flex justify-end space-x-4">
+          <button
+            type="button"
+            onClick={() => router.push('/tastings')}
+            className="px-6 py-2 border border-border rounded-md text-ink hover:bg-sand"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={!coffeeEntry || isSubmitting}
+            className="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isSubmitting ? 'Saving...' : 'Create Tasting'}
+          </button>
+        </div>
+      </form>
     </div>
   )
 }

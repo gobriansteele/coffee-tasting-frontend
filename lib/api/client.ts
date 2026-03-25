@@ -15,6 +15,7 @@ import type {
   TastingListResponse,
   SimilarCoffeesResponse,
   FlavorMatchResponse,
+  CoffeeIdentificationResponse,
   CreateRoasterRequest,
   UpdateRoasterRequest,
   CreateCoffeeRequest,
@@ -36,6 +37,7 @@ type PaginationParams = {
 
 type CoffeeFilters = PaginationParams & {
   roaster_id?: string
+  search?: string
 }
 
 type TastingFilters = PaginationParams & {
@@ -139,6 +141,7 @@ class ApiClient {
     if (params.skip !== undefined) searchParams.append('skip', params.skip.toString())
     if (params.limit !== undefined) searchParams.append('limit', params.limit.toString())
     if (params.roaster_id) searchParams.append('roaster_id', params.roaster_id)
+    if (params.search) searchParams.append('search', params.search)
 
     const query = searchParams.toString()
     return this.request<CoffeeListResponse>(`/coffees${query ? `?${query}` : ''}`)
@@ -340,6 +343,44 @@ class ApiClient {
         }
       }),
     }
+  }
+
+  // ===========================================================================
+  // Identification
+  // ===========================================================================
+
+  async identifyCoffee(images: File[]): Promise<CoffeeIdentificationResponse> {
+    const token = await this.getAuthToken()
+
+    const formData = new FormData()
+    for (const image of images) {
+      formData.append('images', image)
+    }
+
+    const response = await fetch(`${API_URL}/api/v1/identify-coffee`, {
+      method: 'POST',
+      headers: {
+        Authorization: token ? `Bearer ${token}` : '',
+      },
+      body: formData,
+    })
+
+    if (response.status === 401 || response.status === 403) {
+      const supabase = createClient()
+      await supabase.auth.signOut()
+
+      if (typeof window !== 'undefined') {
+        window.location.href = '/login'
+      }
+
+      throw new Error('Authentication required')
+    }
+
+    if (!response.ok) {
+      throw new Error(`API Error: ${response.statusText}`)
+    }
+
+    return response.json()
   }
 }
 

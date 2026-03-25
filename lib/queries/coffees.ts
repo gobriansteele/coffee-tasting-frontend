@@ -10,6 +10,7 @@ type CoffeeFilters = {
   skip?: number
   limit?: number
   roaster_id?: string
+  search?: string
 }
 
 export const useCoffees = (filters?: CoffeeFilters) => {
@@ -19,6 +20,18 @@ export const useCoffees = (filters?: CoffeeFilters) => {
     queryKey: queryKeys.coffees.list(filters),
     queryFn: () => apiClient.getCoffees(filters),
     staleTime: 5 * 60 * 1000,
+  })
+}
+
+export const useCoffeeSearch = (query: string) => {
+  const apiClient = useApiClient()
+  const trimmed = query.trim()
+
+  return useQuery({
+    queryKey: queryKeys.coffees.list({ search: trimmed }),
+    queryFn: () => apiClient.getCoffees({ search: trimmed, limit: 10 }),
+    enabled: trimmed.length >= 2,
+    staleTime: 30 * 1000,
   })
 }
 

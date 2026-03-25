@@ -5,6 +5,7 @@ type PaginationFilters = {
 
 type CoffeeFilters = PaginationFilters & {
   roaster_id?: string
+  search?: string
 }
 
 type TastingFilters = PaginationFilters & {

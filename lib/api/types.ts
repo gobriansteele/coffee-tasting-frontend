@@ -196,6 +196,26 @@ export type UpdateProfileRequest = {
   display_name?: string
 }
 
+export type RoasterInput =
+  | { existing_id: string; name: string; location?: string }
+  | { existing_id?: undefined; name: string; location?: string }
+
+export type CoffeeInput = {
+  name: string
+  roaster: RoasterInput
+  origin_country?: string
+  origin_region?: string
+  processing_method?: ProcessingMethod
+  variety?: string
+  roast_level?: RoastLevel
+  description?: string
+  flavor_names?: string[]
+}
+
+export type CoffeeEntryResult =
+  | { mode: 'existing'; coffee: Coffee }
+  | { mode: 'new'; input: CoffeeInput }
+
 // =============================================================================
 // Response Types (List endpoints)
 // =============================================================================
@@ -227,4 +247,41 @@ export type SimilarCoffeesResponse = {
 export type FlavorMatchResponse = {
   flavor_ids: string[]
   matches: FlavorMatchCoffee[]
+}
+
+// =============================================================================
+// Identification Types (coffee photo identification)
+// =============================================================================
+
+export type IdentifiedFlavor = {
+  name: string
+  category: string | null
+}
+
+export type IdentifiedRoaster = {
+  name: string
+  location: string | null
+}
+
+export type CoffeeIdentificationResponse = {
+  // Coffee-level fields
+  coffee_name: string | null
+  roaster: IdentifiedRoaster | null
+  origin_country: string | null
+  origin_region: string | null
+  processing_method: ProcessingMethod | null
+  variety: string | null
+  roast_level: RoastLevel | null
+  description: string | null
+  flavor_notes: IdentifiedFlavor[]
+  altitude: string | null
+  producer: string | null
+
+  // Tasting-level fields
+  roast_date: string | null
+  best_by_date: string | null
+  lot_number: string | null
+
+  // Debug/transparency
+  raw_text: string | null
 }
