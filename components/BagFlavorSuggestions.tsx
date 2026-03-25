@@ -21,25 +21,19 @@ export function BagFlavorSuggestions({
       {flavors.map((flavor) => {
         const added = addedNames?.has(flavor.name) ?? false
 
-        if (added) {
-          return (
-            <span
-              key={flavor.name}
-              className="px-2 py-0.5 bg-sand text-ink-muted text-xs rounded-full opacity-50"
-            >
-              ✓ {flavor.name}
-            </span>
-          )
-        }
-
         return (
           <button
             key={flavor.name}
             type="button"
-            onClick={() => onAdd(flavor.name, flavor.category)}
-            className="px-2 py-0.5 bg-sand text-ink text-xs rounded-full cursor-pointer hover:bg-copper-soft hover:text-copper transition-colors"
+            disabled={added}
+            onClick={added ? undefined : () => onAdd(flavor.name, flavor.category)}
+            className={`px-2 py-0.5 bg-sand text-xs rounded-full transition-colors ${
+              added
+                ? 'text-ink-muted opacity-50 cursor-default'
+                : 'text-ink cursor-pointer hover:bg-copper-soft hover:text-copper'
+            }`}
           >
-            + {flavor.name}
+            {added ? '✓' : '+'} {flavor.name}
           </button>
         )
       })}

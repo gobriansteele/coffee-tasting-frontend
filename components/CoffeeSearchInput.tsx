@@ -1,19 +1,14 @@
 'use client'
 
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useCoffeeSearch } from '@/lib/queries/coffees'
+import { useDebounced } from '@/hooks/use-debounced'
 import type { Coffee } from '@/lib/api/types'
+import { formatRoastLevel } from '@/lib/format'
 
 type CoffeeSearchInputProps = {
   onSelect: (coffee: Coffee) => void
   placeholder?: string
-}
-
-function formatRoastLevel(level: string): string {
-  return level
-    .split('_')
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ')
 }
 
 export function CoffeeSearchInput({
@@ -21,17 +16,12 @@ export function CoffeeSearchInput({
   placeholder = 'Search for a coffee...',
 }: CoffeeSearchInputProps) {
   const [query, setQuery] = useState('')
-  const [debouncedQuery, setDebouncedQuery] = useState('')
+  const debouncedQuery = useDebounced(query, 300)
   const [isOpen, setIsOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  useEffect(() => {
-    const timer = setTimeout(() => setDebouncedQuery(query), 300)
-    return () => clearTimeout(timer)
-  }, [query])
-
-  const { data, isLoading, isFetching } = useCoffeeSearch(debouncedQuery)
+  const { data, isFetching } = useCoffeeSearch(debouncedQuery)
   const coffees = data?.items ?? []
   const showDropdown = isOpen && debouncedQuery.trim().length >= 2
 
@@ -45,20 +35,16 @@ export function CoffeeSearchInput({
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setIsOpen(false)
-        inputRef.current?.blur()
-      }
-    },
-    []
-  )
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      setIsOpen(false)
+      inputRef.current?.blur()
+    }
+  }
 
   const handleSelect = (coffee: Coffee) => {
     onSelect(coffee)
     setQuery('')
-    setDebouncedQuery('')
     setIsOpen(false)
   }
 
@@ -80,7 +66,7 @@ export function CoffeeSearchInput({
 
       {showDropdown && (
         <div className="absolute z-10 mt-1 w-full bg-card border border-border rounded-md shadow-lg max-h-60 overflow-y-auto">
-          {(isLoading || isFetching) && coffees.length === 0 ? (
+          {isFetching && coffees.length === 0 ? (
             <div className="flex items-center justify-center py-4">
               <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
               <span className="ml-2 text-sm text-ink-muted">Searching...</span>

@@ -37,6 +37,7 @@ type PaginationParams = {
 
 type CoffeeFilters = PaginationParams & {
   roaster_id?: string
+  search?: string
 }
 
 type TastingFilters = PaginationParams & {
@@ -140,6 +141,7 @@ class ApiClient {
     if (params.skip !== undefined) searchParams.append('skip', params.skip.toString())
     if (params.limit !== undefined) searchParams.append('limit', params.limit.toString())
     if (params.roaster_id) searchParams.append('roaster_id', params.roaster_id)
+    if (params.search) searchParams.append('search', params.search)
 
     const query = searchParams.toString()
     return this.request<CoffeeListResponse>(`/coffees${query ? `?${query}` : ''}`)

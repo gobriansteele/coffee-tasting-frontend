@@ -67,14 +67,6 @@ export const queryKeys = {
     flavorProfile: () => [...queryKeys.user.all(), 'flavor-profile'] as const,
   },
 
-  search: {
-    all: () => [...queryKeys.all, 'search'] as const,
-    roasters: (query: string) =>
-      [...queryKeys.search.all(), 'roasters', query] as const,
-    coffees: (query: string) =>
-      [...queryKeys.search.all(), 'coffees', query] as const,
-  },
-
   recommendations: {
     all: () => [...queryKeys.all, 'recommendations'] as const,
     similar: (coffeeId: string) =>

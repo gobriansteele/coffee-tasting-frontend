@@ -196,11 +196,9 @@ export type UpdateProfileRequest = {
   display_name?: string
 }
 
-export type RoasterInput = {
-  existing_id?: string
-  name: string
-  location?: string
-}
+export type RoasterInput =
+  | { existing_id: string; name: string; location?: string }
+  | { existing_id?: undefined; name: string; location?: string }
 
 export type CoffeeInput = {
   name: string
@@ -215,32 +213,8 @@ export type CoffeeInput = {
 }
 
 export type CoffeeEntryResult =
-  | { mode: 'existing'; coffee_id: string; coffee: Coffee }
+  | { mode: 'existing'; coffee: Coffee }
   | { mode: 'new'; input: CoffeeInput }
-
-// =============================================================================
-// Coffee Photo Identification Types
-// =============================================================================
-
-export type IdentifiedFlavor = {
-  name: string
-  category: string | null
-}
-
-export type CoffeeIdentificationResponse = {
-  coffee_name?: string
-  roaster?: {
-    name: string
-    location?: string
-  }
-  origin_country?: string
-  origin_region?: string
-  processing_method?: ProcessingMethod
-  roast_level?: RoastLevel
-  variety?: string
-  description?: string
-  flavor_notes: IdentifiedFlavor[]
-}
 
 // =============================================================================
 // Response Types (List endpoints)

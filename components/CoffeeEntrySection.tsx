@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { CoffeePhotoUpload } from '@/components/CoffeePhotoUpload'
 import { CoffeeSearchInput } from '@/components/CoffeeSearchInput'
 import { RoasterAutocomplete } from '@/components/RoasterAutocomplete'
-import type { RoasterSelection } from '@/components/RoasterAutocomplete'
 import type {
   ProcessingMethod,
   RoastLevel,
@@ -12,7 +11,9 @@ import type {
   CoffeeInput,
   CoffeeEntryResult,
   CoffeeIdentificationResponse,
+  RoasterInput,
 } from '@/lib/api/types'
+import { formatRoastLevel } from '@/lib/format'
 
 type CoffeeEntryProps = {
   onChange: (result: CoffeeEntryResult | null) => void
@@ -22,7 +23,7 @@ type EntryMode = 'scan' | 'search' | 'manual'
 
 type CoffeeFields = {
   name: string
-  roaster: RoasterSelection | null
+  roaster: RoasterInput | null
   origin_country: string
   origin_region: string
   processing_method: ProcessingMethod | ''
@@ -62,12 +63,7 @@ function fieldsToInput(f: CoffeeFields): CoffeeInput {
   }
 }
 
-function formatRoastLevel(level: string): string {
-  return level
-    .split('_')
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ')
-}
+
 
 export function CoffeeEntrySection({ onChange }: CoffeeEntryProps) {
   const [mode, setMode] = useState<EntryMode>('scan')
@@ -79,6 +75,7 @@ export function CoffeeEntrySection({ onChange }: CoffeeEntryProps) {
   const showEditableFields = mode === 'manual' || (mode === 'scan' && scanCompleted)
 
   const handleModeChange = (newMode: EntryMode) => {
+    if (newMode === mode) return
     setMode(newMode)
     setFields(EMPTY_FIELDS)
     setAiFilledFields(new Set())
@@ -91,7 +88,7 @@ export function CoffeeEntrySection({ onChange }: CoffeeEntryProps) {
     const newFields: CoffeeFields = {
       name: result.coffee_name ?? '',
       roaster: result.roaster
-        ? { name: result.roaster.name, location: result.roaster.location }
+        ? { name: result.roaster.name, location: result.roaster.location ?? undefined }
         : null,
       origin_country: result.origin_country ?? '',
       origin_region: result.origin_region ?? '',
@@ -120,7 +117,7 @@ export function CoffeeEntrySection({ onChange }: CoffeeEntryProps) {
 
   const handleSearchSelect = (coffee: Coffee) => {
     setSelectedCoffee(coffee)
-    onChange({ mode: 'existing', coffee_id: coffee.id, coffee })
+    onChange({ mode: 'existing', coffee })
   }
 
   const handleSearchReset = () => {
@@ -146,7 +143,7 @@ export function CoffeeEntrySection({ onChange }: CoffeeEntryProps) {
   }
 
   const aiAccent = (field: keyof CoffeeFields) =>
-    aiFilledFields.has(field) ? 'border-l-2 border-l-primary pl-3' : ''
+    `pl-3 border-l-2 ${aiFilledFields.has(field) ? 'border-l-primary' : 'border-l-transparent'}`
 
   const inputClass =
     'w-full px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-ink'
@@ -235,6 +232,7 @@ export function CoffeeEntrySection({ onChange }: CoffeeEntryProps) {
           <div className={aiAccent('roaster')}>
             <label className={labelClass}>Roaster Name</label>
             <RoasterAutocomplete
+              key={`${mode}-${scanCompleted}`}
               value={fields.roaster}
               onChange={(val) => updateField('roaster', val)}
             />

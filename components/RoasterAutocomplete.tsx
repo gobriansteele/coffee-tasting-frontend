@@ -1,27 +1,13 @@
 'use client'
 
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useRoasters } from '@/lib/queries/roasters'
-import type { Roaster } from '@/lib/api/types'
-
-type RoasterSelection =
-  | { existing_id: string; name: string; location?: string }
-  | { existing_id?: undefined; name: string; location?: string }
+import { useDebounced } from '@/hooks/use-debounced'
+import type { Roaster, RoasterInput } from '@/lib/api/types'
 
 type RoasterAutocompleteProps = {
-  value: RoasterSelection | null
-  onChange: (value: RoasterSelection | null) => void
-}
-
-function useDebounced(value: string, delay: number) {
-  const [debounced, setDebounced] = useState(value)
-
-  useEffect(() => {
-    const timer = setTimeout(() => setDebounced(value), delay)
-    return () => clearTimeout(timer)
-  }, [value, delay])
-
-  return debounced
+  value: RoasterInput | null
+  onChange: (value: RoasterInput | null) => void
 }
 
 export function RoasterAutocomplete({ value, onChange }: RoasterAutocompleteProps) {
@@ -40,16 +26,8 @@ export function RoasterAutocomplete({ value, onChange }: RoasterAutocompleteProp
   const roasters = shouldSearch ? (roastersData?.items ?? []) : []
 
   const exactMatch = roasters.some(
-    (r) => r.name.toLowerCase() === inputValue.trim().toLowerCase()
+    (r) => r.name.toLowerCase() === debouncedQuery.trim().toLowerCase()
   )
-
-  const syncInputFromValue = useCallback(() => {
-    setInputValue(value?.name ?? '')
-  }, [value?.name])
-
-  useEffect(() => {
-    syncInputFromValue()
-  }, [syncInputFromValue])
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -97,7 +75,7 @@ export function RoasterAutocomplete({ value, onChange }: RoasterAutocompleteProp
     }
   }
 
-  const showDropdown = isOpen && inputValue.trim().length >= 2
+  const showDropdown = isOpen && debouncedQuery.trim().length >= 2
 
   return (
     <div ref={containerRef} className="relative">
@@ -106,7 +84,7 @@ export function RoasterAutocomplete({ value, onChange }: RoasterAutocompleteProp
         type="text"
         value={inputValue}
         onChange={handleInputChange}
-        onFocus={() => inputValue.trim().length >= 2 && setIsOpen(true)}
+        onFocus={() => debouncedQuery.trim().length >= 2 && setIsOpen(true)}
         onKeyDown={handleKeyDown}
         placeholder="Search roasters..."
         className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-primary"
@@ -168,4 +146,4 @@ export function RoasterAutocomplete({ value, onChange }: RoasterAutocompleteProp
   )
 }
 
-export type { RoasterSelection, RoasterAutocompleteProps }
+export type { RoasterAutocompleteProps }
