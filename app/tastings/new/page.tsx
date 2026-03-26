@@ -41,7 +41,17 @@ export default function NewTastingPage() {
 
   const handleIdentified = (response: CoffeeIdentificationResponse) => {
     setIdentification(response)
-    if (response.roast_date) setRoastDate(response.roast_date)
+    if (response.roast_date) {
+      const parsed = new Date(response.roast_date)
+      if (!isNaN(parsed.getTime())) {
+        const yyyy = parsed.getFullYear()
+        const mm = String(parsed.getMonth() + 1).padStart(2, '0')
+        const dd = String(parsed.getDate()).padStart(2, '0')
+        setRoastDate(`${yyyy}-${mm}-${dd}`)
+      } else {
+        setRoastDate(response.roast_date)
+      }
+    }
     if (response.lot_number) setLotNumber(response.lot_number)
   }
 
