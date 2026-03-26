@@ -176,7 +176,6 @@ export function CoffeePhotoUpload({ onIdentified, onSkip }: CoffeePhotoUploadPro
             type="file"
             accept="image/jpeg,image/png,image/webp"
             multiple
-            capture="environment"
             onChange={handleFileChange}
             className="hidden"
           />
