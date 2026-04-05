@@ -97,7 +97,7 @@ export function DesktopNavigation({ user, onSignOut, isRecoveryMode = false }: D
             </Link>
             <button
               onClick={onSignOut}
-              className="text-sm text-ink-muted hover:text-ink transition-colors cursor-pointer"
+              className="text-sm text-ink-muted hover:text-danger transition-colors cursor-pointer"
             >
               Sign Out
             </button>

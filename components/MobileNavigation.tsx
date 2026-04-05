@@ -65,7 +65,7 @@ export function MobileNavigation({
           {!isRecoveryMode && (
             <button
               onClick={onToggle}
-              className="p-1.5 text-ink-muted hover:text-ink transition-colors focus:outline-none"
+              className="p-1.5 text-ink-muted hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2"
               aria-label="Toggle mobile menu"
             >
               <svg
@@ -97,7 +97,7 @@ export function MobileNavigation({
       {/* Backdrop overlay for mobile menu */}
       {isOpen && !isRecoveryMode && (
         <div
-          className="fixed inset-0 bg-opacity-25 z-30 md:hidden transition-opacity duration-300"
+          className="fixed inset-0 bg-black/25 z-30 md:hidden transition-opacity duration-300"
           onClick={() => onNavClick()}
         />
       )}
@@ -169,7 +169,7 @@ export function MobileNavigation({
                       onSignOut()
                       onNavClick()
                     }}
-                    className="block w-full text-left px-2 py-3 text-sm text-ink-muted hover:text-ink min-h-[44px] flex items-center transition-colors cursor-pointer"
+                    className="block w-full text-left px-2 py-3 text-sm text-ink-muted hover:text-danger min-h-[44px] flex items-center transition-colors cursor-pointer"
                   >
                     Sign Out
                   </button>
@@ -186,7 +186,7 @@ export function MobileNavigation({
                 </Link>
                 <Link
                   href="/signup"
-                  className="block px-2 py-4 text-2xl font-display font-medium text-ink hover:text-ink-muted min-h-[44px] flex items-center transition-colors"
+                  className="block px-2 py-4 text-2xl font-display font-medium text-ink hover:text-ink-muted min-h-[44px] flex items-center transition-colors border-2 border-ink"
                   onClick={() => onNavClick('/signup')}
                 >
                   Sign Up

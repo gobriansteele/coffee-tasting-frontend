@@ -71,7 +71,7 @@ export function RoasterQuickCreate({
         <button
           type="button"
           onClick={onCancel}
-          className="px-3 py-1.5 border border-border text-ink hover:bg-paper text-sm transition-colors"
+          className="px-3 py-1.5 border border-border text-ink hover:bg-sand text-sm transition-colors"
         >
           Cancel
         </button>

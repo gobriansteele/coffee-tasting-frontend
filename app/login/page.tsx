@@ -92,7 +92,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-primary text-white py-2 px-4 hover:bg-primary-hover focus:outline-none focus:border-ink transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-primary text-white py-2 px-4 hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-paper transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
@@ -100,7 +100,7 @@ export default function LoginPage() {
             <div className="text-center">
               <Link
                 href="/forgot-password"
-                className="text-sm text-primary hover:underline"
+                className="text-sm text-ink hover:underline"
               >
                 Forgot your password?
               </Link>
@@ -109,7 +109,7 @@ export default function LoginPage() {
 
           <p className="mt-6 text-center text-sm text-ink-muted">
             Don&apos;t have an account?{' '}
-            <Link href="/signup" className="text-primary hover:underline">
+            <Link href="/signup" className="text-ink hover:underline">
               Sign up
             </Link>
           </p>

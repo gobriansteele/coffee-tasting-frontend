@@ -52,7 +52,7 @@ export default function Logo({
         strokeWidth="8"
         strokeLinecap="round"
       />
-      <circle cx="115" cy="45" r="10" fill="var(--logo-stroke)" />
+      <circle cx="115" cy="45" r="10" fill="var(--logo-fill)" />
     </svg>
   )
 }

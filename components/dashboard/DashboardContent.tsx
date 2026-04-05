@@ -32,7 +32,7 @@ export function DashboardContent({
           <div className="flex space-x-3">
             <Link
               href="/coffees/new"
-              className="border border-border text-ink px-4 py-2 hover:bg-border transition-colors"
+              className="border border-border text-ink px-4 py-2 text-sm hover:bg-border transition-colors"
             >
               Add Coffee
             </Link>

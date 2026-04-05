@@ -34,7 +34,7 @@ export function DetectedFlavorsList({
       {detectedFlavors.map((df, index) => (
         <div
           key={index}
-          className="flex items-center justify-between p-2 bg-sand border-b border-border"
+          className="flex items-center justify-between p-2 bg-sand border-b border-border last:border-b-0"
         >
           <div className="flex items-center gap-2">
             <span className="font-medium text-ink">{df.flavor.name}</span>

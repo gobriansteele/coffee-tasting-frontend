@@ -107,7 +107,7 @@ export function RoasterAutocomplete({ value, onChange }: RoasterAutocompleteProp
             <button
               type="button"
               onClick={handleCreateNew}
-              className="w-full px-3 py-2 text-left text-sm text-primary hover:bg-sand transition-colors"
+              className="w-full px-3 py-2 text-left text-sm text-ink hover:bg-sand transition-colors"
             >
               Create: {inputValue.trim()}
             </button>
@@ -133,7 +133,7 @@ export function RoasterAutocomplete({ value, onChange }: RoasterAutocompleteProp
                 <button
                   type="button"
                   onClick={handleCreateNew}
-                  className="w-full px-3 py-2 text-left text-sm text-primary hover:bg-sand transition-colors border-t border-border"
+                  className="w-full px-3 py-2 text-left text-sm text-ink hover:bg-sand transition-colors border-t border-border"
                 >
                   Create: {inputValue.trim()}
                 </button>
