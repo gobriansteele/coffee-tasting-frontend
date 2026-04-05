@@ -25,7 +25,7 @@ export function SimilarCoffeesList({
         <Link
           key={item.coffee.id}
           href={`/coffees/${item.coffee.id}`}
-          className="block bg-card rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow"
+          className="block bg-card border border-border p-4 hover:border-ink transition-colors"
         >
           <div className="flex justify-between items-start mb-2">
             <div>

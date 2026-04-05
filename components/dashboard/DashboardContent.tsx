@@ -32,13 +32,13 @@ export function DashboardContent({
           <div className="flex space-x-3">
             <Link
               href="/coffees/new"
-              className="bg-sand text-ink px-4 py-2 rounded-md hover:bg-border transition-colors"
+              className="border border-border text-ink px-4 py-2 hover:bg-border transition-colors"
             >
               Add Coffee
             </Link>
             <Link
               href="/tastings/new"
-              className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary-hover transition-colors"
+              className="bg-primary text-white px-4 py-2 text-sm hover:bg-primary-hover transition-colors"
             >
               Record Tasting
             </Link>
@@ -74,7 +74,7 @@ export function DashboardContent({
             )}
           </div>
         ) : (
-          <div className="text-center py-12 bg-card rounded-lg shadow-sm">
+          <div className="text-center py-12 bg-card border border-border">
             <p className="text-ink-muted">
               You haven&apos;t recorded any tastings yet.
             </p>

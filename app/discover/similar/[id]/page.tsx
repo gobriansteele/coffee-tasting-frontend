@@ -51,7 +51,7 @@ export default function SimilarCoffeesPage() {
       </div>
 
       {/* Source Coffee Card */}
-      <div className="bg-card shadow-sm rounded-lg p-6 mb-8">
+      <div className="bg-card border border-border p-6 mb-8">
         <h2 className="font-display text-lg font-semibold text-ink mb-3">
           Based on
         </h2>

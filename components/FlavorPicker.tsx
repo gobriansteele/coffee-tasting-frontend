@@ -134,12 +134,12 @@ export function FlavorPicker({ selectedFlavors, onChange }: FlavorPickerProps) {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search flavors..."
-              className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full px-3 py-2 bg-card border border-border text-ink placeholder:text-ink-muted focus:outline-none focus:border-ink transition-colors"
             />
 
             {/* Available Flavors */}
             {(searchTerm || selectedFlavors.length === 0) && (
-              <div className="mt-3 max-h-48 overflow-y-auto border border-border rounded-md">
+              <div className="mt-3 max-h-48 overflow-y-auto border border-border">
                 {Object.entries(flavorsByCategory).length === 0 ? (
                   <div className="p-3 text-center text-ink-muted text-sm">
                     {searchTerm ? (
@@ -170,7 +170,7 @@ export function FlavorPicker({ selectedFlavors, onChange }: FlavorPickerProps) {
                               key={flavor.id}
                               type="button"
                               onClick={() => handleAddFlavor(flavor)}
-                              className="px-3 py-1 text-sm bg-card border border-border rounded-full hover:border-primary hover:text-primary transition-colors"
+                              className="px-3 py-1 text-sm bg-card border border-border hover:border-ink hover:text-ink transition-colors"
                             >
                               {flavor.name}
                             </button>

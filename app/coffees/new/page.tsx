@@ -133,13 +133,13 @@ export default function NewCoffeePage() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {(roastersError || createCoffeeMutation.error) && (
-          <div className="bg-danger-soft text-danger p-4 rounded-md">
+          <div className="bg-danger-soft text-danger p-4">
             {roastersError?.message || createCoffeeMutation.error?.message || 'An error occurred'}
           </div>
         )}
 
         {/* Basic Info */}
-        <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
+        <div className="bg-card border border-border p-6 space-y-6">
           <h2 className="font-display text-lg font-semibold text-ink">
             Basic Information
           </h2>
@@ -158,7 +158,7 @@ export default function NewCoffeePage() {
               onChange={(e) => setName(e.target.value)}
               required
               placeholder="e.g., Ethiopian Yirgacheffe"
-              className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="w-full px-3 py-2 bg-card border border-border text-ink placeholder:text-ink-muted focus:outline-none focus:border-ink transition-colors"
             />
           </div>
 
@@ -174,7 +174,7 @@ export default function NewCoffeePage() {
               value={showRoasterForm ? 'new' : roasterId}
               onChange={handleRoasterSelectChange}
               required={!showRoasterForm}
-              className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="w-full px-3 py-2 bg-card border border-border text-ink focus:outline-none focus:border-ink transition-colors"
             >
               <option value="">Select a roaster</option>
               {roasters.map((roaster) => (
@@ -195,7 +195,7 @@ export default function NewCoffeePage() {
         </div>
 
         {/* Origin Information */}
-        <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
+        <div className="bg-card border border-border p-6 space-y-6">
           <h2 className="font-display text-lg font-semibold text-ink">
             Origin Information
           </h2>
@@ -214,7 +214,7 @@ export default function NewCoffeePage() {
                 value={originCountry}
                 onChange={(e) => setOriginCountry(e.target.value)}
                 placeholder="e.g., Ethiopia"
-                className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full px-3 py-2 bg-card border border-border text-ink placeholder:text-ink-muted focus:outline-none focus:border-ink transition-colors"
               />
             </div>
 
@@ -231,7 +231,7 @@ export default function NewCoffeePage() {
                 value={originRegion}
                 onChange={(e) => setOriginRegion(e.target.value)}
                 placeholder="e.g., Yirgacheffe"
-                className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full px-3 py-2 bg-card border border-border text-ink placeholder:text-ink-muted focus:outline-none focus:border-ink transition-colors"
               />
             </div>
 
@@ -248,14 +248,14 @@ export default function NewCoffeePage() {
                 value={variety}
                 onChange={(e) => setVariety(e.target.value)}
                 placeholder="e.g., Heirloom"
-                className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full px-3 py-2 bg-card border border-border text-ink placeholder:text-ink-muted focus:outline-none focus:border-ink transition-colors"
               />
             </div>
           </div>
         </div>
 
         {/* Processing & Roasting */}
-        <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
+        <div className="bg-card border border-border p-6 space-y-6">
           <h2 className="font-display text-lg font-semibold text-ink">
             Processing & Roasting
           </h2>
@@ -274,7 +274,7 @@ export default function NewCoffeePage() {
                 onChange={(e) =>
                   setProcessingMethod(e.target.value as ProcessingMethod)
                 }
-                className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full px-3 py-2 bg-card border border-border text-ink focus:outline-none focus:border-ink transition-colors"
               >
                 <option value="">Select processing method</option>
                 <option value="washed">Washed</option>
@@ -295,7 +295,7 @@ export default function NewCoffeePage() {
                 id="roastLevel"
                 value={roastLevel}
                 onChange={(e) => setRoastLevel(e.target.value as RoastLevel)}
-                className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full px-3 py-2 bg-card border border-border text-ink focus:outline-none focus:border-ink transition-colors"
               >
                 <option value="">Select roast level</option>
                 <option value="light">Light</option>
@@ -308,7 +308,7 @@ export default function NewCoffeePage() {
         </div>
 
         {/* Expected Flavors */}
-        <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
+        <div className="bg-card border border-border p-6 space-y-6">
           <div className="flex justify-between items-start">
             <div>
               <h2 className="font-display text-lg font-semibold text-ink">
@@ -347,7 +347,7 @@ export default function NewCoffeePage() {
                     key={id}
                     type="button"
                     onClick={() => toggleFlavor(id)}
-                    className="px-3 py-1 bg-primary text-white rounded-full text-sm hover:bg-primary-hover transition-colors"
+                    className="px-3 py-1 bg-primary text-white text-sm hover:bg-primary-hover transition-colors"
                   >
                     {flavor.name} ×
                   </button>
@@ -357,7 +357,7 @@ export default function NewCoffeePage() {
           )}
 
           {/* Flavor picker by category */}
-          <div className="border border-border rounded-lg max-h-64 overflow-y-auto">
+          <div className="border border-border max-h-64 overflow-y-auto">
             {Object.keys(flavorsByCategory).length === 0 && !showFlavorForm ? (
               <div className="p-4 text-center text-ink-muted text-sm">
                 <p>No flavors available.</p>
@@ -385,10 +385,10 @@ export default function NewCoffeePage() {
                         key={flavor.id}
                         type="button"
                         onClick={() => toggleFlavor(flavor.id)}
-                        className={`px-3 py-1 text-sm rounded-full border transition-colors ${
+                        className={`px-3 py-1 text-sm border transition-colors ${
                           selectedFlavorIds.includes(flavor.id)
-                            ? 'bg-primary text-white border-primary'
-                            : 'bg-card border-border hover:border-primary hover:text-primary'
+                            ? 'bg-ink text-white border-ink'
+                            : 'bg-card border-border hover:border-ink'
                         }`}
                       >
                         {flavor.name}
@@ -402,7 +402,7 @@ export default function NewCoffeePage() {
         </div>
 
         {/* Description */}
-        <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
+        <div className="bg-card border border-border p-6 space-y-6">
           <h2 className="font-display text-lg font-semibold text-ink">
             Description
           </h2>
@@ -420,7 +420,7 @@ export default function NewCoffeePage() {
               onChange={(e) => setDescription(e.target.value)}
               rows={4}
               placeholder="Describe the coffee's flavor profile, tasting notes, etc..."
-              className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="w-full px-3 py-2 bg-card border border-border text-ink placeholder:text-ink-muted focus:outline-none focus:border-ink transition-colors"
             />
           </div>
         </div>
@@ -429,14 +429,14 @@ export default function NewCoffeePage() {
           <button
             type="button"
             onClick={() => router.push('/coffees')}
-            className="px-6 py-2 border border-border rounded-md text-ink hover:bg-sand transition-colors"
+            className="px-6 py-2 border border-border text-ink hover:bg-sand transition-colors"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={createCoffeeMutation.isPending}
-            className="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-2 bg-primary text-white hover:bg-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {createCoffeeMutation.isPending ? 'Creating...' : 'Create Coffee'}
           </button>

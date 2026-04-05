@@ -148,16 +148,16 @@ export function CoffeeEntrySection({ onChange, onIdentified }: CoffeeEntryProps)
     `pl-3 border-l-2 ${aiFilledFields.has(field) ? 'border-l-primary' : 'border-l-transparent'}`
 
   const inputClass =
-    'w-full px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-ink'
+    'w-full px-3 py-2 bg-card border border-border focus:outline-none focus:border-ink text-ink transition-colors'
   const labelClass = 'block text-sm font-medium text-ink-muted mb-2'
 
   return (
-    <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
+    <div className="bg-card border border-border p-6 space-y-6">
       <h2 className="font-display text-xl font-semibold text-ink">
         What are you tasting?
       </h2>
 
-      <div className="flex rounded-lg border border-border overflow-hidden">
+      <div className="flex border border-border overflow-hidden">
         {MODES.map(({ key, label }) => (
           <button
             key={key}
@@ -186,7 +186,7 @@ export function CoffeeEntrySection({ onChange, onIdentified }: CoffeeEntryProps)
       )}
 
       {mode === 'search' && selectedCoffee && (
-        <div className="border border-border rounded-md p-4 space-y-2">
+        <div className="border border-border p-4 space-y-2">
           <div className="flex justify-between items-start">
             <div>
               <p className="text-ink font-medium">{selectedCoffee.name}</p>

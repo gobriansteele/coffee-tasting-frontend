@@ -16,7 +16,7 @@ export function FlavorIntensitySlider({
   onRemove,
 }: FlavorIntensitySliderProps) {
   return (
-    <div className="flex items-center gap-3 p-3 bg-sand rounded-lg">
+    <div className="flex items-center gap-3 p-3 bg-sand border border-border">
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between mb-1">
           <span className="font-medium text-ink truncate">{flavor.name}</span>

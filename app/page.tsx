@@ -33,13 +33,13 @@ export default async function Home() {
           <div className="flex justify-center space-x-4">
             <Link
               href="/signup"
-              className="bg-primary text-white px-6 py-3 rounded-md hover:bg-primary-hover transition-colors"
+              className="bg-primary text-white px-6 py-3 hover:bg-primary-hover transition-colors"
             >
               Sign Up
             </Link>
             <Link
               href="/login"
-              className="bg-sand text-ink px-6 py-3 rounded-md hover:bg-border transition-colors"
+              className="border border-border text-ink px-6 py-3 hover:bg-sand transition-colors"
             >
               Sign In
             </Link>
@@ -48,7 +48,7 @@ export default async function Home() {
       </div>
 
       <div className="mt-16 grid md:grid-cols-3 gap-8">
-        <div className="bg-card p-6 rounded-lg shadow-sm">
+        <div className="bg-card p-6 border border-border">
           <h3 className="font-display text-xl font-semibold mb-3 text-ink">Track Tastings</h3>
           <p className="text-ink-muted">
             Record detailed notes about each coffee you taste, including brewing
@@ -56,7 +56,7 @@ export default async function Home() {
           </p>
         </div>
 
-        <div className="bg-card p-6 rounded-lg shadow-sm">
+        <div className="bg-card p-6 border border-border">
           <h3 className="font-display text-xl font-semibold mb-3 text-ink">Discover Patterns</h3>
           <p className="text-ink-muted">
             Analyze your tasting history to discover your flavor preferences and
@@ -64,7 +64,7 @@ export default async function Home() {
           </p>
         </div>
 
-        <div className="bg-card p-6 rounded-lg shadow-sm">
+        <div className="bg-card p-6 border border-border">
           <h3 className="font-display text-xl font-semibold mb-3 text-ink">Explore Roasters</h3>
           <p className="text-ink-muted">
             Keep track of your favorite roasters and coffees, and discover new

@@ -28,7 +28,7 @@ export function CoffeeFlavorTags({
       {displayFlavors.map((flavor) => (
         <span
           key={flavor.id}
-          className={`bg-primary-soft text-primary rounded-full ${sizeClasses[size]}`}
+          className={`border border-border text-ink ${sizeClasses[size]}`}
         >
           {flavor.name}
         </span>

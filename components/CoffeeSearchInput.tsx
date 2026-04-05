@@ -61,11 +61,11 @@ export function CoffeeSearchInput({
         onFocus={() => setIsOpen(true)}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-primary"
+        className="w-full px-3 py-2 bg-card border border-border text-ink placeholder:text-ink-muted focus:outline-none focus:border-ink transition-colors"
       />
 
       {showDropdown && (
-        <div className="absolute z-10 mt-1 w-full bg-card border border-border rounded-md shadow-lg max-h-60 overflow-y-auto">
+        <div className="absolute z-10 mt-1 w-full bg-card border border-border shadow-sm max-h-60 overflow-y-auto">
           {isFetching && coffees.length === 0 ? (
             <div className="flex items-center justify-center py-4">
               <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />

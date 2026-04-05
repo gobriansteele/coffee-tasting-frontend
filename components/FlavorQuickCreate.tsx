@@ -37,9 +37,9 @@ export function FlavorQuickCreate({
   }
 
   return (
-    <div className="border border-primary-soft bg-primary-soft rounded-md p-4 mt-2 space-y-3">
+    <div className="border border-border bg-sand p-4 mt-2 space-y-3">
       {createFlavorMutation.error && (
-        <div className="bg-danger-soft text-danger p-2 rounded-md text-sm">
+        <div className="bg-danger-soft text-danger p-2 text-sm">
           {createFlavorMutation.error.message}
         </div>
       )}
@@ -57,7 +57,7 @@ export function FlavorQuickCreate({
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="e.g., Blueberry, Caramel, Jasmine"
-          className="w-full px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-sm text-ink placeholder:text-ink-muted"
+          className="w-full px-3 py-2 bg-card border border-border focus:outline-none focus:border-ink text-sm text-ink placeholder:text-ink-muted transition-colors"
         />
       </div>
 
@@ -72,7 +72,7 @@ export function FlavorQuickCreate({
           id="flavor-category"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="w-full px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-sm text-ink"
+          className="w-full px-3 py-2 bg-card border border-border focus:outline-none focus:border-ink text-sm text-ink transition-colors"
         >
           <option value="">Select a category</option>
           {FLAVOR_CATEGORIES.map((cat) => (
@@ -87,7 +87,7 @@ export function FlavorQuickCreate({
         <button
           type="button"
           onClick={onCancel}
-          className="px-3 py-1.5 border border-border rounded-md text-ink hover:bg-sand text-sm"
+          className="px-3 py-1.5 border border-border text-ink hover:bg-paper text-sm transition-colors"
         >
           Cancel
         </button>
@@ -95,7 +95,7 @@ export function FlavorQuickCreate({
           type="button"
           onClick={handleCreate}
           disabled={createFlavorMutation.isPending || !name.trim()}
-          className="px-3 py-1.5 bg-primary text-white rounded-md hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+          className="px-3 py-1.5 bg-primary text-white hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed text-sm transition-colors"
         >
           {createFlavorMutation.isPending ? 'Creating...' : 'Create Flavor'}
         </button>

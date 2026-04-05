@@ -57,7 +57,7 @@ export default function RoastersPage() {
             <div
               key={roaster.id}
               onClick={() => router.push(`/roasters/${roaster.id}`)}
-              className="bg-card rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow cursor-pointer"
+              className="bg-card border border-border p-6 hover:border-ink transition-colors cursor-pointer"
             >
               <h3 className="text-lg font-semibold text-ink mb-2">
                 {roaster.name}

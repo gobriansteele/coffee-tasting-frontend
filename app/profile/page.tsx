@@ -71,7 +71,7 @@ export default function ProfilePage() {
       </h1>
 
       {/* User Info */}
-      <div className="bg-card shadow-sm rounded-lg p-6 mb-8">
+      <div className="bg-card border border-border p-6 mb-8">
         <div className="flex justify-between items-center mb-4">
           <h2 className="font-display text-xl font-semibold text-ink">
             Account Information
@@ -87,7 +87,7 @@ export default function ProfilePage() {
         </div>
 
         {updateProfile.error && (
-          <div className="mb-4 p-3 bg-danger/10 text-danger text-sm rounded-md">
+          <div className="mb-4 p-3 bg-danger/10 text-danger text-sm">
             Failed to update profile. Please try again.
           </div>
         )}
@@ -106,7 +106,7 @@ export default function ProfilePage() {
                   type="text"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
-                  className="w-full px-3 py-2 border border-border rounded-md bg-background text-ink focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  className="w-full px-3 py-2 border border-border bg-background text-ink focus:outline-none focus:border-ink transition-colors"
                   placeholder="Enter first name"
                 />
               </div>
@@ -116,7 +116,7 @@ export default function ProfilePage() {
                   type="text"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
-                  className="w-full px-3 py-2 border border-border rounded-md bg-background text-ink focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  className="w-full px-3 py-2 border border-border bg-background text-ink focus:outline-none focus:border-ink transition-colors"
                   placeholder="Enter last name"
                 />
               </div>
@@ -126,7 +126,7 @@ export default function ProfilePage() {
                   type="text"
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
-                  className="w-full px-3 py-2 border border-border rounded-md bg-background text-ink focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  className="w-full px-3 py-2 border border-border bg-background text-ink focus:outline-none focus:border-ink transition-colors"
                   placeholder="Enter display name"
                 />
               </div>
@@ -134,14 +134,14 @@ export default function ProfilePage() {
                 <button
                   onClick={handleCancel}
                   disabled={updateProfile.isPending}
-                  className="px-4 py-2 text-sm font-medium text-ink-muted hover:text-ink border border-border rounded-md disabled:opacity-50"
+                  className="px-4 py-2 text-sm font-medium text-ink-muted hover:text-ink border border-border disabled:opacity-50"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleSave}
                   disabled={updateProfile.isPending}
-                  className="px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary/90 rounded-md disabled:opacity-50"
+                  className="px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary/90 disabled:opacity-50"
                 >
                   {updateProfile.isPending ? 'Saving...' : 'Save'}
                 </button>
@@ -167,7 +167,7 @@ export default function ProfilePage() {
       </div>
 
       {/* Flavor Profile */}
-      <div className="bg-card shadow-sm rounded-lg p-6">
+      <div className="bg-card border border-border p-6">
         <h2 className="font-display text-xl font-semibold text-ink mb-4">
           My Flavor Profile
         </h2>

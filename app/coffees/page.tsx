@@ -39,7 +39,7 @@ export default function CoffeesPage() {
         <h1 className="font-display text-3xl font-bold text-ink">All Coffees</h1>
         <Link
           href="/coffees/new"
-          className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary-hover transition-colors"
+          className="bg-primary text-white px-4 py-2 text-sm hover:bg-primary-hover transition-colors"
         >
           Add Coffee
         </Link>
@@ -58,7 +58,7 @@ export default function CoffeesPage() {
             <div
               key={coffee.id}
               onClick={() => router.push(`/coffees/${coffee.id}`)}
-              className="bg-card rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow cursor-pointer"
+              className="bg-card border border-border p-4 hover:border-ink transition-colors cursor-pointer"
             >
               <h3 className="font-semibold text-ink mb-2">
                 {coffee.name}
