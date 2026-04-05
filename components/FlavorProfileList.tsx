@@ -28,10 +28,10 @@ export function FlavorProfileList({ flavorProfile }: FlavorProfileListProps) {
             {top_flavors.map((entry, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between p-3 bg-sand rounded-lg"
+                className="flex items-center justify-between p-3 bg-sand border-b border-border last:border-b-0"
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-2xl font-bold text-primary tabular-nums">
+                  <span className="text-2xl font-bold text-ink tabular-nums">
                     #{index + 1}
                   </span>
                   <div>
@@ -71,9 +71,9 @@ export function FlavorProfileList({ flavorProfile }: FlavorProfileListProps) {
               .map(([category, count]) => (
                 <div
                   key={category}
-                  className="p-3 bg-card border border-border rounded-lg text-center"
+                  className="p-3 bg-card border border-border text-center"
                 >
-                  <div className="text-2xl font-bold text-primary tabular-nums">
+                  <div className="text-2xl font-bold text-ink tabular-nums">
                     {count}
                   </div>
                   <div className="text-sm text-ink-muted">{category}</div>

@@ -16,7 +16,7 @@ export function RecentTastingCard({ tasting }: RecentTastingCardProps) {
   return (
     <Link
       href={`/tastings/${tasting.id}`}
-      className="bg-card rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow"
+      className="bg-card border border-border p-6 hover:border-ink transition-colors"
     >
       <div className="mb-2">
         <h3 className="text-lg font-semibold text-ink">

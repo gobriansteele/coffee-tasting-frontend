@@ -26,9 +26,9 @@ export function RoasterQuickCreate({
   }
 
   return (
-    <div className="border border-primary-soft bg-primary-soft rounded-md p-4 mt-2 space-y-3">
+    <div className="border border-border bg-sand p-4 mt-2 space-y-3">
       {createRoasterMutation.error && (
-        <div className="bg-danger-soft text-danger p-2 rounded-md text-sm">
+        <div className="bg-danger-soft text-danger p-2 text-sm">
           {createRoasterMutation.error.message}
         </div>
       )}
@@ -46,7 +46,7 @@ export function RoasterQuickCreate({
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="e.g., Blue Bottle Coffee"
-          className="w-full px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-sm text-ink placeholder:text-ink-muted"
+          className="w-full px-3 py-2 bg-card border border-border focus:outline-none focus:border-ink text-sm text-ink placeholder:text-ink-muted transition-colors"
         />
       </div>
 
@@ -63,7 +63,7 @@ export function RoasterQuickCreate({
           value={location}
           onChange={(e) => setLocation(e.target.value)}
           placeholder="e.g., Oakland, CA"
-          className="w-full px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-sm text-ink placeholder:text-ink-muted"
+          className="w-full px-3 py-2 bg-card border border-border focus:outline-none focus:border-ink text-sm text-ink placeholder:text-ink-muted transition-colors"
         />
       </div>
 
@@ -71,7 +71,7 @@ export function RoasterQuickCreate({
         <button
           type="button"
           onClick={onCancel}
-          className="px-3 py-1.5 border border-border rounded-md text-ink hover:bg-sand text-sm"
+          className="px-3 py-1.5 border border-border text-ink hover:bg-sand text-sm transition-colors"
         >
           Cancel
         </button>
@@ -79,7 +79,7 @@ export function RoasterQuickCreate({
           type="button"
           onClick={handleCreate}
           disabled={createRoasterMutation.isPending || !name.trim()}
-          className="px-3 py-1.5 bg-primary text-white rounded-md hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+          className="px-3 py-1.5 bg-primary text-white hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed text-sm transition-colors"
         >
           {createRoasterMutation.isPending ? 'Creating...' : 'Create Roaster'}
         </button>

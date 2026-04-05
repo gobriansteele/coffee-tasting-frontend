@@ -41,7 +41,7 @@ export default function TastingsPage() {
         <h1 className="font-display text-3xl font-bold text-ink">My Tastings</h1>
         <Link
           href="/tastings/new"
-          className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary-hover transition-colors"
+          className="bg-primary text-white px-4 py-2 text-sm hover:bg-primary-hover transition-colors"
         >
           New Tasting
         </Link>
@@ -62,7 +62,7 @@ export default function TastingsPage() {
             <Link
               key={tasting.id}
               href={`/tastings/${tasting.id}`}
-              className="bg-card rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow"
+              className="bg-card border border-border p-6 hover:border-ink transition-colors"
             >
               <div className="mb-2">
                 <h3 className="text-lg font-semibold text-ink">

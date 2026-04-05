@@ -34,7 +34,7 @@ export function DetectedFlavorsList({
       {detectedFlavors.map((df, index) => (
         <div
           key={index}
-          className="flex items-center justify-between p-2 bg-sand rounded-lg"
+          className="flex items-center justify-between p-2 bg-sand border-b border-border last:border-b-0"
         >
           <div className="flex items-center gap-2">
             <span className="font-medium text-ink">{df.flavor.name}</span>
@@ -45,9 +45,9 @@ export function DetectedFlavorsList({
             )}
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-20 h-2 bg-border rounded-full overflow-hidden">
+            <div className="w-20 h-2 bg-border overflow-hidden">
               <div
-                className="h-full bg-primary rounded-full"
+                className="h-full bg-ink"
                 style={{ width: `${(df.intensity / 10) * 100}%` }}
               />
             </div>

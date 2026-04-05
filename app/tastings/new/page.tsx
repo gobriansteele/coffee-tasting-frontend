@@ -97,7 +97,7 @@ export default function NewTastingPage() {
   }
 
   const inputClass =
-    'w-full px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-ink'
+    'w-full px-3 py-2 bg-card border border-border focus:outline-none focus:border-ink text-ink transition-colors'
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -107,7 +107,7 @@ export default function NewTastingPage() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {submitError && (
-          <div className="bg-danger-soft text-danger p-4 rounded-md">
+          <div className="bg-danger-soft text-danger p-4">
             {submitError.message}
           </div>
         )}
@@ -118,7 +118,7 @@ export default function NewTastingPage() {
         />
 
         {(roastDate || lotNumber || identification) && (
-          <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
+          <div className="bg-card border border-border p-6 space-y-6">
             <h2 className="font-display text-xl font-semibold text-ink">
               Bag Info
             </h2>
@@ -158,7 +158,7 @@ export default function NewTastingPage() {
           </div>
         )}
 
-        <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
+        <div className="bg-card border border-border p-6 space-y-6">
           <h2 className="font-display text-xl font-semibold text-ink">
             Brewing Parameters
           </h2>
@@ -215,7 +215,7 @@ export default function NewTastingPage() {
           </div>
         </div>
 
-        <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
+        <div className="bg-card border border-border p-6 space-y-6">
           <h2 className="font-display text-xl font-semibold text-ink">
             Detected Flavors
           </h2>
@@ -235,7 +235,7 @@ export default function NewTastingPage() {
           />
         </div>
 
-        <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
+        <div className="bg-card border border-border p-6 space-y-6">
           <h2 className="font-display text-xl font-semibold text-ink">
             Rating
           </h2>
@@ -256,12 +256,12 @@ export default function NewTastingPage() {
               onChange={(e) => setRatingNotes(e.target.value)}
               rows={2}
               placeholder="Why did you give this rating?"
-              className="w-full px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-ink placeholder:text-ink-muted"
+              className="w-full px-3 py-2 bg-card border border-border focus:outline-none focus:border-ink text-ink placeholder:text-ink-muted transition-colors"
             />
           </div>
         </div>
 
-        <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
+        <div className="bg-card border border-border p-6 space-y-6">
           <h2 className="font-display text-xl font-semibold text-ink">
             Notes
           </h2>
@@ -279,7 +279,7 @@ export default function NewTastingPage() {
               onChange={(e) => setNotes(e.target.value)}
               rows={4}
               placeholder="Describe your tasting experience..."
-              className="w-full px-3 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-ink placeholder:text-ink-muted"
+              className="w-full px-3 py-2 bg-card border border-border focus:outline-none focus:border-ink text-ink placeholder:text-ink-muted transition-colors"
             />
           </div>
         </div>
@@ -288,14 +288,14 @@ export default function NewTastingPage() {
           <button
             type="button"
             onClick={() => router.push('/tastings')}
-            className="px-6 py-2 border border-border rounded-md text-ink hover:bg-sand"
+            className="px-6 py-2 border border-border text-ink hover:bg-sand transition-colors"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={!coffeeEntry || isSubmitting}
-            className="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-2 bg-primary text-white hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {isSubmitting ? 'Saving...' : 'Create Tasting'}
           </button>

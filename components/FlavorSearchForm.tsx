@@ -75,7 +75,7 @@ export function FlavorSearchForm({
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Search flavors..."
-          className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-primary"
+          className="w-full px-3 py-2 bg-card border border-border text-ink placeholder:text-ink-muted focus:outline-none focus:border-ink transition-colors"
         />
       </div>
 
@@ -89,7 +89,7 @@ export function FlavorSearchForm({
                 <button
                   key={id}
                   onClick={() => toggleFlavor(id)}
-                  className="px-3 py-1 bg-primary text-white rounded-full text-sm hover:bg-primary-hover transition-colors"
+                  className="px-3 py-1 bg-primary text-white text-sm hover:bg-primary-hover transition-colors"
                 >
                   {flavor.name} ×
                 </button>
@@ -111,7 +111,7 @@ export function FlavorSearchForm({
           type="checkbox"
           checked={excludeTasted}
           onChange={(e) => onExcludeTastedChange(e.target.checked)}
-          className="w-4 h-4 rounded border-border text-primary focus:ring-primary"
+          className="w-4 h-4 border-border text-ink focus:ring-ink"
         />
         <span className="text-sm text-ink">
           Exclude coffees I&apos;ve already tasted
@@ -119,7 +119,7 @@ export function FlavorSearchForm({
       </label>
 
       {/* Flavor Grid by Category */}
-      <div className="border border-border rounded-lg max-h-64 overflow-y-auto">
+      <div className="border border-border max-h-64 overflow-y-auto">
         {Object.keys(filteredCategories).length === 0 ? (
           <div className="p-4 text-center text-ink-muted text-sm">
             No matching flavors
@@ -136,10 +136,10 @@ export function FlavorSearchForm({
                     <button
                       key={flavor.id}
                       onClick={() => toggleFlavor(flavor.id)}
-                      className={`px-3 py-1 text-sm rounded-full border transition-colors ${
+                      className={`px-3 py-1 text-sm border transition-colors ${
                         selectedFlavorIds.includes(flavor.id)
-                          ? 'bg-primary text-white border-primary'
-                          : 'bg-card border-border hover:border-primary hover:text-primary'
+                          ? 'bg-ink text-white border-ink'
+                          : 'bg-card border-border hover:border-ink'
                       }`}
                     >
                       {flavor.name}

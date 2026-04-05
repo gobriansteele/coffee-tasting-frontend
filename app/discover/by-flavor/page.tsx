@@ -35,7 +35,7 @@ export default function SearchByFlavorPage() {
 
       <div className="grid gap-8 lg:grid-cols-2">
         {/* Flavor Selection */}
-        <div className="bg-card shadow-sm rounded-lg p-6">
+        <div className="bg-card border border-border p-6">
           <h2 className="font-display text-lg font-semibold text-ink mb-4">
             Select Flavors
           </h2>
@@ -59,21 +59,21 @@ export default function SearchByFlavorPage() {
           </h2>
 
           {selectedFlavorIds.length === 0 ? (
-            <div className="text-center py-12 bg-sand rounded-lg">
+            <div className="text-center py-12 bg-sand border border-border">
               <p className="text-ink-muted">
                 Select some flavors to see matching coffees
               </p>
             </div>
           ) : isLoading ? (
-            <div className="text-center py-12 bg-sand rounded-lg">
+            <div className="text-center py-12 bg-sand border border-border">
               <p className="text-ink-muted">Searching...</p>
             </div>
           ) : error ? (
-            <div className="text-center py-12 bg-danger-soft rounded-lg">
+            <div className="text-center py-12 bg-danger-soft border border-border">
               <p className="text-danger">Failed to search coffees</p>
             </div>
           ) : matchData?.matches.length === 0 ? (
-            <div className="text-center py-12 bg-sand rounded-lg">
+            <div className="text-center py-12 bg-sand border border-border">
               <p className="text-ink-muted">
                 No coffees found with these flavors
               </p>
@@ -87,7 +87,7 @@ export default function SearchByFlavorPage() {
                 <Link
                   key={item.coffee.id}
                   href={`/coffees/${item.coffee.id}`}
-                  className="block bg-card shadow-sm rounded-lg p-4 hover:shadow-md transition-shadow"
+                  className="block bg-card border border-border p-4 hover:border-ink transition-colors"
                 >
                   <div className="flex justify-between items-start mb-2">
                     <div>

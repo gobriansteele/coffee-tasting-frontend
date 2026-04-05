@@ -13,7 +13,6 @@ export default function Logo({
         {
           '--logo-fill': 'var(--ink)',
           '--logo-stroke': 'var(--card)',
-          '--logo-accent': 'var(--copper)',
         } as React.CSSProperties
       }
     >
@@ -53,7 +52,7 @@ export default function Logo({
         strokeWidth="8"
         strokeLinecap="round"
       />
-      <circle cx="115" cy="45" r="10" fill="var(--logo-accent)" />
+      <circle cx="115" cy="45" r="10" fill="var(--logo-fill)" />
     </svg>
   )
 }

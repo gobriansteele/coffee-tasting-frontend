@@ -24,7 +24,7 @@ export default function DiscoverPage() {
         {/* Find by Flavor */}
         <Link
           href="/discover/by-flavor"
-          className="bg-card shadow-sm rounded-lg p-6 hover:shadow-md transition-shadow"
+          className="bg-card border border-border p-6 hover:border-ink transition-colors"
         >
           <div className="flex items-center gap-4 mb-4">
             <div className="w-12 h-12 bg-primary-soft rounded-full flex items-center justify-center">
@@ -58,7 +58,7 @@ export default function DiscoverPage() {
         </Link>
 
         {/* Find Similar */}
-        <div className="bg-card shadow-sm rounded-lg p-6">
+        <div className="bg-card border border-border p-6">
           <div className="flex items-center gap-4 mb-4">
             <div className="w-12 h-12 bg-success-soft rounded-full flex items-center justify-center">
               <svg
@@ -94,7 +94,7 @@ export default function DiscoverPage() {
                 <Link
                   key={coffee.id}
                   href={`/discover/similar/${coffee.id}`}
-                  className="block p-3 bg-sand rounded-lg hover:bg-border transition-colors"
+                  className="block p-3 bg-sand border border-border hover:bg-border transition-colors"
                 >
                   <span className="font-medium text-ink">{coffee.name}</span>
                   {coffee.roaster && (

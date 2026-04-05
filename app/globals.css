@@ -1,49 +1,49 @@
 @import 'tailwindcss';
 
-/* ===== CUPPING NOTEBOOK DESIGN TOKENS ===== */
+/* ===== EDITORIAL DESIGN TOKENS ===== */
 
 :root {
   /* Surfaces */
-  --paper: #FBFAF3;
-  --sand: #EEE9DF;
+  --paper: #FFFFFF;
+  --sand: #F5F3EF;
   --card: #FFFFFF;
 
   /* Text */
-  --ink: #161513;
-  --ink-muted: #6B6A64;
+  --ink: #1A1A1A;
+  --ink-muted: #6B6B6B;
 
   /* Border */
-  --border: #E2DDD3;
+  --border: #E5E5E5;
 
-  /* Primary (Copper - main actions) */
-  --primary: #9C4221;
-  --primary-hover: #7C3118;
-  --primary-soft: #F4E3DD;
+  /* Primary (Monochrome - editorial confidence) */
+  --primary: #1A1A1A;
+  --primary-hover: #000000;
+  --primary-soft: #F0F0F0;
 
-  /* Link color (warm slate) */
-  --link: #6B5B4F;
-  --link-hover: #4A3F36;
+  /* Link color */
+  --link: #1A1A1A;
+  --link-hover: #000000;
 
-  /* Accent (Copper alias for compatibility) */
-  --copper: #9C4221;
-  --copper-soft: #F4E3DD;
+  /* Accent (warm tone for ratings/highlights only) */
+  --copper: #1A1A1A;
+  --copper-soft: #F0F0F0;
 
   /* Semantic */
-  --success: #2E7D32;
-  --success-soft: #E8F5E9;
-  --warning: #B76E00;
-  --warning-soft: #FFF8E1;
-  --danger: #C62828;
-  --danger-soft: #FFEBEE;
+  --success: #1A7A2E;
+  --success-soft: #F0F7F0;
+  --warning: #8B6914;
+  --warning-soft: #FAF6ED;
+  --danger: #B91C1C;
+  --danger-soft: #FEF2F2;
 
-  /* Shape */
-  --r-sm: 10px;
-  --r-md: 14px;
-  --r-lg: 20px;
+  /* Shape — sharp editorial geometry */
+  --r-sm: 2px;
+  --r-md: 4px;
+  --r-lg: 6px;
 
-  /* Shadow */
-  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
-  --shadow-md: 0 4px 8px rgba(16, 24, 40, 0.08);
+  /* Shadow — minimal, prefer borders */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.06);
 
   /* Legacy compatibility */
   --background: var(--paper);
@@ -52,34 +52,34 @@
 
 /* Dark mode via data attribute */
 [data-theme="dark"] {
-  --paper: #0E0F11;
-  --sand: #15171A;
-  --card: #1C1F24;
+  --paper: #0A0A0A;
+  --sand: #141414;
+  --card: #1A1A1A;
 
-  --ink: #F4F2EC;
-  --ink-muted: #B8B3AA;
+  --ink: #EBEBEB;
+  --ink-muted: #999999;
 
-  --border: #2A2F36;
+  --border: #2A2A2A;
 
-  --primary: #D4856A;
-  --primary-hover: #E09980;
-  --primary-soft: rgba(156, 66, 33, 0.2);
+  --primary: #EBEBEB;
+  --primary-hover: #FFFFFF;
+  --primary-soft: rgba(255, 255, 255, 0.08);
 
-  --link: #B8A89A;
-  --link-hover: #D4C4B6;
+  --link: #EBEBEB;
+  --link-hover: #FFFFFF;
 
-  --copper: #D4856A;
-  --copper-soft: #2E1F1A;
+  --copper: #EBEBEB;
+  --copper-soft: #1F1F1F;
 
-  --success: #66BB6A;
-  --success-soft: #1A2E1A;
-  --warning: #FFB74D;
-  --warning-soft: #2E2510;
-  --danger: #EF5350;
-  --danger-soft: #2E1515;
+  --success: #4ADE80;
+  --success-soft: #0A1F0A;
+  --warning: #FBBF24;
+  --warning-soft: #1A1508;
+  --danger: #EF4444;
+  --danger-soft: #1F0A0A;
 
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.5);
 
   --background: var(--paper);
   --foreground: var(--ink);
@@ -134,13 +134,15 @@ body {
   background: var(--paper);
   color: var(--ink);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Typography utilities */
 .text-micro {
-  font-size: 12px;
+  font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   font-weight: 500;
 }
 
@@ -178,4 +180,11 @@ button {
 /* Prevent font size adjustments on iOS */
 html {
   -webkit-text-size-adjust: 100%;
+}
+
+/* Ensure visible focus for form inputs (WCAG 2.4.7) */
+input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: none;
+  border-color: var(--ink);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 25%, transparent);
 }

@@ -42,7 +42,7 @@ export default function TastingDetailPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Header Section */}
-      <div className="bg-card shadow-sm rounded-lg p-6 mb-8">
+      <div className="bg-card border border-border p-6 mb-8">
         <div className="flex justify-between items-start mb-4">
           <div>
             <h1 className="font-display text-3xl font-bold text-ink">
@@ -70,7 +70,7 @@ export default function TastingDetailPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Brewing Parameters */}
-        <div className="bg-card shadow-sm rounded-lg p-6">
+        <div className="bg-card border border-border p-6">
           <h2 className="font-display text-xl font-semibold text-ink mb-4">
             Brewing Parameters
           </h2>
@@ -95,7 +95,7 @@ export default function TastingDetailPage() {
         </div>
 
         {/* Rating & Notes */}
-        <div className="bg-card shadow-sm rounded-lg p-6">
+        <div className="bg-card border border-border p-6">
           <h2 className="font-display text-xl font-semibold text-ink mb-4">
             Rating
           </h2>
@@ -122,7 +122,7 @@ export default function TastingDetailPage() {
 
       {/* Detected Flavors */}
       {tasting.detected_flavors && tasting.detected_flavors.length > 0 && (
-        <div className="bg-card shadow-sm rounded-lg p-6 mt-8">
+        <div className="bg-card border border-border p-6 mt-8">
           <h2 className="font-display text-xl font-semibold text-ink mb-4">
             Detected Flavors
           </h2>
@@ -130,7 +130,7 @@ export default function TastingDetailPage() {
             {tasting.detected_flavors.map((df, index) => (
               <div
                 key={index}
-                className="border border-border rounded-lg p-3"
+                className="border border-border p-3"
               >
                 <div className="flex justify-between items-start">
                   <span className="font-medium text-ink">
@@ -153,14 +153,14 @@ export default function TastingDetailPage() {
 
       {/* Notes */}
       {tasting.notes && (
-        <div className="bg-card shadow-sm rounded-lg p-6 mt-8">
+        <div className="bg-card border border-border p-6 mt-8">
           <h2 className="font-display text-xl font-semibold text-ink mb-4">Notes</h2>
           <p className="text-ink whitespace-pre-wrap">{tasting.notes}</p>
         </div>
       )}
 
       {/* Session Info */}
-      <div className="bg-sand rounded-lg p-4 mt-8">
+      <div className="bg-sand border border-border p-4 mt-8">
         <div className="text-sm text-ink-muted">
           <p>
             Session created: {formatLongDate(tasting.created_at)} at{' '}
@@ -177,7 +177,7 @@ export default function TastingDetailPage() {
         <div className="flex space-x-2">
           <Link
             href={`/tastings/${tastingId}/edit`}
-            className="bg-sand text-ink px-4 py-2 rounded-md hover:bg-border transition-colors"
+            className="border border-border text-ink px-4 py-2 hover:bg-sand transition-colors text-sm"
           >
             Edit Tasting
           </Link>

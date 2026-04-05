@@ -73,7 +73,7 @@ export default function CoffeeDetailPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Coffee Information Section */}
-      <div className="bg-card shadow-sm rounded-lg p-6 mb-8">
+      <div className="bg-card border border-border p-6 mb-8">
         <div className="flex justify-between items-start mb-4">
           <div>
             <h1 className="font-display text-3xl font-bold text-ink">{coffee.name}</h1>
@@ -89,14 +89,14 @@ export default function CoffeeDetailPage() {
           <div className="flex space-x-2">
             <Link
               href={`/coffees/${coffeeId}/edit`}
-              className="bg-sand text-ink px-4 py-2 rounded-md hover:bg-border transition-colors"
+              className="border border-border text-ink px-4 py-2 text-sm hover:bg-sand transition-colors"
             >
               Edit
             </Link>
             <button
               onClick={handleDelete}
               disabled={isDeleting}
-              className="bg-danger text-white px-4 py-2 rounded-md hover:bg-danger/90 transition-colors disabled:opacity-50"
+              className="bg-danger text-white px-4 py-2 text-sm hover:bg-danger/90 transition-colors disabled:opacity-50"
             >
               {isDeleting ? 'Deleting...' : 'Delete'}
             </button>
@@ -140,7 +140,7 @@ export default function CoffeeDetailPage() {
               {coffee.flavors.map((flavor) => (
                 <span
                   key={flavor.id}
-                  className="bg-primary-soft text-primary px-3 py-1 rounded-full text-sm"
+                  className="border border-border text-ink px-3 py-1 text-sm"
                 >
                   {flavor.name}
                 </span>
@@ -166,14 +166,14 @@ export default function CoffeeDetailPage() {
         </h2>
         <Link
           href={`/tastings/new?coffeeId=${coffeeId}`}
-          className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary-hover transition-colors"
+          className="bg-primary text-white px-4 py-2 text-sm hover:bg-primary-hover transition-colors"
         >
           Add Tasting
         </Link>
       </div>
 
       {tastings?.items.length === 0 ? (
-        <div className="text-center py-8 bg-sand rounded-lg">
+        <div className="text-center py-8 bg-sand border border-border">
           <p className="text-ink-muted">
             No tasting sessions found for this coffee.
           </p>
@@ -184,7 +184,7 @@ export default function CoffeeDetailPage() {
             <Link
               key={tasting.id}
               href={`/tastings/${tasting.id}`}
-              className="bg-card rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow"
+              className="bg-card border border-border p-4 hover:border-ink transition-colors"
             >
               <div className="flex justify-between items-start mb-2">
                 <h3 className="font-semibold text-ink capitalize">

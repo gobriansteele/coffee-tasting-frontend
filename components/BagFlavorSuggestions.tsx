@@ -27,10 +27,10 @@ export function BagFlavorSuggestions({
             type="button"
             disabled={added}
             onClick={added ? undefined : () => onAdd(flavor.name, flavor.category)}
-            className={`px-2 py-0.5 bg-sand text-xs rounded-full transition-colors ${
+            className={`px-2 py-0.5 border border-border text-xs transition-colors ${
               added
                 ? 'text-ink-muted opacity-50 cursor-default'
-                : 'text-ink cursor-pointer hover:bg-copper-soft hover:text-copper'
+                : 'text-ink cursor-pointer hover:border-ink'
             }`}
           >
             {added ? '✓' : '+'} {flavor.name}

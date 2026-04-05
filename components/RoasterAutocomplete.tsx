@@ -87,7 +87,7 @@ export function RoasterAutocomplete({ value, onChange }: RoasterAutocompleteProp
         onFocus={() => debouncedQuery.trim().length >= 2 && setIsOpen(true)}
         onKeyDown={handleKeyDown}
         placeholder="Search roasters..."
-        className="w-full px-3 py-2 bg-card border border-border rounded-md text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-primary"
+        className="w-full px-3 py-2 bg-card border border-border text-ink placeholder:text-ink-muted focus:outline-none focus:border-ink transition-colors"
       />
 
       {value?.existing_id && (
@@ -98,7 +98,7 @@ export function RoasterAutocomplete({ value, onChange }: RoasterAutocompleteProp
       )}
 
       {showDropdown && (
-        <div className="absolute z-10 mt-1 w-full bg-card border border-border rounded-md shadow-lg max-h-60 overflow-y-auto">
+        <div className="absolute z-10 mt-1 w-full bg-card border border-border shadow-sm max-h-60 overflow-y-auto">
           {isLoading && (
             <div className="px-3 py-2 text-sm text-ink-muted">Searching...</div>
           )}
@@ -107,7 +107,7 @@ export function RoasterAutocomplete({ value, onChange }: RoasterAutocompleteProp
             <button
               type="button"
               onClick={handleCreateNew}
-              className="w-full px-3 py-2 text-left text-sm text-primary hover:bg-sand transition-colors"
+              className="w-full px-3 py-2 text-left text-sm text-ink hover:bg-sand transition-colors"
             >
               Create: {inputValue.trim()}
             </button>
@@ -133,7 +133,7 @@ export function RoasterAutocomplete({ value, onChange }: RoasterAutocompleteProp
                 <button
                   type="button"
                   onClick={handleCreateNew}
-                  className="w-full px-3 py-2 text-left text-sm text-primary hover:bg-sand transition-colors border-t border-border"
+                  className="w-full px-3 py-2 text-left text-sm text-ink hover:bg-sand transition-colors border-t border-border"
                 >
                   Create: {inputValue.trim()}
                 </button>

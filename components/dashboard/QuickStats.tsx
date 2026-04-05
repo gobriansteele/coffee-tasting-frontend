@@ -24,7 +24,7 @@ function StatsContent({
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {/* Top Rated Coffees */}
-      <div className="bg-card rounded-lg p-6 shadow-sm">
+      <div className="bg-card border border-border p-6">
         <div className="text-sm text-ink-muted uppercase tracking-wide mb-4">
           Your Favorites
         </div>
@@ -51,7 +51,7 @@ function StatsContent({
       </div>
 
       {/* Best Brew Method */}
-      <div className="bg-card rounded-lg p-6 shadow-sm">
+      <div className="bg-card border border-border p-6">
         <div className="text-sm text-ink-muted uppercase tracking-wide mb-4">
           Best Brew Method
         </div>
@@ -84,7 +84,7 @@ function PlaceholderStats() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {/* Top Rated Coffees Placeholder */}
-      <div className="bg-card rounded-lg p-6 shadow-sm">
+      <div className="bg-card border border-border p-6">
         <div className="text-sm text-ink-muted uppercase tracking-wide mb-4">
           Your Favorites
         </div>
@@ -117,7 +117,7 @@ function PlaceholderStats() {
       </div>
 
       {/* Best Brew Method Placeholder */}
-      <div className="bg-card rounded-lg p-6 shadow-sm">
+      <div className="bg-card border border-border p-6">
         <div className="text-sm text-ink-muted uppercase tracking-wide mb-4">
           Best Brew Method
         </div>
@@ -202,13 +202,13 @@ export function QuickStats({ tastings, totalTastings }: QuickStatsProps) {
       </div>
 
       {/* Overlay with CTA */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center bg-paper/60 rounded-lg">
+      <div className="absolute inset-0 flex flex-col items-center justify-center bg-paper/60">
         <p className="text-ink text-center mb-4 px-4">
           Record a few more tastings to unlock insights
         </p>
         <Link
           href="/tastings/new"
-          className="bg-primary text-white px-6 py-3 rounded-md hover:bg-primary-hover transition-colors"
+          className="bg-primary text-white px-6 py-3 hover:bg-primary-hover transition-colors"
         >
           Record Tasting
         </Link>

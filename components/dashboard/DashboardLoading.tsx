@@ -8,19 +8,19 @@ export function DashboardLoading() {
           <div className="h-5 w-32 bg-sand rounded animate-pulse mt-2" />
         </div>
         <div className="flex space-x-3">
-          <div className="h-10 w-28 bg-sand rounded-md animate-pulse" />
-          <div className="h-10 w-32 bg-sand rounded-md animate-pulse" />
+          <div className="h-10 w-28 bg-sand animate-pulse" />
+          <div className="h-10 w-32 bg-sand animate-pulse" />
         </div>
       </div>
 
       {/* Stats skeleton */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-card rounded-lg p-6 shadow-sm">
+        <div className="bg-card border border-border p-6">
           <div className="h-4 w-24 bg-sand rounded animate-pulse mb-3" />
           <div className="h-10 w-20 bg-sand rounded animate-pulse mb-2" />
           <div className="h-4 w-32 bg-sand rounded animate-pulse" />
         </div>
-        <div className="bg-card rounded-lg p-6 shadow-sm">
+        <div className="bg-card border border-border p-6">
           <div className="h-4 w-24 bg-sand rounded animate-pulse mb-4" />
           <div className="space-y-3">
             {[1, 2, 3, 4].map((i) => (
@@ -29,7 +29,7 @@ export function DashboardLoading() {
                   <div className="h-4 w-20 bg-sand rounded animate-pulse" />
                   <div className="h-4 w-6 bg-sand rounded animate-pulse" />
                 </div>
-                <div className="h-2 bg-sand rounded-full" />
+                <div className="h-2 bg-sand" />
               </div>
             ))}
           </div>
@@ -45,7 +45,7 @@ export function DashboardLoading() {
       {/* Cards skeleton */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="bg-card rounded-lg p-6 shadow-sm">
+          <div key={i} className="bg-card border border-border p-6">
             <div className="h-5 w-32 bg-sand rounded animate-pulse mb-2" />
             <div className="h-4 w-24 bg-sand rounded animate-pulse mb-4" />
             <div className="space-y-2">

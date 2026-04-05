@@ -7,16 +7,16 @@ type FlavorTagProps = {
 
 export default function FlavorTag({ flavor, onRemove }: FlavorTagProps) {
   return (
-    <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-copper-soft text-copper text-sm">
+    <div className="inline-flex items-center gap-1.5 px-3 py-1 border border-border text-ink text-sm">
       <span>{flavor}</span>
       <button
         type="button"
         onClick={onRemove}
-        className="ml-1 hover:bg-copper/10 rounded-full p-0.5 transition-colors"
+        className="ml-0.5 hover:text-danger p-0.5 transition-colors"
         aria-label={`Remove ${flavor} tag`}
       >
-        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
     </div>

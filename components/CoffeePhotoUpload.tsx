@@ -97,7 +97,7 @@ export function CoffeePhotoUpload({ onIdentified, onSkip }: CoffeePhotoUploadPro
   }
 
   return (
-    <div className="bg-card shadow-sm rounded-lg p-6 space-y-6">
+    <div className="bg-card border border-border p-6 space-y-6">
       <div className="flex justify-between items-start">
         <div>
           <h2 className="font-display text-lg font-semibold text-ink">
@@ -118,7 +118,7 @@ export function CoffeePhotoUpload({ onIdentified, onSkip }: CoffeePhotoUploadPro
 
       {/* Validation / API error */}
       {(validationError || identifyMutation.error) && (
-        <div className="bg-danger-soft text-danger p-4 rounded-md text-sm">
+        <div className="bg-danger-soft text-danger p-4 text-sm">
           {validationError || identifyMutation.error?.message || 'Failed to identify coffee.'}
           {identifyMutation.error && (
             <button
@@ -139,10 +139,10 @@ export function CoffeePhotoUpload({ onIdentified, onSkip }: CoffeePhotoUploadPro
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
-          className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
+          className={`border-2 border-dashed p-8 text-center cursor-pointer transition-colors ${
             isDragOver
-              ? 'border-primary bg-primary/5'
-              : 'border-border hover:border-primary'
+              ? 'border-ink bg-sand'
+              : 'border-border hover:border-ink'
           }`}
         >
           <div className="text-ink-muted">
@@ -190,13 +190,13 @@ export function CoffeePhotoUpload({ onIdentified, onSkip }: CoffeePhotoUploadPro
               <img
                 src={src}
                 alt={`Coffee bag photo ${index + 1}`}
-                className="h-24 w-24 object-cover rounded-md border border-border"
+                className="h-24 w-24 object-cover border border-border"
               />
               {!identifyMutation.isPending && (
                 <button
                   type="button"
                   onClick={() => removeImage(index)}
-                  className="absolute -top-2 -right-2 bg-card border border-border rounded-full w-6 h-6 flex items-center justify-center text-xs text-ink-muted hover:text-danger transition-colors shadow-sm"
+                  className="absolute -top-2 -right-2 bg-card border border-border w-6 h-6 flex items-center justify-center text-xs text-ink-muted hover:text-danger transition-colors"
                 >
                   &times;
                 </button>
@@ -212,7 +212,7 @@ export function CoffeePhotoUpload({ onIdentified, onSkip }: CoffeePhotoUploadPro
           <button
             type="button"
             onClick={onSkip}
-            className="px-4 py-2 border border-border rounded-md text-ink text-sm hover:bg-sand transition-colors"
+            className="px-4 py-2 border border-border text-ink text-sm hover:bg-sand transition-colors"
           >
             Skip
           </button>
@@ -220,7 +220,7 @@ export function CoffeePhotoUpload({ onIdentified, onSkip }: CoffeePhotoUploadPro
             type="button"
             onClick={handleIdentify}
             disabled={identifyMutation.isPending}
-            className="px-4 py-2 bg-primary text-white text-sm rounded-md hover:bg-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 bg-primary text-white text-sm hover:bg-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {identifyMutation.isPending ? 'Identifying...' : 'Identify Coffee'}
           </button>
