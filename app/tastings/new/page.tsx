@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useCreateTasting } from '@/lib/queries/tastings'
 import { useCreateCoffeeFromInput } from '@/lib/queries/submit-coffee'
-import { useFlavors } from '@/lib/queries/flavors'
+import { useFlavors, useCreateFlavor } from '@/lib/queries/flavors'
 import type {
   BrewMethod,
   GrindSize,
@@ -24,6 +24,7 @@ export default function NewTastingPage() {
 
   const { data: flavorsData } = useFlavors()
   const allFlavors = flavorsData?.items ?? []
+  const createFlavorMutation = useCreateFlavor()
 
   const [coffeeEntry, setCoffeeEntry] = useState<CoffeeEntryResult | null>(null)
   const [identification, setIdentification] = useState<CoffeeIdentificationResponse | null>(null)
@@ -55,16 +56,21 @@ export default function NewTastingPage() {
     if (response.lot_number) setLotNumber(response.lot_number)
   }
 
-  const handleAddBagFlavor = (flavorName: string, category: string | null) => {
-    const existing = allFlavors.find(
+  const handleAddBagFlavor = async (flavorName: string, category: string | null, intensity: number) => {
+    let flavor = allFlavors.find(
       (f) => f.name.toLowerCase() === flavorName.toLowerCase()
     )
-    if (existing) {
-      const alreadyAdded = detectedFlavors.some((df) => df.flavor_id === existing.id)
-      if (!alreadyAdded) {
-        setDetectedFlavors((prev) => [...prev, { flavor_id: existing.id, intensity: 5 }])
-      }
+    if (!flavor) {
+      flavor = await createFlavorMutation.mutateAsync({
+        name: flavorName,
+        category: category ?? undefined,
+      })
     }
+    setDetectedFlavors((prev) => {
+      const alreadyAdded = prev.some((df) => df.flavor_id === flavor.id)
+      if (alreadyAdded) return prev
+      return [...prev, { flavor_id: flavor.id, intensity }]
+    })
   }
 
   const addedFlavorNames = new Set(
