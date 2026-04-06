@@ -2,7 +2,7 @@ import type { IdentifiedFlavor } from '@/lib/api/types'
 
 type BagFlavorSuggestionsProps = {
   flavors: IdentifiedFlavor[]
-  onAdd: (flavorName: string, category: string | null) => void
+  onAdd: (flavorName: string, category: string | null, intensity: number) => void
   addedNames?: Set<string>
 }
 
@@ -26,11 +26,11 @@ export function BagFlavorSuggestions({
             key={flavor.name}
             type="button"
             disabled={added}
-            onClick={added ? undefined : () => onAdd(flavor.name, flavor.category)}
-            className={`px-2 py-0.5 border border-border text-xs transition-colors ${
+            onClick={added ? undefined : () => onAdd(flavor.name, flavor.category, 5)}
+            className={`px-3 py-2 border text-sm transition-colors min-h-[44px] ${
               added
-                ? 'text-ink-muted opacity-50 cursor-default'
-                : 'text-ink cursor-pointer hover:border-ink'
+                ? 'border-border text-ink-muted opacity-50 cursor-default'
+                : 'border-border text-ink cursor-pointer hover:border-ink active:bg-sand'
             }`}
           >
             {added ? '✓' : '+'} {flavor.name}
